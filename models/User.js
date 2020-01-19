@@ -13,7 +13,7 @@ const UserSchema = new Schema({
   },
   balance: {
     type: Number,
-    required: true,
+    required: false,
     default: 1000
   },
   date: {
