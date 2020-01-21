@@ -39,4 +39,4 @@ class Deck {
     }
 }
 
-export default Deck;
+export default Deck
