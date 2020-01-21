@@ -34,7 +34,9 @@ class Deck {
         return this.deck.pop();
     }
 
-    length(){
+    length() {
         return this.deck.length();
     }
 }
+
+export default Deck;
