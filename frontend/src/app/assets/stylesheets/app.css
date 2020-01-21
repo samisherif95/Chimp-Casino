@@ -1,0 +1,210 @@
+
+
+.main-page{
+    width: 100%;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+}
+
+.play-button-container{
+    width: 15%;
+    margin: 0 auto;
+}
+
+.btn {
+    width: 100%;
+    font-size: 20px;
+    line-height: 24px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+.btn-play{
+    background-color: #FFA500;
+    color: #fff;
+    font-weight: 200;
+}
+
+.btn-play:hover{
+    background-color: #FF4500;
+}
+
+.logo-container{
+    display: flex;
+    align-items: center;
+}
+
+.logo-container h2{
+    font-family: 'Lobster', cursive;
+    color: #f44336;
+}
+
+.navbar img{
+    height: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    background-image: url('../images/bb-chimpcasino4.jpg');
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover;
+    min-height: 94vh;
+}
+
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(255, 166, 0, 0.788);
+    color: white;
+}
+
+ul {
+    padding-right: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+li {
+  float: left;
+  vertical-align: center;
+}
+
+li a {
+    font-size: 18px;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+  background-color: #FF4500;
+}
+
+button{
+    font-size: 100%;
+    font-family: inherit;
+    border: 0;
+    padding: 0;
+}
+
+.btn-logout {
+    color: white;
+    background-color: #333;
+    padding: 10px;
+    height: 100%;
+    -webkit-transition-duration: 0.4s; 
+    transition-duration: 0.4s;
+}
+
+.btn-logout:hover {
+  background-color: #f44336;
+  color: white;
+}
+
+
+/* MODALS */
+.modal-screen {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    background-color: rgba(254,254,254,0.4);
+}
+
+.modal-content {
+    position: absolute;
+    width: 525px;
+    /* background-image: url('../images/monkeypoker.jpg');
+    background-position: center; 
+    background-repeat: no-repeat; */
+    background-color: #fff;
+    background-size: cover;
+    box-shadow: 0 8px 16px rgba(254,254,254,0.4);
+    border-radius: 10px;
+    text-align: center;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.modal-banner {
+    height: 50px;
+    text-align: right;
+    right: 100%;
+}
+
+.modal-banner button{
+    cursor: pointer;
+    padding-right: 0;
+    font-size: 1.7em;
+    color: #6a707a;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+}
+
+.top-content{
+    margin-bottom: 20px;
+}
+
+.top-content h3 {
+    font-family: Avenir-Heavy,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 28px;
+    line-height: 32px;
+    margin-bottom: 0px;
+    color: #343840;
+}
+
+
+#username, #password,
+#password2 {
+    display: block;
+    width: 80%;
+    height: 30px;
+    text-align: left;
+    padding: 6px 12px;
+    margin: 10px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #343840;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ced2da;
+    border-radius: 5px;
+    transform: translateX(7%);
+}
+
+#submit-signup,
+#submit-login{
+    background-color: #e82953;
+    color: #fff;
+    font-size: 16px;
+    width: 80%;
+    height: 30px;
+    padding: 6px 12px;
+    border-radius: 5px;
+}
+
+.text-center p a {
+    padding-left: 20px;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
