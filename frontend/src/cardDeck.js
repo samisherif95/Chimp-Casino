@@ -38,3 +38,5 @@ class Deck {
         return this.deck.length();
     }
 }
+
+export default Deck
