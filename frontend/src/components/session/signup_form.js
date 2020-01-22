@@ -17,14 +17,6 @@ class SignupForm extends React.Component {
         this.clearedErrors = false;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.currentUser === true) {
-            this.props.history.push('/game');
-        }
-
-        this.setState({ errors: nextProps.errors })
-    }
-
     update(field) {
         return e => this.setState({
             [field]: e.currentTarget.value
