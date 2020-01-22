@@ -22,9 +22,11 @@ class Player extends React.Component {
     }
 
     render() {
+        const { player } = this.props;
+
         return (
             <div>
-                hello
+
             </div>
         );
     }
