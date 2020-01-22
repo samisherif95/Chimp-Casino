@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
-import logo from '../../app/assets/images/logo.png'
+import logo from '../../app/assets/images/logo.jpeg'
 
 class NavBar extends React.Component {
     constructor(props) {
@@ -34,10 +34,12 @@ class NavBar extends React.Component {
     render() {
         return (
             <div className='navbar'>
-                <div className='logo-container'>
-                    <img src={logo} />
-                    <h2>Chimp Casino</h2>
-                </div>
+                <Link to='/'>
+                    <div className='logo-container'>
+                        <img src={logo} />
+                        <h2>Chimp Casino</h2>
+                    </div>
+                </Link>
                 {this.getLinks()}
             </div>
         );

@@ -16,6 +16,10 @@ class SignupForm extends React.Component {
         this.handleCancel = this.handleCancel.bind(this)
         this.clearedErrors = false;
     }
+    
+    componentWillReceiveProps(nextProps) {
+        this.setState({ errors: nextProps.errors })
+    }
 
     update(field) {
         return e => this.setState({
@@ -32,20 +36,42 @@ class SignupForm extends React.Component {
         };
 
         this.props.signup(user)
-            .then( () => this.props.history.push('/game') )
-            .then(() => this.props.closeModal())
+            .then( () => {
+                console.log("errors", this.state.errors)
+                if(!Object.keys(this.state.errors).length){
+                    this.props.history.push('/game');
+                    this.props.closeModal(); 
+                }
+            })
     }
 
     renderErrors() {
-        return (
-            <ul>
-                {Object.keys(this.state.errors).map((error, i) => (
-                    <li key={`error-${i}`}>
-                        {this.state.errors[error]}
-                    </li>
-                ))}
-            </ul>
-        );
+        let inputs = document.querySelectorAll('.input')
+        inputs.forEach(input => {
+            if (input.value.trim() === '') {
+                input.style.borderColor = "red";
+            } else {
+                input.style.borderColor = ""
+            }
+        })
+
+        let errorUsername = null;
+        let errorPassword = null;
+        let errorPassword2 = null;
+
+        Object.values(this.state.errors).forEach(error => {
+            if (error.includes('Username') || error.includes('user')) {
+                errorUsername = error;
+            } else if (error.includes('Password')) {
+                errorPassword = error
+            } else if (error.includes('Confirm') || error.includes('match')) {
+                errorPassword2 = error
+            }
+        });
+
+        const errorArr = [<p>{errorUsername}</p>, <p>{errorPassword}</p>, <p>{errorPassword2}</p>]
+
+        return errorArr;
     }
 
     handleCancel() {
@@ -68,31 +94,33 @@ class SignupForm extends React.Component {
                     <p>Please Sign Up</p>
                 </div>
 
-                <form onSubmit={this.handleSubmit}>
+                <form className='form-signup' onSubmit={this.handleSubmit}>
                     <div className="signup-form">
                         <input type="text"
                             id='username'
                             value={this.state.username}
                             onChange={this.update('username')}
                             placeholder="Username"
+                            className='input'
                         />
-                        <br />
+                        {Object.keys(this.state.errors).length > 0 ? this.renderErrors()[0] : null}
                         <input type="password"
                             id='password'
                             value={this.state.password}
                             onChange={this.update('password')}
                             placeholder="Password"
+                            className='input'
                         />
-                        <br />
+                        {Object.keys(this.state.errors).length > 0 ? this.renderErrors()[1] : null}
                         <input type="password"
                             id='password2'
                             value={this.state.password2}
                             onChange={this.update('password2')}
                             placeholder="Confirm Password"
+                            className='input'
                         />
-                        <br />
+                        {Object.keys(this.state.errors).length > 0 ? this.renderErrors()[2] : null}
                         <input id='submit-signup' type="submit" value="Sign Up" />
-                        {this.renderErrors()}
                     </div>
                 </form>
 
