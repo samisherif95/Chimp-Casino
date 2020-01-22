@@ -48,6 +48,7 @@
     height: 50px;
     padding-left: 20px;
     padding-right: 20px;
+    border-radius: 50%;
 }
 
 body{
@@ -64,7 +65,7 @@ body{
 .navbar{
     display: flex;
     justify-content: space-between;
-    background-color: rgba(255, 166, 0, 0.788);
+    background-color: rgba(46, 45, 42, 0.788);
     color: white;
 }
 
@@ -93,7 +94,7 @@ li a {
 }
 
 li a:hover {
-  background-color: #FF4500;
+  background-color: #f44336;
 }
 
 button{
@@ -101,6 +102,16 @@ button{
     font-family: inherit;
     border: 0;
     padding: 0;
+}
+
+.form-signup p,
+.form-login p{
+    font-size: 12px;
+    margin-left: 45px;
+    text-align: left;
+    color: red;
+    transform: translateY(-50%);
+    /* margin-bottom: 10px; */
 }
 
 .btn-logout {
@@ -200,7 +211,7 @@ button{
     color: #fff;
     font-size: 16px;
     width: 80%;
-    height: 30px;
+    height: 40px;
     padding: 6px 12px;
     border-radius: 5px;
 }
