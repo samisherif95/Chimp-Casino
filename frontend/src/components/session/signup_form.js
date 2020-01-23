@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
@@ -18,6 +17,10 @@ class SignupForm extends React.Component {
     }
     
     componentWillReceiveProps(nextProps) {
+        if (nextProps.signedIn === true) {
+            this.props.history.push('/login');
+        }
+        
         this.setState({ errors: nextProps.errors })
     }
 

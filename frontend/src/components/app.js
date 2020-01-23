@@ -1,10 +1,12 @@
 import React from 'react';
 import { AuthRoute, ProtectedRoute } from '../util/route_util';
-import { Switch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import NavBarContainer from './nav/navbar_container';
 
 import MainPageContainer from './main/main_page_container';
 import Modal from './modal/modal';
+import ChatContainer from './chat/chat_container';
+
 
 
 import '../app/assets/stylesheets/app.css';
@@ -16,8 +18,10 @@ const App = () => (
         
         <NavBarContainer />
 
+        <Route path='/game' component={ChatContainer} />
+
         <Switch>
-            <AuthRoute exact path="/" component={MainPageContainer} />
+            <Route exact path="/" component={MainPageContainer} />
         </Switch>
     </div>
 );
