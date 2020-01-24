@@ -9,6 +9,7 @@ const socket = require('socket.io')
 const User = require("./models/User");
 const users = require("./routes/api/users");
 const chatrooms = require("./routes/api/chatrooms");
+const lobbies = require("./routes/api/lobbies");
 
 
 //SETUP
@@ -28,6 +29,7 @@ require('./config/passport')(passport);
 //Routes
 app.use("/api/users", users);
 app.use("/api/chatrooms", chatrooms);
+app.use("/api/lobbies", lobbies);
 
 
 //Websockets Setup

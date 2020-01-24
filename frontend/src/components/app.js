@@ -6,6 +6,8 @@ import NavBarContainer from './nav/navbar_container';
 import MainPageContainer from './main/main_page_container';
 import Modal from './modal/modal';
 import ChatContainer from './chat/chat_container';
+import GameContainer from "./game";
+import LobbyIndexContainer from "./lobbies/lobby_index_container"
 
 
 
@@ -19,7 +21,8 @@ const App = () => (
         <NavBarContainer />
 
         <Route path='/game' component={ChatContainer} />
-
+        <Route path='/games' component={GameContainer} />
+        <Route path='/lobbies' component={LobbyIndexContainer} />
         <Switch>
             <Route exact path="/" component={MainPageContainer} />
         </Switch>
