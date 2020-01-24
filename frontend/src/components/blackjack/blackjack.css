@@ -1,0 +1,24 @@
+/* .blackjack-table {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+} */
+
+.blackjack-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.blackjack-player-info {
+    color: red;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+}
+
+.blackjack-hand {
+    display: flex;
+    flex-direction: column;
+}

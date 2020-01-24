@@ -8,11 +8,12 @@ class MainPage extends React.Component {
 
 
     handleClick(){
-        if(this.props.loggedIn){
-            this.props.history.push('/game');
-        }else{
-            this.props.openLogIn();
-        }
+        // if(this.props.loggedIn){
+        //     this.props.history.push('/game');
+        // }else{
+        //     this.props.openLogIn();
+        // }
+        this.props.openBlackjack();
     }
 
     render() {
