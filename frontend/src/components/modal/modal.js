@@ -3,6 +3,8 @@ import { closeModal } from '../../actions/modal_actions';
 import { connect } from 'react-redux';
 import LoginFormContainer from '../session/login_form_container';
 import SignupFormContainer from '../session/signup_form_container';
+import LobbyFormContainer from "../lobbies/lobby_form_container";
+import LobbyIndexContainer from '../lobbies/lobby_index_container';
 
 const Modal = ({ modal, closeModal }) => {
     if (!modal) {
@@ -15,6 +17,12 @@ const Modal = ({ modal, closeModal }) => {
             break;
         case 'signup':
             component = <SignupFormContainer />;
+            break;
+        case 'createLobby':
+            component = <LobbyFormContainer />;
+            break;
+        case 'lobbyIndex':
+            component = <LobbyIndexContainer />
             break;
         default:
             return null;
