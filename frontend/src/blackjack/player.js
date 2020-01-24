@@ -1,4 +1,4 @@
-export class Player {
+export default class Player {
     constructor(userId, balance) {
         this.userId = userId;
         this.pool = 0;
@@ -9,7 +9,8 @@ export class Player {
         this.hand = [];
         this.handSplit = [];
         this.stand = false;
-        this.bet = false;
+        this.betted = false;
+        this.bust = false;
     }
 
     getHandValue(hand) {
@@ -40,11 +41,11 @@ export class Player {
 
         this.balance -= wager;
         this.pool += wager;
-        this.bet = true;
+        this.betted = true;
     }
 
     isFace(card) {
-        const faceCard = ["Jack", "Queen", "King"];
+        const faceCard = ["J", "Q", "K"];
         if (faceCard.includes(card[0])) {
             return true;
         }
@@ -68,6 +69,10 @@ export class Player {
 
     hit(card) {
         this.hand.push(card);
+        if (this.getHandValue(this.hand) > 21) {
+            this.bust = true;
+            console.log("player has busted!")
+        }
     }
 
     hitSplit(card) {
