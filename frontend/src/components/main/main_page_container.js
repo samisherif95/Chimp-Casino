@@ -9,7 +9,8 @@ const mSTP = state => ({
 
 const mDTP = dispatch => ({
     openLogIn: () => dispatch(openModal('login')),
-    closeModal: () => dispatch(closeModal())
+    closeModal: () => dispatch(closeModal()),
+    openBlackjack: () => dispatch(openModal('blackjack'))
 })
 
 export default connect(mSTP, mDTP)(MainPage)
