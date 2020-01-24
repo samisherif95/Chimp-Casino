@@ -138,23 +138,28 @@ button{
     left: 0;
     right: 0;
     z-index: 2;
-    background-color: rgba(254,254,254,0.4);
+    background-color: rgba(0,0,0,0.4);
 }
 
 .modal-content {
+
     position: absolute;
-    width: 525px;
+    min-width: 40%;
+    max-width: 70%;
+    /* width: 525px; */
     /* background-image: url('../images/monkeypoker.jpg');
     background-position: center; 
     background-repeat: no-repeat; */
+    /* background-color: rgb(0,0,0,0.9); */
     background-color: #fff;
     background-size: cover;
-    box-shadow: 0 8px 16px rgba(254,254,254,0.4);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.8);
     border-radius: 10px;
     text-align: center;
     top: 10%;
     left: 50%;
     transform: translateX(-50%);
+    border: 5px solid #fcd600;
 }
 
 .modal-banner {
@@ -188,7 +193,8 @@ button{
 
 
 #username, #password,
-#password2 {
+#password2, #form-lobby-name, 
+#form-lobby-password, #form-lobby-balance {
     display: block;
     width: 80%;
     height: 30px;
@@ -206,7 +212,8 @@ button{
 }
 
 #submit-signup,
-#submit-login{
+#submit-login, 
+#submit-lobby {
     background-color: #e82953;
     color: #fff;
     font-size: 16px;
@@ -216,9 +223,100 @@ button{
     border-radius: 5px;
 }
 
+#submit-signup:hover,
+#submit-login:hover,
+#submit-lobby:hover {
+    background-color: #c40d35;
+    cursor: pointer;
+
+}
+
 .text-center p a {
     padding-left: 20px;
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.lobby-form {
+    padding-bottom: 3em;
+}
+
+.lobby-index {
+    width: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 300px;
+    display: block;
+    /* background-color: rgb(0, 0, 0, 0.4) */
+}
+
+.lobby-index li {
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.lobby-index li:hover {
+    background-color: #fcd600;
+    cursor: pointer;
+}
+
+.lobby-index-header {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    border-bottom: 3px solid #fcd600;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    background-color: #fcd600;
+    /* font-size: 1.5em; */
+}
+
+
+canvas {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.8);
+    border-radius: 15px;
+}
+
+
+.lobby-name-div{
+    display: flex;
+    justify-content: center;
+    width: 60%;
+}
+
+.lobby-info-div {
+    display: flex;
+    justify-content: space-around;
+    width: 40%;
+}
+
+.lobby-info-div span {
+    width: 33%;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+
+/* .lobby-index-item {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+} */
+
+.game-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1vw;
+}
+
+h2 {
+    font-family: 'Lobster', cursive;
 }
