@@ -1,8 +1,12 @@
 import React from "react";
+import { withRouter } from "react-router-dom"
 
-const LobbyIndexItem = ({lobby}) => {
+const LobbyIndexItem = ({lobby, history}) => {
+    const handleClick = (e) => {
+        history.push(`/lobbies/${lobby._id}/game`)
+    }
     return (
-        <li className="lobby-index-item">
+        <li onClick={handleClick} className="lobby-index-item">
             <div className="lobby-name-div">
                 <span className="lobby-name-span">{lobby.lobbyName}</span>
             </div>
@@ -15,4 +19,4 @@ const LobbyIndexItem = ({lobby}) => {
     )
 }
 
-export default LobbyIndexItem
+export default withRouter(LobbyIndexItem)

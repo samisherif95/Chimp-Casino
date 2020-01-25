@@ -67,6 +67,7 @@ body{
     justify-content: space-between;
     background-color: rgba(46, 45, 42, 0.788);
     color: white;
+    margin-bottom: 30px;
 }
 
 ul {
@@ -231,6 +232,39 @@ button{
 
 }
 
+.leave-lobby {
+    font-size: 1.5em;
+}
+
+#leave-lobby-yes {
+    background-color: #e82953;
+    color: #fff;
+    font-size: 16px;
+    padding: 6px 18px;
+    border-radius: 5px;
+}
+
+#leave-lobby-yes:hover {
+    background-color: #c40d35;
+    cursor: pointer;
+}
+
+#leave-lobby-no {
+    background-color: #fff;
+    border: 3px solid #fcd600;
+    color: black;
+    font-size: 16px;
+    padding: 6px 18px;
+    border-radius: 5px;
+}
+
+#leave-lobby-no:hover {
+    background-color: #fcd600;
+    cursor: pointer;
+}
+
+
+
 .text-center p a {
     padding-left: 20px;
     color: blue;
@@ -246,7 +280,7 @@ button{
     width: 100%;
     overflow: scroll;
     overflow-x: hidden;
-    height: 300px;
+    height: 500px;
     display: block;
     /* background-color: rgb(0, 0, 0, 0.4) */
 }
@@ -285,13 +319,13 @@ canvas {
 .lobby-name-div{
     display: flex;
     justify-content: center;
-    width: 60%;
+    width: 50%;
 }
 
 .lobby-info-div {
     display: flex;
     justify-content: space-around;
-    width: 40%;
+    width: 50%;
 }
 
 .lobby-info-div span {
@@ -300,9 +334,29 @@ canvas {
     justify-content: center;
 }
 
+.lobby-index-container {
+    margin-top: 500px;
+    width: 60%;
+    border-radius: 5px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 3px solid #fcd600;
+}
+
+.lobby-index-container h2 {
+    text-align: center;
+    font-size: 2em;
+}
 
 
-
+.leave-lobby-buttons {
+    padding-top: 30px;
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
 
 /* .lobby-index-item {
     display: flex;
@@ -319,4 +373,66 @@ canvas {
 
 h2 {
     font-family: 'Lobster', cursive;
+}
+
+
+.leaderboard-header {
+    display: flex;
+    /* justify-content: space-around; */
+    font-weight: bold;
+    border-bottom: 3px solid #fcd600;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    background-color: #fcd600;
+}
+
+.leaderboard-index {
+    width: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 330px;
+    display: block;
+    /* background-color: rgb(0, 0, 0, 0.4) */
+}
+
+.leaderboard-index li {
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.leaderboard-index li:hover {
+    background-color: #fcd600;
+    cursor: pointer;
+}
+
+.leaderboard-ranking-div {
+    display: flex;
+    justify-content: center;
+    width: 20%;
+}
+.leaderboard-name-div{
+    display: flex;
+    justify-content: center;
+    width: 55%;
+}
+
+.leaderboard-info-div {
+    display: flex;
+    justify-content: space-around;
+    width: 25%;
+}
+
+.gold {
+    color:  #fcd600
+}
+
+.silver {
+    color: silver
+}
+
+.bronze {
+    color: #cd7f32;
 }
