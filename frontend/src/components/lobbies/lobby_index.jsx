@@ -39,3 +39,11 @@ class LobbiesIndex extends React.Component {
 
 
 export default LobbiesIndex;
+
+
+// lobbiesCollection = {
+//     1: {
+//         players = [];
+        
+//     }
+// }

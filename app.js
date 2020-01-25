@@ -33,11 +33,16 @@ app.use("/api/lobbies", lobbies);
 
 
 //Websockets Setup
-const socketPort = 8000;
-const server = app.listen(socketPort, function () {
-  console.log("Listening at http://localhost: " + socketPort);
+const chatPort = 8000;
+const lobbyPort = 7000;
+const chatSocket = app.listen(chatPort, function () {
+  console.log("Listening at http://localhost: " + chatPort);
 });
-const chatServer = socket(server);
+const lobbySocket = app.listen(lobbyPort, function () {
+  console.log("Listening at http://localhost: " + lobbyPort);
+})
+const lobbyServer = socket(lobbySocket)
+const chatServer = socket(chatSocket);
 
 
 //Chat Server
@@ -51,6 +56,77 @@ chatServer.on("connection", (socket) => {
     socket.broadcast.emit("typing", data);
   });
 });
+
+
+// lobbiesCollection: {
+//   lobbyId: {
+//     poker: {
+      
+//     }
+//     blackjack: {
+
+//     }
+//     players: {
+//       socket-id: {
+
+//       }
+//     }
+//   }
+// }
+//Lobby Server
+const lobbiesCollection = {};
+
+lobbyServer.on("connection", (socket) => {
+  console.log("made connection with socket " + socket.id);
+  socket.emit("requestLobby")
+
+  socket.on("joinLobby", (lobbyId, username) => {
+    socket.join(lobbyId)
+    console.log(username);
+    // console.log("lobbyId", lobbyId)
+    // console.log("lobbyserver", lobbyServer.sockets.adapter.sids[socket.id])
+    if (lobbiesCollection[lobbyId]) {
+      lobbiesCollection[lobbyId].players[socket.id] = {
+        x: 200,
+        y: 250,
+        playerId: socket.id,
+        username
+      }
+    } else {
+      lobbiesCollection[lobbyId] = {
+        poker: {},
+        blackjack: {},
+        players: {}
+      }
+      lobbiesCollection[lobbyId].players[socket.id] = {
+        x: 200,
+        y: 250,
+        playerId: socket.id,
+        username
+      }
+    }
+    socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id])
+    socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players)
+  });
+
+  socket.on('playerMovement', (position, lobbyId) => {
+    const movedPlayer = lobbiesCollection[lobbyId].players[socket.id];
+    movedPlayer.x = position.x;
+    movedPlayer.y = position.y;
+    socket.to(lobbyId).emit("playerMoved", movedPlayer)
+  })
+
+  // socket.on("disconnect", () => {
+  //   const lobbyRoom = Object.keys(lobbyServer.sockets.adapter.sids[socket.id]);
+  //   delete lobbiesCollection[lobbyRoom].players[socket.id]
+  // })
+})
+
+
+
+
+
+
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');

@@ -20,10 +20,9 @@ const App = () => (
         
         <NavBarContainer />
 
-        <Route path='/game' component={ChatContainer} />
-        <Route path='/games' component={GameContainer} />
-        <Route path='/lobbies' component={LobbyIndexContainer} />
         <Switch>
+            <ProtectedRoute path='/lobbies/:lobbyId/game' component={GameContainer} />
+            <ProtectedRoute exact path="/lobbies" component={LobbyIndexContainer} />
             <Route exact path="/" component={MainPageContainer} />
         </Switch>
     </div>
