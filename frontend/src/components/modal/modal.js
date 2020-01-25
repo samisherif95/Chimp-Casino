@@ -5,6 +5,9 @@ import LoginFormContainer from '../session/login_form_container';
 import SignupFormContainer from '../session/signup_form_container';
 import LobbyFormContainer from "../lobbies/lobby_form_container";
 import LobbyIndexContainer from '../lobbies/lobby_index_container';
+import LeaveLobby from "../lobbies/leave_lobby";
+import LeaderBoard from "../users/leaderboard";
+// import LeaveLobby from "../lobbies/leave_lobby";
 
 const Modal = ({ modal, closeModal }) => {
     if (!modal) {
@@ -21,8 +24,11 @@ const Modal = ({ modal, closeModal }) => {
         case 'createLobby':
             component = <LobbyFormContainer />;
             break;
-        case 'lobbyIndex':
-            component = <LobbyIndexContainer />
+        case 'leaveLobby':
+            component = <LeaveLobby />;
+            break;
+        case 'leaderboard':
+            component = <LeaderBoard />;
             break;
         default:
             return null;

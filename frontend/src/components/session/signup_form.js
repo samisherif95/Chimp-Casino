@@ -42,7 +42,7 @@ class SignupForm extends React.Component {
             .then( () => {
                 console.log("errors", this.state.errors)
                 if(!Object.keys(this.state.errors).length){
-                    this.props.history.push('/game');
+                    this.props.history.push('/lobbies');
                     this.props.closeModal(); 
                 }
             })

@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { closeModal } from "../../actions/modal_actions";
 import { createLobby } from "../../actions/lobby_actions";
+import { withRouter } from "react-router-dom";
 import LobbyForm from "./lobby_form";
 
 const mapStateToProps = state => ({
@@ -12,4 +13,4 @@ const mapDispatchToProps = dispatch => ({
     createLobby: lobbyData => dispatch(createLobby(lobbyData))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(LobbyForm);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LobbyForm));
