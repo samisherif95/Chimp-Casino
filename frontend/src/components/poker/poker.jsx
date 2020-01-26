@@ -2,7 +2,6 @@ import React from 'react';
 import pokerTable from '../../app/assets/images/pokerTable.png'
 import Game from '../../components/poker/game';
 import '../../app/assets/stylesheets/poker.css'
-// import img2C from './PokerImages/2C.png'
 import imageHash from './pokerImages';
 import Deck from '../../cardDeck';
 

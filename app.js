@@ -52,10 +52,10 @@ chatServer.on("connection", (socket) => {
   socket.on("chat", (data) => {
     chatServer.sockets.emit("receiveMessage", data);
   });
-  socket.on("typing", (data) => {
-    // send an event to everyone but the person who emitted the typing event to the server
-    socket.broadcast.emit("typing", data);
-  });
+  // socket.on("typing", (data) => {
+  //   // send an event to everyone but the person who emitted the typing event to the server
+  //   socket.broadcast.emit("typing", data);
+  // });
 });
 
 

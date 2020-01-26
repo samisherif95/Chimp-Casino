@@ -10,7 +10,6 @@ import LobbyIndexContainer from "./lobbies/lobby_index_container";
 
 
 
-
 import '../app/assets/stylesheets/app.css';
 
 

@@ -450,7 +450,7 @@ h2 {
 }
 
 .chat-text{
-    height: 65vh;
+    height: 80%;
     border-bottom: 1px solid #ccc;
     overflow-y: scroll;
 }
@@ -520,18 +520,20 @@ h2 {
     position: absolute;
     bottom: 0;
     width: 100%;
-    min-height: 10vh;
-    padding-bottom: 10px;
+    min-height: 20%;
 }
 
 .chat-form form{
     width: 90%;
+    height: 120px;
     margin: 0 auto;
-    transform: translateY(5%);
+    padding-top: 20px;
 }
 
-.chat-panel form textarea{
+
+#message-to-send{
     box-sizing: border-box;
+    height: 70%;
     width: 100%;
     border: none;
     padding: 10px 20px;
@@ -541,7 +543,8 @@ h2 {
     resize: none;
 }
 
-.chat-panel form button {
+.chat-panel form button,
+#send {
     float: right;
     color: #94C2ED;
     font-size: 16px;
@@ -552,7 +555,8 @@ h2 {
     background: none;
 }
 
-.chat-panel form button:hover{
+.chat-panel form button:hover,
+#send{
     color: darken(#94C2ED, 10%);
 }
 

@@ -34,26 +34,6 @@ class GameContainer extends React.Component {
         this.socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:7000');
         this.lobbyId = this.props.match.params.lobbyId;
         const game = this;
-        // const phaserGameDiv = document.getElementById("phaser-game")
-
-
-        // this.createPlayer = (playerInfo) => {
-        //     this.container = this.add.container(200, 250)
-        //     this.physics.world.enable(this.container);
-    
-        //     this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
-        //         .setInteractive()
-        //         .on('pointerdown', () => this.props.openModal('createLobby'))
-           
-        //     this.player.setCollideWorldbounds(true);
-        //     this.text = this.add.text(0, 0, 'evans');
-        //     this.text.font = "Arial"
-        //     this.container.add(this.player)
-        //     this.container.add(this.text)
-    
-        //     this.container.body.setCollideWorldBounds(true);
-        // }
-
 
         this.config = {
             width: 1024,
