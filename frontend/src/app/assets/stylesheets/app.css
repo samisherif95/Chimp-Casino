@@ -59,7 +59,7 @@ body{
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover;
-    min-height: 94vh;
+    min-height: 100vh;
 }
 
 .navbar{
