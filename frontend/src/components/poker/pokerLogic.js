@@ -28,19 +28,19 @@ class PokerLogic {
         let result = [];
         let count = 0
         cards.forEach(card =>{
-            if(card[0] === 'Ace' && !result.includes(card[0])){
+            if(card[0] === 'A' && !result.includes(card[0])){
                 result.push(card[0]);
                 count+=1;
             } else if (card[0] === 10 && !result.includes(card[0])){
                 result.push(card[0]);
                 count += 1;
-            } else if (card[0] === 'Jack' && !result.includes(card[0])) {
+            } else if (card[0] === 'J' && !result.includes(card[0])) {
                 result.push(card[0]);
                 count += 1;
-            } else if (card[0] === 'Queen' && !result.includes(card[0])) {
+            } else if (card[0] === 'Q' && !result.includes(card[0])) {
                 result.push(card[0]);
                 count += 1;
-            } else if (card[0] === 'King' && !result.includes(card[0])) {
+            } else if (card[0] === 'K' && !result.includes(card[0])) {
                 result.push(card[0]);
                 count += 1;
             }
@@ -65,12 +65,13 @@ class PokerLogic {
                 cardValues.push(14)
                 cardValues.push(1)
             }
-            else if (card[0] === 'Jack') {cardValues.push(11)}
-            else if (card[0] === 'Queen') {cardValues.push(12)}
-            else if (card[0] === 'King') {cardValues.push(13)}
+            else if (card[0] === 'J') {cardValues.push(11)}
+            else if (card[0] === 'Q') {cardValues.push(12)}
+            else if (card[0] === 'K') {cardValues.push(13)}
             else {cardValues.push(card[0])}
         })
         cardValues = cardValues.sort(function (a, b) { return a - b });
+        let inOrder = false;
         for (let i = 0; i < cardValues.length - 5; i++) {
             let arr = []
             for (let j = 0; j < cardValues.length - 1; j++) {
@@ -123,13 +124,13 @@ class PokerLogic {
     Straight(cards){
         let cardValues = []
         cards.forEach(card => {
-            if (card[0] === 'Ace') { 
+            if (card[0] === 'A') { 
                 cardValues.push(14) 
                 cardValues.push(1)
             }
-            else if (card[0] === 'Jack') { cardValues.push(11) }
-            else if (card[0] === 'Queen') { cardValues.push(12) }
-            else if (card[0] === 'King') { cardValues.push(13) }
+            else if (card[0] === 'J') { cardValues.push(11) }
+            else if (card[0] === 'Q') { cardValues.push(12) }
+            else if (card[0] === 'K') { cardValues.push(13) }
             else { cardValues.push(card[0]) }
         })
         cardValues = cardValues.sort(function (a, b) { return a - b });
@@ -195,13 +196,15 @@ class PokerLogic {
     HighCard(cards){
         let cardValues = []
         cards.forEach(card => {
-            if (card[0] === 'Ace') { cardValues.push(14)}
-            else if (card[0] === 'Jack') { cardValues.push(11) }
-            else if (card[0] === 'Queen') { cardValues.push(12) }
-            else if (card[0] === 'King') { cardValues.push(13) }
+            if (card[0] === 'A') { cardValues.push(14)}
+            else if (card[0] === 'J') { cardValues.push(11) }
+            else if (card[0] === 'Q') { cardValues.push(12) }
+            else if (card[0] === 'K') { cardValues.push(13) }
             else { cardValues.push(card[0]) }
         })
         cardValues = cardValues.sort(function (a, b) { return a - b });
         return (cardValues[cardValues.length - 1] + cardValues[cardValues.length - 2])
     }
 }
+
+export default PokerLogic;

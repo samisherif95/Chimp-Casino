@@ -8,12 +8,13 @@ class Deck {
     reset() {
         this.deck = [];
 
-        const suits = ['Hearts', 'Spades', 'Clubs', 'Diamonds'];
-        const values = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', 'Queen', 'King'];
+        const suits = ['H', 'S', 'C', 'D'];
+        const values = ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'];
 
         for(let i=0; i < suits.length; i++){
             for(let j = 0; j< values.length; j++){
-                this.deck.push([values[j],suits[i]])
+                let cardName = [values[j],suits[i]].join('')
+                this.deck.push([values[j],suits[i],cardName])
             }
         }
     }
