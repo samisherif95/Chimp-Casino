@@ -24,6 +24,7 @@ const Modal = ({ modal, closeModal }) => {
             break;
         case 'poker':
             component =<PokerContainer/>
+            break;
         case 'createLobby':
             component = <LobbyFormContainer />;
             break;

@@ -251,9 +251,9 @@ class GameContainer extends React.Component {
                         this.container.body.setVelocityY(0)
 
                         this.physics.add.collider(this.container, this.furnitures)
-                        this.physics.add.collider(this.container, this.pokerTable, () => game.props.openModal("createLobby"))
-                        this.physics.add.collider(this.container, this.blackjackTable, () => game.props.openModal("createLobby"));
-                        this.physics.add.collider(this.container, this.slotsTable, () => game.props.openModal("createLobby"))
+                        this.physics.add.collider(this.container, this.pokerTable, () => game.props.openModal("poker"))
+                        this.physics.add.collider(this.container, this.blackjackTable, () => game.props.openModal("poker"));
+                        this.physics.add.collider(this.container, this.slotsTable, () => game.props.openModal("poker"))
                         this.physics.add.collider(this.container, this.casinoDoor, () => game.props.openModal("leaveLobby"))
                         this.physics.add.collider(this.container, this.bulletinBoard, () => game.props.openModal("leaderboard"))
                                     
