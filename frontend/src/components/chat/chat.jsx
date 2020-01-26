@@ -35,7 +35,8 @@ class Chat extends React.Component {
         });
     }
 
-    handleSubmit(){
+    handleSubmit(e){
+        e.preventDefault();
         this.socket.emit("chat", {
             user: this.props.currentUser.username,
             message: this.state.message
