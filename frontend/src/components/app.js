@@ -5,9 +5,9 @@ import NavBarContainer from './nav/navbar_container';
 
 import MainPageContainer from './main/main_page_container';
 import Modal from './modal/modal';
-import ChatContainer from './chat/chat_container';
 import GameContainer from "./game";
-import LobbyIndexContainer from "./lobbies/lobby_index_container"
+import LobbyIndexContainer from "./lobbies/lobby_index_container";
+
 
 
 
