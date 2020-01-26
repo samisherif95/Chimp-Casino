@@ -5,6 +5,10 @@ import NavBarContainer from './nav/navbar_container';
 
 import MainPageContainer from './main/main_page_container';
 import Modal from './modal/modal';
+import GameContainer from "./game";
+import LobbyIndexContainer from "./lobbies/lobby_index_container";
+
+
 
 
 import '../app/assets/stylesheets/app.css';
@@ -17,6 +21,8 @@ const App = () => (
         <NavBarContainer />
 
         <Switch>
+            <ProtectedRoute path='/lobbies/:lobbyId/game' component={GameContainer} />
+            <ProtectedRoute exact path="/lobbies" component={LobbyIndexContainer} />
             <Route exact path="/" component={MainPageContainer} />
         </Switch>
     </div>

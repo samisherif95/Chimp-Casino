@@ -3,7 +3,12 @@ import { closeModal } from '../../actions/modal_actions';
 import { connect } from 'react-redux';
 import LoginFormContainer from '../session/login_form_container';
 import SignupFormContainer from '../session/signup_form_container';
+import LobbyFormContainer from "../lobbies/lobby_form_container";
+import LobbyIndexContainer from '../lobbies/lobby_index_container';
+import LeaveLobby from "../lobbies/leave_lobby";
+import LeaderBoard from "../users/leaderboard";
 import PokerContainer from '../poker/poker_container';
+// import LeaveLobby from "../lobbies/leave_lobby";
 
 const Modal = ({ modal, closeModal }) => {
     if (!modal) {
@@ -19,6 +24,14 @@ const Modal = ({ modal, closeModal }) => {
             break;
         case 'poker':
             component =<PokerContainer/>
+        case 'createLobby':
+            component = <LobbyFormContainer />;
+            break;
+        case 'leaveLobby':
+            component = <LeaveLobby />;
+            break;
+        case 'leaderboard':
+            component = <LeaderBoard />;
             break;
         default:
             return null;

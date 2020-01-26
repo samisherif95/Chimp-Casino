@@ -15,6 +15,9 @@ const UserSchema = new Schema({
     type: Number,
     default: 1000
   },
+  lobbyId: {
+    type: Number
+  },
   date: {
     type: Date,
     default: Date.now
