@@ -9,7 +9,7 @@ class MainPage extends React.Component {
 
     handleClick(){
         if(this.props.loggedIn){
-            this.props.history.push('/game');
+            this.props.history.push('/lobbies');
         }else{
             this.props.openLogIn();
         }

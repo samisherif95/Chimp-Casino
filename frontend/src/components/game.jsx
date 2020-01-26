@@ -151,15 +151,6 @@ class GameContainer extends React.Component {
                     // create other players 
                     this.otherPlayers = this.physics.add.group();
 
-                    // this.createOtherPlayer = playerInfo => {
-                    //     const otherPlayer = this.add.sprite(playerInfo.x, playerInfo.y, 'monkey2', 9)
-                    //         .setInteractive({ useHandCursor: true })
-                    //         .on('pointerdown', () => game.props.openModal('createLobby'))
-                    //     otherPlayer.setTint(Math.random() * 0xffffff);
-                    //     otherPlayer.playerId = playerInfo.playerId;
-                    //     this.otherPlayers.add(otherPlayer);
-                    // }
-
                     this.createOtherPlayer = playerInfo => {
                         const otherPlayerContainer = this.add.container(playerInfo.x, playerInfo.y)
                         const otherPlayer = this.add.sprite(20, 35, 'monkey2', 56)
@@ -174,20 +165,29 @@ class GameContainer extends React.Component {
                     }
 
                     // move other players
-
-            
                     this.moveOtherPlayer = playerInfo => {
                         this.otherPlayers.getChildren().forEach(player => {
                             if (playerInfo.playerId === player.playerId) {
-                                debugger
                                 player.setPosition(playerInfo.x, playerInfo.y);
                             }
                         })
                     }
+
+                    // destroy player on disconnect
+                    this.destroyPlayer = playerId => {
+                        this.otherPlayers.getChildren().forEach(player => {
+                            if (playerId === player.playerId) {
+                              player.destroy();
+                            }
+                        })
+                    }
                     
+
+                    // bind functions
                     game.moveOtherPlayer = this.moveOtherPlayer.bind(this);
                     game.createOtherPlayer = this.createOtherPlayer.bind(this);
                     game.createPlayer = this.createPlayer.bind(this);
+                    game.destroyPlayer = this.destroyPlayer.bind(this);
 
 
                     // audio
@@ -202,32 +202,6 @@ class GameContainer extends React.Component {
                         delay: 0
                     }
                     this.music.play()
-
-
-                    
-                    //player
-                    // this.container = this.add.container(200, 250)
-                        
-                    // this.physics.world.enable(this.container);
-                    // this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
-                    //     .setInteractive({ useHandCursor: true })
-                    //     .on('pointerdown', () => {
-                    //         if (this.music.isPlaying) {
-                    //             this.music.pause();
-                    //         } else {
-                    //             this.music.resume();
-                    //         }
-                             
-                    //     })
-                    //     // .on('pointerdown', () => game.props.openModal('createLobby'))
-                        
-
-                    // this.text = this.add.text(0, 0, game.props.currentUser.username);
-                    // this.text.font = "Arial"
-                    // this.container.add(this.player)
-                    // this.container.add(this.text)
-                        
-                    // this.container.body.setCollideWorldBounds(true);
 
 
                     //sound button
@@ -269,16 +243,6 @@ class GameContainer extends React.Component {
 
 
                     this.cursors = this.input.keyboard.createCursorKeys()
-                    
-
-
-                    // game.socket.on('disconnect', function (playerId) {
-                    //     this.otherPlayers.getChildren().forEach(function (player) {
-                    //         if (playerId === player.playerId) {
-                    //             player.destroy();
-                    //         }
-                    //     }.bind(this));
-                    // }.bind(this));
                 },
                 update: function() {
                     if (this.container) {
@@ -359,6 +323,10 @@ class GameContainer extends React.Component {
 
         this.socket.on("playerMoved", (player) => {
             this.moveOtherPlayer(player);
+        })
+
+        this.socket.on("removePlayer", player => {
+            this.destroyPlayer(player)
         })
         // console.log(this.config.scene)
 

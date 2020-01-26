@@ -7,6 +7,7 @@ const socket = require('socket.io')
 
 //File Imports
 const User = require("./models/User");
+const Lobby = require("./models/Lobby");
 const users = require("./routes/api/users");
 const chatrooms = require("./routes/api/chatrooms");
 const lobbies = require("./routes/api/lobbies");
@@ -82,9 +83,6 @@ lobbyServer.on("connection", (socket) => {
 
   socket.on("joinLobby", (lobbyId, username) => {
     socket.join(lobbyId)
-    console.log(username);
-    // console.log("lobbyId", lobbyId)
-    // console.log("lobbyserver", lobbyServer.sockets.adapter.sids[socket.id])
     if (lobbiesCollection[lobbyId]) {
       lobbiesCollection[lobbyId].players[socket.id] = {
         x: 200,
@@ -96,7 +94,8 @@ lobbyServer.on("connection", (socket) => {
       lobbiesCollection[lobbyId] = {
         poker: {},
         blackjack: {},
-        players: {}
+        players: {},
+        id: lobbyId
       }
       lobbiesCollection[lobbyId].players[socket.id] = {
         x: 200,
@@ -105,8 +104,8 @@ lobbyServer.on("connection", (socket) => {
         username
       }
     }
-    socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id])
-    socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players)
+    socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id]);
+    socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players);
   });
 
   socket.on('playerMovement', (position, lobbyId) => {
@@ -116,10 +115,18 @@ lobbyServer.on("connection", (socket) => {
     socket.to(lobbyId).emit("playerMoved", movedPlayer)
   })
 
-  // socket.on("disconnect", () => {
-  //   const lobbyRoom = Object.keys(lobbyServer.sockets.adapter.sids[socket.id]);
-  //   delete lobbiesCollection[lobbyRoom].players[socket.id]
-  // })
+  socket.on("disconnect", () => {
+    Object.values(lobbiesCollection).forEach(lobby => {
+      if (lobby.players.hasOwnProperty(socket.id)) {
+        delete lobby.players[socket.id]
+        socket.to(lobby.id).emit('removePlayer', socket.id)
+        if (!Object.values(lobby.players).length) {
+          delete lobbiesCollection[lobby.id]
+          Lobby.findByIdAndRemove(lobby.id)
+        }
+      }
+    })
+  })
 })
 
 
