@@ -1,47 +1,100 @@
- import React from 'react';
+import React from 'react';
 const io = require('socket.io-client');
-
-
 
 class Chat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            message: '',
             messages: []
         }
         this.socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:8000');
-        this.handleTest = this.handleTest.bind(this)
+        this.handleSubmit  = this.handleSubmit.bind(this)
     }
 
     componentDidMount(){ 
         this.socket.on("receiveMessage", (data) => {
-        this.state.messages.push(data)
-            this.setState(this.state)
-        })
+            this.state.messages.push(data)
+                this.setState(this.state)
+            }
+        )
         
     }
 
-    handleTest(){
-        this.socket.emit("chat", "kfjsdahfjklsdahklfjshakfhweohdcknc")
+    componentDidUpdate(prevProps, prevState){
+        this.updateScroll();
+    }
+    
+    updateScroll() {
+        var element = document.getElementById("chat-text");
+        element.scrollTop = element.scrollHeight;
+    }
+    handleChange(field){
+        return e => this.setState({
+            [field]: e.currentTarget.value
+        });
+    }
+
+    handleSubmit(){
+        this.socket.emit("chat", {
+            user: this.props.currentUser.username,
+            message: this.state.message
+        })
+
+        this.setState({
+            message:''
+        })
     }
 
     render() {
-        console.log(this.props.currentUser.username)
-        console.log(this.state.messages)
+        let messages = this.state.messages
         return (
-            <div className='chat-container'>
-                <div className='chat-box'>
-                    
-                </div>
-
-
-
-                {/* <button onClick={this.handleTest}>Click me</button>
-                <ul>
+            <div className="chat-panel">
+                <div className='chat-text' id='chat-text'>
+                    <ul className='chat-content'>
                     {
-                        this.state.messages.map( (message, idx) => <li key={idx} >{message}</li> )
+                        messages.map( (message,idx) => {
+                            let selectClass = (message.user === this.props.currentUser.username) ? 'me' : 'him';
+
+                            
+                            
+                            if(idx === 0 || message.user !== messages[idx-1].user){
+                                return (   
+                                    <div key={idx} className={`message-content`}>
+                                        <span className={`message-data-name-${selectClass}`} >              {message.user.toUpperCase()}
+                                        </span> 
+                                        <li className={selectClass}>
+                                            {message.message}
+                                        </li>
+                                    </div>
+                                )
+                            } else {
+                                return (
+                                    <div key={idx} className={`message-content`}>
+                                        <li className={selectClass}>
+                                            {message.message}
+                                        </li>
+                                    </div>
+                                )
+                            }
+
+                        })
                     }
-                </ul> */}
+                    </ul>
+                </div>
+                <div className='chat-form'>
+                    <form onSubmit={this.handleSubmit}>
+                        <textarea 
+                            name="message-to-send"
+                            value={this.state.message}
+                            onChange={this.handleChange('message')}
+                            id="message-to-send"
+                            placeholder="Type your message"
+                            rows="3"
+                        />
+                        <button>Send</button>
+                    </form>
+                </div>
             </div>
         )
     }
