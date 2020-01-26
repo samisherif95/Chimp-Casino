@@ -26,8 +26,6 @@ class Chat extends React.Component {
     }
 
     render() {
-        console.log(this.props.currentUser.username)
-        console.log(this.state.messages)
         return (
             <div className='chat-container'>
                 <div className='chat-box'>
