@@ -21,6 +21,7 @@ import blackjackCol from "../app/assets/images/blackjack-col.png"
 import slotsCol from "../app/assets/images/slots-col.png"
 import logoSvg from "../app/assets/images/logo-svg.png";
 import islandDreams from "../app/assets/audio/island-dreams.mp3"
+import ChatContainer from './chat/chat_container';
 const io = require('socket.io-client');
 
 
@@ -350,6 +351,7 @@ class GameContainer extends React.Component {
             // </div>
             <div className="game-container">
                 <IonPhaser game={this.config} />
+                <ChatContainer />
             </div>
         )
     }
