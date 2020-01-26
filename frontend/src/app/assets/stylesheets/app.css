@@ -59,7 +59,7 @@ body{
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover;
-    min-height: 94vh;
+    height: 100vh;
 }
 
 .navbar{
@@ -435,4 +435,143 @@ h2 {
 
 .bronze {
     color: #cd7f32;
+}
+
+.chat-panel{
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    position: relative;
+    width: 30%;
+    max-width: 300px;
+    height: 768px;
+    margin-left: 10px;
+    border-radius: 10px;
+    background-color: rgb(0, 0, 0, 0.4);
+    margin-left: 30px;
+}
+
+.chat-text{
+    height: 65vh;
+    border-bottom: 1px solid #ccc;
+    overflow-y: scroll;
+}
+
+.chat-content{
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat-content li{
+  display:inline-block;
+  clear: both;
+  padding: 15px;
+  border-radius: 30px;
+  margin-bottom: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+  word-wrap: break-word;
+  max-width: 80%;
+  
+}
+
+.message-content{
+    max-width: 100%;
+    overflow: auto;
+}
+
+.message-data-name-him{
+    float: left;
+    font-size: 10px;
+    color: #ccc;
+}
+
+.message-data-name-me{
+    float: right;
+    font-size: 12px;
+    color: #ccc;
+}
+
+
+.him{
+    background: rgb(204, 197, 197);
+    float: left;
+}
+
+.me{
+    float: right;
+    background: #0084ff;
+    color: #fff;
+}
+
+.him + .me{
+  border-bottom-right-radius: 5px;
+}
+
+.me + .me{
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.me:last-of-type {
+  border-bottom-right-radius: 30px;
+}
+
+.chat-form{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    min-height: 10vh;
+    padding-bottom: 10px;
+}
+
+.chat-form form{
+    width: 90%;
+    margin: 0 auto;
+    transform: translateY(5%);
+}
+
+.chat-panel form textarea{
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    padding: 10px 20px;
+    font: 14px/22px "Lato", Arial, sans-serif;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    resize: none;
+}
+
+.chat-panel form button {
+    float: right;
+    color: #94C2ED;
+    font-size: 16px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: none;
+}
+
+.chat-panel form button:hover{
+    color: darken(#94C2ED, 10%);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 50%;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgb(0,0,0,0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #fcd600;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
 }
