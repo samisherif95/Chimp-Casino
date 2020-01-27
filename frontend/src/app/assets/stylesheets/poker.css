@@ -32,7 +32,7 @@
     position: absolute;
     width: 100px;
     border-radius: 7px;
-    transform: translateX(120px);
+    transform: translate(20px, -500px);
 }
 
 .CardsButtons img{
@@ -61,6 +61,7 @@
 }
 .test{
     display: flex;
+    justify-content: space-around;
     padding-top: 15px;
     padding-bottom: 15px;
 }
@@ -83,6 +84,16 @@
     display: flex;
     justify-content: space-evenly;
 }
+
+.pot {
+    position: absolute;
+    top: 30%;
+    left: 45%;
+    font-family: sans-serif;
+    font-size: 1.5em;
+    color: gold;
+}
+
 .disabled{
     opacity: 0.6;
     cursor: not-allowed;
@@ -91,7 +102,6 @@
 
 .CCpoker{
     list-style: none;
-    transform: translateX(74px);
 }
 
 .deck{
