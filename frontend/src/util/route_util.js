@@ -12,18 +12,20 @@ const Auth = ({ component: Component, path, loggedIn, exact }) => (
     )} />
 );
 
-const Protected = ({ component: Component, loggedIn, ...rest }) => (
+const Protected = ({ component: Component, loggedIn, socket, ...rest }) => {
+    return (
     <Route
         {...rest}
         render={props =>
             loggedIn ? (
-                <Component {...props} />
+                <Component socket={socket} {...props} />
             ) : (
                 <Redirect to="/" />
                 )
         }
     />
-);
+    );
+}
 
 const mapStateToProps = state => (
     { loggedIn: state.session.isAuthenticated }
