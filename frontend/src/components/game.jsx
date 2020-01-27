@@ -34,32 +34,11 @@ class GameContainer extends React.Component {
         this.socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:7000');
         this.lobbyId = this.props.match.params.lobbyId;
         const game = this;
-        // const phaserGameDiv = document.getElementById("phaser-game")
-
-
-        // this.createPlayer = (playerInfo) => {
-        //     this.container = this.add.container(200, 250)
-        //     this.physics.world.enable(this.container);
-    
-        //     this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
-        //         .setInteractive()
-        //         .on('pointerdown', () => this.props.openModal('createLobby'))
-           
-        //     this.player.setCollideWorldbounds(true);
-        //     this.text = this.add.text(0, 0, 'evans');
-        //     this.text.font = "Arial"
-        //     this.container.add(this.player)
-        //     this.container.add(this.text)
-    
-        //     this.container.body.setCollideWorldBounds(true);
-        // }
-
 
         this.config = {
             width: 1024,
             height: 768,
-            type: Phaser.AUTO,    
-            // type: Phaser.AUTO,    
+            type: Phaser.AUTO,        
             physics: {
                 default: 'arcade',
             },
@@ -67,7 +46,6 @@ class GameContainer extends React.Component {
                 preload: function() {
                     this.load.image('casino-wall', casinoWall)
                     this.load.spritesheet('monkey2', monkeys, {frameWidth: 80, frameHeight: 80})
-                    // this.load.spritesheet('monkey2', monkeys, 80, 80)
                     this.load.image('carpet', carpet)
                     this.load.image('blackjack', blackjack)
                     this.load.image('poker', poker)
@@ -92,13 +70,11 @@ class GameContainer extends React.Component {
                     this.add.sprite(615, 60, 'slots').setOrigin(0, 0)
                     this.add.sprite(315, 20, 'wood-plank').setOrigin(0, 0)
                     this.add.sprite(750, 0, 'millionaire').setOrigin(0, 0)
-                    // this.add.sprite(5, 83, 'statue').setOrigin(0, 0)
                     this.add.sprite(490, 60, 'jukebox').setOrigin(0, 0)
         
                     this.furnitures = this.physics.add.staticGroup()
                     this.furnitures.create(0, 0, 'casino-wall').setOrigin(0, 0)
                     this.furnitures.create(315, 30, 'wood-plank').setOrigin(0, 0)
-                    // this.furnitures.create(315, 80, 'bulletin-board').setOrigin(0, 0)
                     this.furnitures.create(750, 0, 'millionaire').setOrigin(0, 0)
                     this.furnitures.create(60, 140, 'statue')
                     this.furnitures.create(490, 60, 'jukebox').setOrigin(0, 0)
@@ -117,12 +93,10 @@ class GameContainer extends React.Component {
                     
                     this.add.sprite(580, 470, 'blackjack').setOrigin(0, 0)
                     this.add.sprite(80, 400, 'poker').setOrigin(0, 0)
-                    // this.add.sprite(100, 0, 'casino-door').setOrigin(0, 0)
                     this.add.sprite(615, 60, 'slots').setOrigin(0, 0)
 
                     this.bulletinBoard = this.physics.add.staticGroup();
                     this.bulletinBoard.create(315, 90, 'bulletin-board').setOrigin(0, 0)
-                    // this.add.sprite(315, 80, 'bulletin-board').setOrigin(0, 0)
 
                     // player creation
                     this.createPlayer = playerName => {
@@ -131,7 +105,6 @@ class GameContainer extends React.Component {
                 
                         this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
                             .setInteractive({ useHandCursor: true })
-                            // .on('pointerdown', () => game.props.openModal('createLobby'))
                             .on('pointerdown', () => {
                                 if (this.music.isPlaying) {
                                     this.music.pause();
@@ -204,10 +177,6 @@ class GameContainer extends React.Component {
                     }
                     this.music.play()
 
-
-                    //sound button
-                    // this.soundOn = this.add.sprite(50, 50, 'sound-on')
-
                     //balance
                     this.balance =this.add.sprite(50, 720, 'logo-svg')
                     this.balance.setScale(0.25)
@@ -258,22 +227,18 @@ class GameContainer extends React.Component {
                         this.physics.add.collider(this.container, this.bulletinBoard, () => game.props.openModal("leaderboard"))
                                     
                         if (this.cursors.left.isDown && !game.props.modal) {
-                            // this.player.body.velocity.x = -150
                             this.container.body.setVelocityX(-150)
     
                             this.player.anims.play('left', true)
                         } else if (this.cursors.right.isDown && !game.props.modal) {
-                            // this.player.body.velocity.x = 150
                             this.container.body.setVelocityX(150)
                         
                             this.player.anims.play('right', true)
                         } else if (this.cursors.up.isDown && !game.props.modal) {
-                            // this.player.body.velocity.y = -150
                             this.container.body.setVelocityY(-150)
                         
                             this.player.anims.play('up', true)
                         } else if (this.cursors.down.isDown && !game.props.modal) {
-                            // this.player.body.velocity.y = 150
                             this.container.body.setVelocityY(150)
                         
                             this.player.anims.play('down', true)
@@ -329,26 +294,11 @@ class GameContainer extends React.Component {
         this.socket.on("removePlayer", player => {
             this.destroyPlayer(player)
         })
-        // console.log(this.config.scene)
-
-        // this.socket.on("playerMoved", movedPlayer => {
-        //     console.log(movedPlayer)
-        // })
 
     }
 
-    // componentDidUpdate(prevProps) {
-    //     if (this.props.match.params.lobbyId !== prevProps.props.match.params.lobbyId) {
-
-    //     }
-    // }
-
-
     render() {
         return (
-            // <div id="phaser-game">
-
-            // </div>
             <div className="game-container">
                 <IonPhaser game={this.config} />
                 <ChatContainer />
