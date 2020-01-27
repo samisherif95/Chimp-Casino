@@ -1,7 +1,8 @@
 import React from 'react'
 import * as GameLogic from '../../blackjack/blackjack';
 import './blackjack.css';
-import Player from './player';
+import blackjackTable from '../../app/assets/images/blackjackTable.png';
+import imageHash from "./blackjackImages";
 
 // Remember to change the start playing onClick back over to the login screen //
 
@@ -328,32 +329,27 @@ class Blackjack extends React.Component {
                     )
         
         return (
-            <div className="blackjack-table">
-                <h1>{blackjack.currentPhase}</h1>
-                <div>
-                    <ul className="dealer-info">
-                        {
-                            dealer.hand.map(card => {
-                                return (
-                                    <li key={card}>
-                                        {card}
-                                    </li>
-                                )
-                            })
-                        }
-                    </ul>
-                </div>
-
-                <div className="players-info">
-                    <ul>{ingamePlayers ? ingamePlayers : null}</ul>
-                </div>
-
-                <div className="player-bet">
-                    Bet Amount: {players.length === 0 ? 'None' : players[0].pool}
-                </div>
-
-                {render}
+          <div className="blackjack-table">
+            <img id="blackjack-table-png" src={blackjackTable} alt="blackjack table" />
+            <h1>{blackjack.currentPhase}</h1>
+            <div>
+              <ul className="dealer-info">
+                {dealer.hand.map(card => {
+                  return <li key={card}>{card}</li>;
+                })}
+              </ul>
             </div>
+
+            <div className="players-info">
+              <ul>{ingamePlayers ? ingamePlayers : null}</ul>
+            </div>
+
+            <div className="player-bet">
+              Bet Amount: {players.length === 0 ? "None" : players[0].pool}
+            </div>
+
+            {render}
+          </div>
         );
     }
 }
