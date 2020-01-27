@@ -53,12 +53,6 @@ const lobbySocket = app.listen(lobbyPort, function () {
 
 const lobbyServer = socket(lobbySocket)
 
-lobbyServer.configure(function () {
-    lobbyServer.set("transports", ["xhr-polling"]);
-    lobbyServer.set("polling duration", 10);
-});
-
-
 //Lobby Server
 const lobbiesCollection = {};
 
