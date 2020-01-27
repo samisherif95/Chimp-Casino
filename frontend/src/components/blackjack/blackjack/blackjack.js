@@ -1,4 +1,3 @@
-var sleep = require('sleep');
 
 export class Blackjack {
     // Integerate "Insurance later?"
