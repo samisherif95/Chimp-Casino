@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Chat extends React.Component {
+class GameChat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -50,9 +50,9 @@ class Chat extends React.Component {
     render() {
         let messages = this.state.messages
         return (
-            <div className="chat-panel">
-                <div className='chat-text' id='chat-text'>
-                    <ul className='chat-content'>
+            <div className="game-chat-panel">
+                <div className='game-chat-text' id='game-chat-text'>
+                    <ul className='game-chat-content'>
                     {
                         messages.map( (message,idx) => {
                             let selectClass = (message.user === this.props.currentUser.username) ? 'me' : 'him';
@@ -81,15 +81,14 @@ class Chat extends React.Component {
                     }
                     </ul>
                 </div>
-                <div className='chat-form'>
+                <div className='game-chat-form'>
                     <form onSubmit={this.handleSubmit}>
-                        <textarea 
+                        <input type="text"
                             name="message-to-send"
                             value={this.state.message}
                             onChange={this.handleChange('message')}
                             id="message-to-send"
                             placeholder="Type your message"
-                            rows="3"
                         />
                         <button>Send</button>
                     </form>
@@ -100,5 +99,5 @@ class Chat extends React.Component {
 
 }
 
-export default Chat
+export default GameChat
 
