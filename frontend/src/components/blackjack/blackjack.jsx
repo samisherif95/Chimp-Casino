@@ -25,10 +25,6 @@ class Blackjack extends React.Component {
         this.handleStand = this.handleStand.bind(this);
         this.handleSplit = this.handleSplit.bind(this);
         this.handleDouble = this.handleDouble.bind(this);
-
-        window.state = this.state;
-        window.addPlayer = this.addPlayer;
-        window.dealCards = this.dealCards;
     }
 
     //Get current player id. Goes into game, gets zeroth index 
@@ -186,6 +182,11 @@ class Blackjack extends React.Component {
 
     checkDealerStood() {
         return this.state.blackjack.checkDealerStood();
+    }
+
+    componentDidMount() {
+        // this.socket.emit('joinBlackjackGame', this.props.currentUser.username, this.props.currentUser.balance)
+        this.addPlayer(this.props.currentUser.username, 1000)
     }
 
     render() {
