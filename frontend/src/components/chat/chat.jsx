@@ -57,12 +57,8 @@ class Chat extends React.Component {
                             let selectClass = (message.user === this.props.currentUser.username) ? 'me' : 'him';
                             if(idx === 0 || message.user !== messages[idx-1].user){
                                 return (   
-                                    <div key={idx} className={`message-content`}>
-<<<<<<< HEAD
-                                        <span className={`message-data-name-${selectClass}`} >              
-=======
+                                    <div key={idx} className={`message-content`}>          
                                         <span className={`message-data-name-${selectClass}`} > 
->>>>>>> 7bcb4a402f79c87d5b25024eed92afb7f47f9b92
                                             {message.user.toUpperCase()}
                                         </span> 
                                         <li className={selectClass}>
