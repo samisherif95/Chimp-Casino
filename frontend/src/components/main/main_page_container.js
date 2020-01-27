@@ -10,6 +10,7 @@ const mSTP = state => ({
 const mDTP = dispatch => ({
     openLogIn: () => dispatch(openModal('login')),
     closeModal: () => dispatch(closeModal()),
+    openBlackjack: () => dispatch(openModal('blackjack')),
     openPoker: () =>dispatch(openModal('poker'))
 })
 

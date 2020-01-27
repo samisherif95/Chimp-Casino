@@ -22,7 +22,6 @@ import slotsCol from "../app/assets/images/slots-col.png"
 import logoSvg from "../app/assets/images/logo-svg.png";
 import islandDreams from "../app/assets/audio/island-dreams.mp3"
 import ChatContainer from './chat/chat_container';
-const io = require('socket.io-client');
 
 
 
@@ -31,15 +30,17 @@ const io = require('socket.io-client');
 class GameContainer extends React.Component {
     constructor(props) {
         super(props);
-        this.socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:7000');
         this.lobbyId = this.props.match.params.lobbyId;
+        this.socket = this.props.socket
+
+        this.socket.emit("joinLobby", this.lobbyId, this.props.currentUser.username);
+
         const game = this;
 
         this.config = {
             width: 1024,
             height: 768,
-            type: Phaser.AUTO,    
-            // type: Phaser.AUTO,    
+            type: Phaser.AUTO,        
             physics: {
                 default: 'arcade',
             },
@@ -47,7 +48,6 @@ class GameContainer extends React.Component {
                 preload: function() {
                     this.load.image('casino-wall', casinoWall)
                     this.load.spritesheet('monkey2', monkeys, {frameWidth: 80, frameHeight: 80})
-                    // this.load.spritesheet('monkey2', monkeys, 80, 80)
                     this.load.image('carpet', carpet)
                     this.load.image('blackjack', blackjack)
                     this.load.image('poker', poker)
@@ -72,13 +72,20 @@ class GameContainer extends React.Component {
                     this.add.sprite(615, 60, 'slots').setOrigin(0, 0)
                     this.add.sprite(315, 20, 'wood-plank').setOrigin(0, 0)
                     this.add.sprite(750, 0, 'millionaire').setOrigin(0, 0)
-                    // this.add.sprite(5, 83, 'statue').setOrigin(0, 0)
                     this.add.sprite(490, 60, 'jukebox').setOrigin(0, 0)
+                        .setInteractive({ useHandCursor: true })
+                        .on('pointerdown', () => {
+                            if (this.music.isPlaying) {
+                                this.music.pause();
+                            } else {
+                                this.music.resume();
+                            }
+
+                        })
         
                     this.furnitures = this.physics.add.staticGroup()
                     this.furnitures.create(0, 0, 'casino-wall').setOrigin(0, 0)
                     this.furnitures.create(315, 30, 'wood-plank').setOrigin(0, 0)
-                    // this.furnitures.create(315, 80, 'bulletin-board').setOrigin(0, 0)
                     this.furnitures.create(750, 0, 'millionaire').setOrigin(0, 0)
                     this.furnitures.create(60, 140, 'statue')
                     this.furnitures.create(490, 60, 'jukebox').setOrigin(0, 0)
@@ -97,12 +104,11 @@ class GameContainer extends React.Component {
                     
                     this.add.sprite(580, 470, 'blackjack').setOrigin(0, 0)
                     this.add.sprite(80, 400, 'poker').setOrigin(0, 0)
-                    // this.add.sprite(100, 0, 'casino-door').setOrigin(0, 0)
                     this.add.sprite(615, 60, 'slots').setOrigin(0, 0)
 
                     this.bulletinBoard = this.physics.add.staticGroup();
                     this.bulletinBoard.create(315, 90, 'bulletin-board').setOrigin(0, 0)
-                    // this.add.sprite(315, 80, 'bulletin-board').setOrigin(0, 0)
+
 
                     // player creation
                     this.createPlayer = playerName => {
@@ -110,16 +116,15 @@ class GameContainer extends React.Component {
                         this.physics.world.enable(this.container);
                 
                         this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
-                            .setInteractive({ useHandCursor: true })
-                            // .on('pointerdown', () => game.props.openModal('createLobby'))
-                            .on('pointerdown', () => {
-                                if (this.music.isPlaying) {
-                                    this.music.pause();
-                                } else {
-                                    this.music.resume();
-                                }
+                            // .setInteractive({ useHandCursor: true })
+                            // .on('pointerdown', () => {
+                            //     if (this.music.isPlaying) {
+                            //         this.music.pause();
+                            //     } else {
+                            //         this.music.resume();
+                            //     }
                                     
-                            })
+                            // })
                         
                         this.text = this.add.text(0, 0, playerName);
                         this.text.font = "Arial"
@@ -162,6 +167,18 @@ class GameContainer extends React.Component {
                             }
                         })
                     }
+
+                    this.disableKeys = () => {
+                        console.log("disabled")
+                        this.input.keyboard.enabled = false;
+                        this.input.enabled = false;
+                    }
+
+                    this.enableKeys = () => {
+                        console.log("enabled")
+                        this.input.keyboard.enabled = true;
+                        this.input.enabled = true;
+                    }
                     
 
                     // bind functions
@@ -169,6 +186,8 @@ class GameContainer extends React.Component {
                     game.createOtherPlayer = this.createOtherPlayer.bind(this);
                     game.createPlayer = this.createPlayer.bind(this);
                     game.destroyPlayer = this.destroyPlayer.bind(this);
+                    game.disableKeys = this.disableKeys.bind(this);
+                    game.enableKeys = this.enableKeys.bind(this);
 
 
                     // audio
@@ -183,10 +202,6 @@ class GameContainer extends React.Component {
                         delay: 0
                     }
                     this.music.play()
-
-
-                    //sound button
-                    // this.soundOn = this.add.sprite(50, 50, 'sound-on')
 
                     //balance
                     this.balance =this.add.sprite(50, 720, 'logo-svg')
@@ -224,6 +239,8 @@ class GameContainer extends React.Component {
 
 
                     this.cursors = this.input.keyboard.createCursorKeys()
+                    
+                    this.input.keyboard.clearCaptures();
                 },
                 update: function() {
                     if (this.container) {
@@ -232,28 +249,24 @@ class GameContainer extends React.Component {
 
                         this.physics.add.collider(this.container, this.furnitures)
                         this.physics.add.collider(this.container, this.pokerTable, () => game.props.openModal("poker"))
-                        this.physics.add.collider(this.container, this.blackjackTable, () => game.props.openModal("poker"));
+                        this.physics.add.collider(this.container, this.blackjackTable, () => game.props.openModal("blackjack"));
                         this.physics.add.collider(this.container, this.slotsTable, () => game.props.openModal("poker"))
                         this.physics.add.collider(this.container, this.casinoDoor, () => game.props.openModal("leaveLobby"))
                         this.physics.add.collider(this.container, this.bulletinBoard, () => game.props.openModal("leaderboard"))
                                     
                         if (this.cursors.left.isDown && !game.props.modal) {
-                            // this.player.body.velocity.x = -150
                             this.container.body.setVelocityX(-150)
     
                             this.player.anims.play('left', true)
                         } else if (this.cursors.right.isDown && !game.props.modal) {
-                            // this.player.body.velocity.x = 150
                             this.container.body.setVelocityX(150)
                         
                             this.player.anims.play('right', true)
                         } else if (this.cursors.up.isDown && !game.props.modal) {
-                            // this.player.body.velocity.y = -150
                             this.container.body.setVelocityY(-150)
                         
                             this.player.anims.play('up', true)
                         } else if (this.cursors.down.isDown && !game.props.modal) {
-                            // this.player.body.velocity.y = 150
                             this.container.body.setVelocityY(150)
                         
                             this.player.anims.play('down', true)
@@ -265,15 +278,28 @@ class GameContainer extends React.Component {
                         const x = this.container.x;
                         const y = this.container.y;
                         if (this.container.oldPosition && (x !== this.container.oldPosition.x || y !== this.container.oldPosition.y)) {
-                            game.socket.emit('playerMovement', { x, y }, game.lobbyId );
+                            game.socket.emit('playerMovement', { x, y } );
                         }
                         // save old position data
                         this.container.oldPosition = {
                             x: this.container.x,
                             y: this.container.y,
                         };
-                    }   
+                    }
                 },
+                // render: function() {
+                    // console.log("here")
+                    // const chatDOM = document.getElementById("message-to-send")
+                    // const gameDOM = document.getElementById("game")
+            
+                    // gameDOM.addEventListener('click', () => {
+                    //     this.enableKeys();
+                    // })
+            
+                    // chatDOM.addEventListener('focus', () => {
+                    //     this.disableKeys();
+                    // })
+                // },
                 parent: "phaser-game"
             }
         }
@@ -284,10 +310,6 @@ class GameContainer extends React.Component {
 
 
     componentDidMount() {
-        this.socket.on("requestLobby", () => {
-            this.socket.emit("joinLobby", this.lobbyId, this.props.currentUser.username);
-        })
-
         this.socket.on("lobbyPlayers", (players) => {
             Object.values(players).forEach(player => {
                 if (player.playerId === this.socket.id) {
@@ -309,29 +331,14 @@ class GameContainer extends React.Component {
         this.socket.on("removePlayer", player => {
             this.destroyPlayer(player)
         })
-        // console.log(this.config.scene)
-
-        // this.socket.on("playerMoved", movedPlayer => {
-        //     console.log(movedPlayer)
-        // })
 
     }
 
-    // componentDidUpdate(prevProps) {
-    //     if (this.props.match.params.lobbyId !== prevProps.props.match.params.lobbyId) {
-
-    //     }
-    // }
-
-
     render() {
         return (
-            // <div id="phaser-game">
-
-            // </div>
             <div className="game-container">
-                <IonPhaser game={this.config} />
-                <ChatContainer />
+                <IonPhaser game={this.config} id="game"/>
+                <ChatContainer socket={this.socket} />
             </div>
         )
     }

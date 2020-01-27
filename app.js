@@ -34,11 +34,9 @@ app.use("/api/lobbies", lobbies);
 
 
 //Websockets Setup
-const chatPort = 8000;
+
 const lobbyPort = 7000;
-const chatSocket = app.listen(chatPort, function () {
-  console.log("Listening at http://localhost: " + chatPort);
-});
+
 const lobbySocket = app.listen(lobbyPort, function () {
   console.log("Listening at http://localhost: " + lobbyPort);
 })
@@ -58,30 +56,27 @@ chatServer.on("connection", (socket) => {
   // });
 });
 
+const lobbyServer = socket(lobbySocket)
 
-// lobbiesCollection: {
-//   lobbyId: {
-//     poker: {
-      
-//     }
-//     blackjack: {
 
-//     }
-//     players: {
-//       socket-id: {
 
-//       }
-//     }
-//   }
-// }
 //Lobby Server
 const lobbiesCollection = {};
 
 lobbyServer.on("connection", (socket) => {
   console.log("made connection with socket " + socket.id);
-  socket.emit("requestLobby")
+  let localLobbyId
 
+  //chat 
+  socket.on("chat", (data) => {
+    lobbyServer.in(localLobbyId).emit("receiveMessage", data);
+  });
+
+
+  //lobbies
   socket.on("joinLobby", (lobbyId, username) => {
+    localLobbyId = lobbyId
+
     socket.join(lobbyId)
     if (lobbiesCollection[lobbyId]) {
       lobbiesCollection[lobbyId].players[socket.id] = {
@@ -92,8 +87,6 @@ lobbyServer.on("connection", (socket) => {
       }
     } else {
       lobbiesCollection[lobbyId] = {
-        poker: {},
-        blackjack: {},
         players: {},
         id: lobbyId
       }
@@ -108,25 +101,76 @@ lobbyServer.on("connection", (socket) => {
     socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players);
   });
 
-  socket.on('playerMovement', (position, lobbyId) => {
-    const movedPlayer = lobbiesCollection[lobbyId].players[socket.id];
+  socket.on('playerMovement', position => {
+    const movedPlayer = lobbiesCollection[localLobbyId].players[socket.id];
     movedPlayer.x = position.x;
     movedPlayer.y = position.y;
-    socket.to(lobbyId).emit("playerMoved", movedPlayer)
+    socket.to(localLobbyId).emit("playerMoved", movedPlayer)
   })
 
-  socket.on("disconnect", () => {
-    Object.values(lobbiesCollection).forEach(lobby => {
-      if (lobby.players.hasOwnProperty(socket.id)) {
-        delete lobby.players[socket.id]
-        socket.to(lobby.id).emit('removePlayer', socket.id)
-        if (!Object.values(lobby.players).length) {
-          delete lobbiesCollection[lobby.id]
-          Lobby.findByIdAndRemove(lobby.id)
-        }
-      }
-    })
+  socket.on("leaveLobby", () => {
+    socket.leave(localLobbyId)
+    delete lobbiesCollection[localLobbyId].players[socket.id]
+    localLobbyId = null;
   })
+
+  //games
+
+  // poker
+  socket.on("joinPokerGame", () => {
+    socket.join(localLobbyId + "poker")
+  })
+
+  socket.on("addPokerGamePlayer", username => {
+    lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username)
+  })
+
+  socket.on("playerCalled", username => {
+    lobbyServer.in(localLobbyId + "poker").emit("playerCalled", username)
+  })
+
+  socket.on("playerRaised", (username, amount) => {
+    lobbyServer.in(localLobbyId + "poker").emit("playerRaised", username, amount)
+  })
+
+  socket.on("playerChecked", username => {
+    lobbyServer.in(localLobbyId + "poker").emit("playerChecked", username)
+  })
+
+  socket.on("playerFolded", username => {
+    lobbyServer.in(localLobbyId + "poker").emit("playerFolded", username)
+  })
+
+  socket.on("playerWon", (amount, username) => {
+    lobbyServer.in(localLobbyId + "poker").emit("playerWon", username, amount)
+  })
+
+  // bj
+  socket.on("joinBlackjackGame", (username, balance) => {
+      console.log("JOINED")
+    console.log(username, balance)
+    socket.join(localLobbyId + "bj")
+    lobbyServer.in(localLobbyId + "bj").emit("newPlayer", username, balance)
+  })
+
+  socket.on("leavePokerGame", () => {
+    socket.leave(localLobbyId + "poker")
+  })
+
+  socket.on("leaveBlackjackGame", () => {
+    socket.leave(localLobbyId + "bj")
+  })
+
+
+  //disconect
+  socket.on("disconnect", () => {
+    console.log(localLobbyId)
+    if (localLobbyId) {
+      delete lobbiesCollection[localLobbyId].players[socket.id]
+      socket.to(localLobbyId).emit('removePlayer', socket.id)
+    }
+  })
+ 
 })
 
 

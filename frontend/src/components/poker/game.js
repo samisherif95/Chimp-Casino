@@ -119,11 +119,18 @@ class Game {
     }
 
 
-    dealCommunity(){
-        for(let i=0; i < 5 ;i++){
+    dealCommunityPhase1(){
+        for(let i=0; i < 3 ;i++){
             this.communityCards.push(this.deck.deal());
         }
+    }
 
+    dealCommunityPhase2(){
+        this.communityCards.push(this.deck.deal());
+    }
+
+    dealCommunityPhase3(){
+        this.communityCards.push(this.deck.deal());
         this.players.forEach(player =>{
             this.communityCards.forEach(card =>{
                 player.fullcardHand.push(card);
@@ -132,7 +139,7 @@ class Game {
             player.hand.forEach(card => {
               player.fullcardHand.push(card);
             });
-        })  
+        }) 
     }
 
     getWinner(){
@@ -150,23 +157,22 @@ class Game {
         })
         max.bananas+= this.pot
         this.pot = 0
-        this.turnStarted = false
+        // this.turnStarted = false
         return (max.handle)
     }
 
     resetNextBetRound(){
-        this.players.forEach(player =>{
+        this.currentPlayers.forEach(player =>{
             player.checked = false;
             player.betPlaced = false;
             player.called = false
-            player.folded = false
-            
-            
+            player.folded = false            
         })
     }
 
     exitGame(){
         this.exit = true
+        this.turnStarted = false
         return this.players.shift(0)
     }
 }

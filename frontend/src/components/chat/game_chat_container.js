@@ -1,13 +1,12 @@
 import  { connect } from 'react-redux';
 import { openModal } from '../../actions/modal_actions';
 
-import Chat from './chat';
+import GameChat from './game_chat';
 
 const mapStateToProps = state => ({
     currentUser: state.session.user
 });
 
-const mDTP = dispatch => ({
-})
 
-export default connect(mapStateToProps, mDTP)(Chat)
+
+export default connect(mapStateToProps)(GameChat)
