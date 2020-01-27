@@ -300,26 +300,6 @@ class GameContainer extends React.Component {
 
 
     componentDidMount() {
-        // const chatDOM = document.getElementById("message-to-send")
-        // const gameDOM = document.getElementById("game")
-
-        // setTimeout(() => {
-        //     gameDOM.addEventListener('click', () => {
-        //         this.enableKeys();
-        //     })
-        // }, 2000)
-
-        // setTimeout(() => {
-        //     chatDOM.addEventListener('focus', () => {
-        //         this.disableKeys();
-        //     })
-        // }, 2000)
-
-
-
-        // this.socket.on("requestLobby", () => {
-        // })
-
         this.socket.on("lobbyPlayers", (players) => {
             Object.values(players).forEach(player => {
                 if (player.playerId === this.socket.id) {
