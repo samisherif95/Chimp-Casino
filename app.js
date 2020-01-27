@@ -131,10 +131,6 @@ lobbyServer.on("connection", (socket) => {
 
 
 
-
-
-
-
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });

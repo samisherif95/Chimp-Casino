@@ -8,6 +8,7 @@ import LobbyIndexContainer from '../lobbies/lobby_index_container';
 import LeaveLobby from "../lobbies/leave_lobby";
 import LeaderBoard from "../users/leaderboard";
 import PokerContainer from '../poker/poker_container';
+import SlotContainer from '../slots/slots_container';
 // import LeaveLobby from "../lobbies/leave_lobby";
 
 const Modal = ({ modal, closeModal }) => {
@@ -33,6 +34,9 @@ const Modal = ({ modal, closeModal }) => {
             break;
         case 'leaderboard':
             component = <LeaderBoard />;
+            break;
+        case 'slots':
+            component = <SlotContainer />
             break;
         default:
             return null;
