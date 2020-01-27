@@ -49,14 +49,14 @@ const lobbySocket = app.listen(lobbyPort, function () {
   console.log("Listening at http://localhost: " + lobbyPort);
 })
 
-lobbySocket.configure(function () {
-    lobbySocket.set("transports", ["xhr-polling"]);
-    lobbySocket.set("polling duration", 10);
-});
+
 
 const lobbyServer = socket(lobbySocket)
 
-
+lobbyServer.configure(function () {
+    lobbyServer.set("transports", ["xhr-polling"]);
+    lobbyServer.set("polling duration", 10);
+});
 
 
 //Lobby Server
