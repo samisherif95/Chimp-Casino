@@ -11,9 +11,14 @@ import ChatContainer from "./chat/chat_container"
 import '../app/assets/stylesheets/app.css';
 
 
+<<<<<<< HEAD
 const io = require('socket.io-client');
 
 const socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:7000');
+=======
+import '../app/assets/stylesheets/app.css';
+
+>>>>>>> slots
 
 const App = () => (
     <div>

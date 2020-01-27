@@ -9,6 +9,7 @@ import LobbyIndexContainer from '../lobbies/lobby_index_container';
 import LeaveLobby from "../lobbies/leave_lobby";
 import LeaderBoard from "../users/leaderboard";
 import PokerContainer from '../poker/poker_container';
+import SlotContainer from '../slots/slots_container';
 // import LeaveLobby from "../lobbies/leave_lobby";
 
 const Modal = ({ modal, closeModal, socket }) => {
@@ -40,6 +41,8 @@ const Modal = ({ modal, closeModal, socket }) => {
             break;
         case 'blackjack':
             component = <BlackjackContainer socket={socket}/>;
+        case 'slots':
+            component = <SlotContainer />
             break;
         default:
             return null;
