@@ -139,10 +139,36 @@ lobbyServer.on("connection", (socket) => {
   // })
 
   //games
+
+  // poker
   socket.on("joinPokerGame", () => {
+    // console.log(localLobbyId + "poker")
     socket.join(localLobbyId + "poker")
   })
 
+  socket.on("addPokerGamePlayer", username => {
+    // console.log("HITTING HERE", username)
+    lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username)
+  })
+
+  socket.on("playerCalled", username => {
+    lobbyServer.in(localLobbyId + "poker").emit("playerCalled", username)
+  })
+
+  socket.on("playerRaised", (username, amount) => {
+    console.log(username, amount)
+    lobbyServer.in(localLobbyId + "poker").emit("playerRaised", username, amount)
+  })
+
+  socket.on("playerChecked", username => {
+    lobbyServer.in(localLobbyId + "poker").emit("playerChecked", username)
+  })
+
+  socket.on("playerFolded", username => {
+    lobbyServer.in(localLobbyId + "poker").emit("playerFolded", username)
+  })
+
+  // bj
   socket.on("joinBlackjackGame", () => {
     socket.join(localLobbyId + "bj")
   })
