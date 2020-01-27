@@ -131,8 +131,11 @@ lobbyServer.on("connection", (socket) => {
   })
 
   // bj
-  socket.on("joinBlackjackGame", () => {
+  socket.on("joinBlackjackGame", (username, balance) => {
+      console.log("JOINED")
+    console.log(username, balance)
     socket.join(localLobbyId + "bj")
+    lobbyServer.in(localLobbyId + "bj").emit("newPlayer", username, balance)
   })
 
   socket.on("leavePokerGame", () => {
