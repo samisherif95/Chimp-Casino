@@ -18,6 +18,7 @@ class NavBar extends React.Component {
         if (this.props.loggedIn) {
             return (
                 <ul className='nav'>
+                    <li><button className='btn btn-logout' onClick={() => this.props.openModal('createLobby')}>New Lobby</button></li>
                     <li><button className='btn btn-logout' onClick={this.logoutUser}>Logout</button></li>
                 </ul>
             );
