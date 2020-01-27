@@ -119,11 +119,18 @@ class Game {
     }
 
 
-    dealCommunity(){
+    dealCommunityPhase1(){
         for(let i=0; i < 3 ;i++){
             this.communityCards.push(this.deck.deal());
         }
+    }
 
+    dealCommunityPhase2(){
+        this.communityCards.push(this.deck.deal());
+    }
+
+    dealCommunityPhase3(){
+        this.communityCards.push(this.deck.deal());
         this.players.forEach(player =>{
             this.communityCards.forEach(card =>{
                 player.fullcardHand.push(card);
@@ -132,7 +139,7 @@ class Game {
             player.hand.forEach(card => {
               player.fullcardHand.push(card);
             });
-        })  
+        }) 
     }
 
     getWinner(){
