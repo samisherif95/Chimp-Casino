@@ -1,5 +1,5 @@
 import React from 'react'
-import * as GameLogic from '../../blackjack/blackjack';
+import * as GameLogic from './blackjack/blackjack';
 import './blackjack.css';
 import blackjackTable from '../../app/assets/images/blackjackTable.png';
 import imageHash from "./blackjackImages";

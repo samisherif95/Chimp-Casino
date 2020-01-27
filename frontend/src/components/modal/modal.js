@@ -38,6 +38,9 @@ const Modal = ({ modal, closeModal, socket }) => {
         case 'leaderboard':
             component = <LeaderBoard />;
             break;
+        case 'blackjack':
+            component = <BlackjackContainer socket={socket}/>;
+            break;
         default:
             return null;
     }

@@ -73,6 +73,15 @@ class GameContainer extends React.Component {
                     this.add.sprite(315, 20, 'wood-plank').setOrigin(0, 0)
                     this.add.sprite(750, 0, 'millionaire').setOrigin(0, 0)
                     this.add.sprite(490, 60, 'jukebox').setOrigin(0, 0)
+                        .setInteractive({ useHandCursor: true })
+                        .on('pointerdown', () => {
+                            if (this.music.isPlaying) {
+                                this.music.pause();
+                            } else {
+                                this.music.resume();
+                            }
+
+                        })
         
                     this.furnitures = this.physics.add.staticGroup()
                     this.furnitures.create(0, 0, 'casino-wall').setOrigin(0, 0)
@@ -100,21 +109,22 @@ class GameContainer extends React.Component {
                     this.bulletinBoard = this.physics.add.staticGroup();
                     this.bulletinBoard.create(315, 90, 'bulletin-board').setOrigin(0, 0)
 
+
                     // player creation
                     this.createPlayer = playerName => {
                         this.container = this.add.container(200, 250)
                         this.physics.world.enable(this.container);
                 
                         this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
-                            .setInteractive({ useHandCursor: true })
-                            .on('pointerdown', () => {
-                                if (this.music.isPlaying) {
-                                    this.music.pause();
-                                } else {
-                                    this.music.resume();
-                                }
+                            // .setInteractive({ useHandCursor: true })
+                            // .on('pointerdown', () => {
+                            //     if (this.music.isPlaying) {
+                            //         this.music.pause();
+                            //     } else {
+                            //         this.music.resume();
+                            //     }
                                     
-                            })
+                            // })
                         
                         this.text = this.add.text(0, 0, playerName);
                         this.text.font = "Arial"
@@ -239,7 +249,7 @@ class GameContainer extends React.Component {
 
                         this.physics.add.collider(this.container, this.furnitures)
                         this.physics.add.collider(this.container, this.pokerTable, () => game.props.openModal("poker"))
-                        this.physics.add.collider(this.container, this.blackjackTable, () => game.props.openModal("poker"));
+                        this.physics.add.collider(this.container, this.blackjackTable, () => game.props.openModal("blackjack"));
                         this.physics.add.collider(this.container, this.slotsTable, () => game.props.openModal("poker"))
                         this.physics.add.collider(this.container, this.casinoDoor, () => game.props.openModal("leaveLobby"))
                         this.physics.add.collider(this.container, this.bulletinBoard, () => game.props.openModal("leaderboard"))
