@@ -47,6 +47,28 @@ class Poker extends React.Component{
     nextTurn(){
         let temp = this.state.game.currentPlayers.shift();
         this.state.game.currentPlayers.push(temp)
+        if(this.state.CalledChecked === this.state.game.currentPlayers.length-1 && this.state.cycle === 0){
+            console.log('first 3 community cards have been dealt')
+            this.state.game.dealCommunityPhase1()
+            this.setState({
+                CalledChecked: 0,
+                cycle: this.state.cycle+1
+            })
+        } else if (this.state.CalledChecked === this.state.game.currentPlayers.length-1 && this.state.cycle === 1){
+            console.log('river has been dealt')
+            this.state.game.dealCommunityPhase2()
+            this.setState({
+                CalledChecked: 0,
+                cycle: this.state.cycle + 1
+            })
+        } else if (this.state.CalledChecked === this.state.game.currentPlayers.length-1 && this.state.cycle === 2){
+            console.log('flop has been dealt')
+            this.state.game.dealCommunityPhase3()
+            this.setState({
+                CalledChecked: 0,
+                cycle: this.state.cycle + 1
+            })
+        }
         this.forceUpdate()
     }
 
@@ -128,11 +150,11 @@ class Poker extends React.Component{
         if(this.state.won === true){
             this.state.game.communityCards = []
             this.state.game.deck = new Deck()
-            this.state.game.dealCommunity()
+            // this.state.game.dealCommunity()
             this.state.game.currentPlayers = this.state.game.players.slice()
             this.state.game.dealHandPhase2()
             this.state.game.resetNextBetRound()
-            this.setState({ CalledChecked: 0, won: false,raised:false})
+            this.setState({ CalledChecked: 0, won: false,raised:false, cycle: 0})
         }
     }
 
@@ -140,7 +162,7 @@ class Poker extends React.Component{
    
     render(){ 
         let gameStarted = this.state.fullGame ? null : <button className='addPlayer' onClick={this.addPlayerToGame}>Add Player</button>
-        let winner = (this.state.CalledChecked === this.state.game.currentPlayers.length && this.state.game.players.length !==0 && this.state.game.turnStarted === true) ? this.handleWinner() : (null)                           
+        let winner = (this.state.CalledChecked === this.state.game.currentPlayers.length && this.state.game.players.length !==0 && this.state.game.turnStarted === true && this.state.cycle === 3) ? this.handleWinner() : (null)                           
         let check = this.state.raised ? (<button onClick={this.handleCheck} disabled>Check</button>) : (
           <button onClick={this.handleCheck}>Check</button>);
         if (this.state.game.currentPlayers.length !== 0){
