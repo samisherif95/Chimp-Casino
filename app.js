@@ -16,9 +16,11 @@ const lobbies = require("./routes/api/lobbies");
 
 //SETUP
 const app = express();
+const server = require('http').createServer(app)
 const db = require("./config/keys").mongoURI;
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>  console.log(`listening on port ${PORT}`));  //This console log is just for testing
+// app.listen(PORT, () =>  console.log(`listening on port ${PORT}`));  //This console log is just for testing
+server.listen(PORT, () =>  console.log(`listening on port ${PORT}`));  //This console log is just for testing
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() => console.log("Connected to mongoDB"))
@@ -42,16 +44,15 @@ app.use("/api/lobbies", lobbies);
 
 
 //Websockets Setup
+// const lobbyPort = 7000;
 
-const lobbyPort = 7000;
-
-const lobbySocket = app.listen(lobbyPort, function () {
-  console.log("Listening at http://localhost: " + lobbyPort);
-})
-
+// const lobbySocket = app.listen(lobbyPort, function () {
+//   console.log("Listening at http://localhost: " + lobbyPort);
+// })
 
 
-const lobbyServer = socket(lobbySocket)
+
+const lobbyServer = socket(server)
 
 //Lobby Server
 const lobbiesCollection = {};
