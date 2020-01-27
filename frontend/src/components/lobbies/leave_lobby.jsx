@@ -3,9 +3,10 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { closeModal } from "../../actions/modal_actions";
 
-const LeaveLobby = ({history, closeModal}) => {
+const LeaveLobby = ({history, closeModal, socket}) => {
     const handleYes = () => {
         closeModal();
+        socket.emit("leaveLobby")
         history.push("/lobbies");
     }
 

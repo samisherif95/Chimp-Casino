@@ -8,7 +8,7 @@ class Chat extends React.Component {
             message: '',
             messages: []
         }
-        this.socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:8000');
+        this.socket = this.props.socket
         this.handleSubmit  = this.handleSubmit.bind(this)
     }
 
@@ -103,3 +103,4 @@ class Chat extends React.Component {
 }
 
 export default Chat
+

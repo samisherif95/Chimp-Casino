@@ -22,7 +22,6 @@ import slotsCol from "../app/assets/images/slots-col.png"
 import logoSvg from "../app/assets/images/logo-svg.png";
 import islandDreams from "../app/assets/audio/island-dreams.mp3"
 import ChatContainer from './chat/chat_container';
-const io = require('socket.io-client');
 
 
 
@@ -31,29 +30,12 @@ const io = require('socket.io-client');
 class GameContainer extends React.Component {
     constructor(props) {
         super(props);
-        this.socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:7000');
         this.lobbyId = this.props.match.params.lobbyId;
+        this.socket = this.props.socket
+
+        this.socket.emit("joinLobby", this.lobbyId, this.props.currentUser.username);
+
         const game = this;
-        // const phaserGameDiv = document.getElementById("phaser-game")
-
-
-        // this.createPlayer = (playerInfo) => {
-        //     this.container = this.add.container(200, 250)
-        //     this.physics.world.enable(this.container);
-    
-        //     this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
-        //         .setInteractive()
-        //         .on('pointerdown', () => this.props.openModal('createLobby'))
-           
-        //     this.player.setCollideWorldbounds(true);
-        //     this.text = this.add.text(0, 0, 'evans');
-        //     this.text.font = "Arial"
-        //     this.container.add(this.player)
-        //     this.container.add(this.text)
-    
-        //     this.container.body.setCollideWorldBounds(true);
-        // }
-
 
         this.config = {
             width: 1024,
@@ -182,6 +164,18 @@ class GameContainer extends React.Component {
                             }
                         })
                     }
+
+                    this.disableKeys = () => {
+                        console.log("disabled")
+                        this.input.keyboard.enabled = false;
+                        this.input.enabled = false;
+                    }
+
+                    this.enableKeys = () => {
+                        console.log("enabled")
+                        this.input.keyboard.enabled = true;
+                        this.input.enabled = true;
+                    }
                     
 
                     // bind functions
@@ -189,6 +183,8 @@ class GameContainer extends React.Component {
                     game.createOtherPlayer = this.createOtherPlayer.bind(this);
                     game.createPlayer = this.createPlayer.bind(this);
                     game.destroyPlayer = this.destroyPlayer.bind(this);
+                    game.disableKeys = this.disableKeys.bind(this);
+                    game.enableKeys = this.enableKeys.bind(this);
 
 
                     // audio
@@ -244,6 +240,8 @@ class GameContainer extends React.Component {
 
 
                     this.cursors = this.input.keyboard.createCursorKeys()
+                    
+                    this.input.keyboard.clearCaptures();
                 },
                 update: function() {
                     if (this.container) {
@@ -285,15 +283,28 @@ class GameContainer extends React.Component {
                         const x = this.container.x;
                         const y = this.container.y;
                         if (this.container.oldPosition && (x !== this.container.oldPosition.x || y !== this.container.oldPosition.y)) {
-                            game.socket.emit('playerMovement', { x, y }, game.lobbyId );
+                            game.socket.emit('playerMovement', { x, y } );
                         }
                         // save old position data
                         this.container.oldPosition = {
                             x: this.container.x,
                             y: this.container.y,
                         };
-                    }   
+                    }
                 },
+                // render: function() {
+                    // console.log("here")
+                    // const chatDOM = document.getElementById("message-to-send")
+                    // const gameDOM = document.getElementById("game")
+            
+                    // gameDOM.addEventListener('click', () => {
+                    //     this.enableKeys();
+                    // })
+            
+                    // chatDOM.addEventListener('focus', () => {
+                    //     this.disableKeys();
+                    // })
+                // },
                 parent: "phaser-game"
             }
         }
@@ -304,9 +315,25 @@ class GameContainer extends React.Component {
 
 
     componentDidMount() {
-        this.socket.on("requestLobby", () => {
-            this.socket.emit("joinLobby", this.lobbyId, this.props.currentUser.username);
-        })
+        const chatDOM = document.getElementById("message-to-send")
+        const gameDOM = document.getElementById("game")
+
+        setTimeout(() => {
+            gameDOM.addEventListener('click', () => {
+                this.enableKeys();
+            })
+        }, 2000)
+
+        setTimeout(() => {
+            chatDOM.addEventListener('focus', () => {
+                this.disableKeys();
+            })
+        }, 2000)
+
+
+
+        // this.socket.on("requestLobby", () => {
+        // })
 
         this.socket.on("lobbyPlayers", (players) => {
             Object.values(players).forEach(player => {
@@ -350,8 +377,8 @@ class GameContainer extends React.Component {
 
             // </div>
             <div className="game-container">
-                <IonPhaser game={this.config} />
-                <ChatContainer />
+                <IonPhaser game={this.config} id="game"/>
+                <ChatContainer socket={this.socket} />
             </div>
         )
     }

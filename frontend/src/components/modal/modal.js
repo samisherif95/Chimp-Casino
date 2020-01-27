@@ -10,7 +10,7 @@ import LeaderBoard from "../users/leaderboard";
 import PokerContainer from '../poker/poker_container';
 // import LeaveLobby from "../lobbies/leave_lobby";
 
-const Modal = ({ modal, closeModal }) => {
+const Modal = ({ modal, closeModal, socket }) => {
     if (!modal) {
         return null;
     }
@@ -29,7 +29,7 @@ const Modal = ({ modal, closeModal }) => {
             component = <LobbyFormContainer />;
             break;
         case 'leaveLobby':
-            component = <LeaveLobby />;
+            component = <LeaveLobby socket={socket}/>;
             break;
         case 'leaderboard':
             component = <LeaderBoard />;
