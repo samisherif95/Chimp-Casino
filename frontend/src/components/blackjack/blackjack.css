@@ -1,0 +1,49 @@
+/* .blackjack-table {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+} */
+
+.blackjack-table {
+    height: 100%;
+    z-index: 1;
+}
+
+#blackjack-table-png {
+    height: 740px;
+    z-index: -1;
+    position: absolute;
+    transform: translate(-50%);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.blackjack-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.blackjack-player-info {
+    color: red;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+}
+
+.blackjack-hand {
+    display: flex;
+    flex-direction: column;
+}
+
+.dealer-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.blackjack-options {
+    display: flex;
+    flex-direction: column;
+}
