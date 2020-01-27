@@ -120,7 +120,7 @@ class Game {
 
 
     dealCommunity(){
-        for(let i=0; i < 5 ;i++){
+        for(let i=0; i < 3 ;i++){
             this.communityCards.push(this.deck.deal());
         }
 
@@ -150,23 +150,22 @@ class Game {
         })
         max.bananas+= this.pot
         this.pot = 0
-        this.turnStarted = false
+        // this.turnStarted = false
         return (max.handle)
     }
 
     resetNextBetRound(){
-        this.players.forEach(player =>{
+        this.currentPlayers.forEach(player =>{
             player.checked = false;
             player.betPlaced = false;
             player.called = false
-            player.folded = false
-            
-            
+            player.folded = false            
         })
     }
 
     exitGame(){
         this.exit = true
+        this.turnStarted = false
         return this.players.shift(0)
     }
 }

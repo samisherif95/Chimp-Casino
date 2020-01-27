@@ -29,6 +29,7 @@ class Chat extends React.Component {
         var element = document.getElementById("chat-text");
         element.scrollTop = element.scrollHeight;
     }
+
     handleChange(field){
         return e => this.setState({
             [field]: e.currentTarget.value
@@ -56,13 +57,11 @@ class Chat extends React.Component {
                     {
                         messages.map( (message,idx) => {
                             let selectClass = (message.user === this.props.currentUser.username) ? 'me' : 'him';
-
-                            
-                            
                             if(idx === 0 || message.user !== messages[idx-1].user){
                                 return (   
                                     <div key={idx} className={`message-content`}>
-                                        <span className={`message-data-name-${selectClass}`} >              {message.user.toUpperCase()}
+                                        <span className={`message-data-name-${selectClass}`} > 
+                                            {message.user.toUpperCase()}
                                         </span> 
                                         <li className={selectClass}>
                                             {message.message}
