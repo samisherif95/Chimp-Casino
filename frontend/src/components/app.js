@@ -7,21 +7,22 @@ import MainPageContainer from './main/main_page_container';
 import Modal from './modal/modal';
 import GameContainer from "./game";
 import LobbyIndexContainer from "./lobbies/lobby_index_container";
-
-
-
-
+import ChatContainer from "./chat/chat_container"
 import '../app/assets/stylesheets/app.css';
 
 
+const io = require('socket.io-client');
+
+const socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:7000');
+
 const App = () => (
     <div>
-        <Modal />
+        <Modal socket={socket} />
         
         <NavBarContainer />
 
         <Switch>
-            <ProtectedRoute path='/lobbies/:lobbyId/game' component={GameContainer} />
+            <ProtectedRoute path='/lobbies/:lobbyId/game' component={GameContainer} socket={socket} />
             <ProtectedRoute exact path="/lobbies" component={LobbyIndexContainer} />
             <Route exact path="/" component={MainPageContainer} />
         </Switch>
