@@ -40,38 +40,11 @@ const lobbyPort = 7000;
 const lobbySocket = app.listen(lobbyPort, function () {
   console.log("Listening at http://localhost: " + lobbyPort);
 })
-// const socket = app.listen(port, function () {
-//   console.log("Listening at http://localhost: " + port);
-// })
+
 const lobbyServer = socket(lobbySocket)
-// const server = socket(socket);
-
-//server 
-
-// server.on("connection", (socket) => {
-//   console.log("6000 made connection with socket " + socket.id );
-// })
 
 
 
-
-
-
-// lobbiesCollection: {
-//   lobbyId: {
-//     poker: {
-      
-//     }
-//     blackjack: {
-
-//     }
-//     players: {
-//       socket-id: {
-
-//       }
-//     }
-//   }
-// }
 //Lobby Server
 const lobbiesCollection = {};
 
@@ -125,29 +98,15 @@ lobbyServer.on("connection", (socket) => {
     delete lobbiesCollection[localLobbyId].players[socket.id]
     localLobbyId = null;
   })
-  // socket.on("disconnect", () => {
-  //   Object.values(lobbiesCollection).forEach(lobby => {
-  //     if (lobby.players.hasOwnProperty(socket.id)) {
-  //       delete lobby.players[socket.id]
-  //       socket.to(lobby.id).emit('removePlayer', socket.id)
-  //       if (!Object.values(lobby.players).length) {
-  //         delete lobbiesCollection[lobby.id]
-  //         Lobby.findByIdAndRemove(lobby.id)
-  //       }
-  //     }
-  //   })
-  // })
 
   //games
 
   // poker
   socket.on("joinPokerGame", () => {
-    // console.log(localLobbyId + "poker")
     socket.join(localLobbyId + "poker")
   })
 
   socket.on("addPokerGamePlayer", username => {
-    // console.log("HITTING HERE", username)
     lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username)
   })
 
@@ -156,7 +115,6 @@ lobbyServer.on("connection", (socket) => {
   })
 
   socket.on("playerRaised", (username, amount) => {
-    console.log(username, amount)
     lobbyServer.in(localLobbyId + "poker").emit("playerRaised", username, amount)
   })
 
@@ -166,6 +124,10 @@ lobbyServer.on("connection", (socket) => {
 
   socket.on("playerFolded", username => {
     lobbyServer.in(localLobbyId + "poker").emit("playerFolded", username)
+  })
+
+  socket.on("playerWon", (amount, username) => {
+    lobbyServer.in(localLobbyId + "poker").emit("playerWon", username, amount)
   })
 
   // bj
