@@ -3,6 +3,7 @@ import { closeModal } from '../../actions/modal_actions';
 import { connect } from 'react-redux';
 import LoginFormContainer from '../session/login_form_container';
 import SignupFormContainer from '../session/signup_form_container';
+import BlackjackContainer from '../../components/blackjack/blackjack_container';
 import LobbyFormContainer from "../lobbies/lobby_form_container";
 import LobbyIndexContainer from '../lobbies/lobby_index_container';
 import LeaveLobby from "../lobbies/leave_lobby";
@@ -21,6 +22,9 @@ const Modal = ({ modal, closeModal, socket }) => {
             break;
         case 'signup':
             component = <SignupFormContainer />;
+            break;
+        case 'blackjack':
+            component = <BlackjackContainer />;
             break;
         case 'poker':
             component =<PokerContainer socket={socket} />
