@@ -59,7 +59,7 @@ body{
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover;
-    min-height: 94vh;
+    height: 100vh;
 }
 
 .navbar{
@@ -67,6 +67,7 @@ body{
     justify-content: space-between;
     background-color: rgba(46, 45, 42, 0.788);
     color: white;
+    margin-bottom: 30px;
 }
 
 ul {
@@ -138,23 +139,27 @@ button{
     left: 0;
     right: 0;
     z-index: 2;
-    background-color: rgba(254,254,254,0.4);
+    background-color: rgba(0,0,0,0.4);
 }
 
 .modal-content {
+
     position: absolute;
-    width: 525px;
+    min-width: 40%;
+    /* width: 525px; */
     /* background-image: url('../images/monkeypoker.jpg');
     background-position: center; 
     background-repeat: no-repeat; */
+    /* background-color: rgb(0,0,0,0.9); */
     background-color: #fff;
     background-size: cover;
-    box-shadow: 0 8px 16px rgba(254,254,254,0.4);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.8);
     border-radius: 10px;
     text-align: center;
     top: 10%;
     left: 50%;
     transform: translateX(-50%);
+    border: 5px solid #fcd600;
 }
 
 .modal-banner {
@@ -188,7 +193,8 @@ button{
 
 
 #username, #password,
-#password2 {
+#password2, #form-lobby-name, 
+#form-lobby-password, #form-lobby-balance {
     display: block;
     width: 80%;
     height: 30px;
@@ -206,7 +212,8 @@ button{
 }
 
 #submit-signup,
-#submit-login{
+#submit-login, 
+#submit-lobby {
     background-color: #e82953;
     color: #fff;
     font-size: 16px;
@@ -216,9 +223,354 @@ button{
     border-radius: 5px;
 }
 
+#submit-signup:hover,
+#submit-login:hover,
+#submit-lobby:hover {
+    background-color: #c40d35;
+    cursor: pointer;
+
+}
+
+.leave-lobby {
+    font-size: 1.5em;
+}
+
+#leave-lobby-yes {
+    background-color: #e82953;
+    color: #fff;
+    font-size: 16px;
+    padding: 6px 18px;
+    border-radius: 5px;
+}
+
+#leave-lobby-yes:hover {
+    background-color: #c40d35;
+    cursor: pointer;
+}
+
+#leave-lobby-no {
+    background-color: #fff;
+    border: 3px solid #fcd600;
+    color: black;
+    font-size: 16px;
+    padding: 6px 18px;
+    border-radius: 5px;
+}
+
+#leave-lobby-no:hover {
+    background-color: #fcd600;
+    cursor: pointer;
+}
+
+
+
 .text-center p a {
     padding-left: 20px;
     color: blue;
     text-decoration: underline;
+    cursor: pointer;
+}
+
+.lobby-form {
+    padding-bottom: 3em;
+}
+
+.lobby-index {
+    width: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 500px;
+    display: block;
+    /* background-color: rgb(0, 0, 0, 0.4) */
+}
+
+.lobby-index li {
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.lobby-index li:hover {
+    background-color: #fcd600;
+    cursor: pointer;
+}
+
+.lobby-index-header {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    border-bottom: 3px solid #fcd600;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    background-color: #fcd600;
+    /* font-size: 1.5em; */
+}
+
+
+canvas {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.8);
+    border-radius: 15px;
+}
+
+
+.lobby-name-div{
+    display: flex;
+    justify-content: center;
+    width: 50%;
+}
+
+.lobby-info-div {
+    display: flex;
+    justify-content: space-around;
+    width: 50%;
+}
+
+.lobby-info-div span {
+    width: 33%;
+    display: flex;
+    justify-content: center;
+}
+
+.lobby-index-container {
+    margin-top: 500px;
+    width: 60%;
+    border-radius: 5px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 3px solid #fcd600;
+}
+
+.lobby-index-container h2 {
+    text-align: center;
+    font-size: 2em;
+}
+
+
+.leave-lobby-buttons {
+    padding-top: 30px;
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
+
+/* .lobby-index-item {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+} */
+
+.game-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1vw;
+}
+
+h2 {
+    font-family: 'Lobster', cursive;
+}
+
+
+.leaderboard-header {
+    display: flex;
+    /* justify-content: space-around; */
+    font-weight: bold;
+    border-bottom: 3px solid #fcd600;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    background-color: #fcd600;
+}
+
+.leaderboard-index {
+    width: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 330px;
+    display: block;
+    /* background-color: rgb(0, 0, 0, 0.4) */
+}
+
+.leaderboard-index li {
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.leaderboard-index li:hover {
+    background-color: #fcd600;
+    cursor: pointer;
+}
+
+.leaderboard-ranking-div {
+    display: flex;
+    justify-content: center;
+    width: 20%;
+}
+.leaderboard-name-div{
+    display: flex;
+    justify-content: center;
+    width: 55%;
+}
+
+.leaderboard-info-div {
+    display: flex;
+    justify-content: space-around;
+    width: 25%;
+}
+
+.gold {
+    color:  #fcd600
+}
+
+.silver {
+    color: silver
+}
+
+.bronze {
+    color: #cd7f32;
+}
+
+.chat-panel{
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    position: relative;
+    width: 30%;
+    max-width: 300px;
+    height: 768px;
+    margin-left: 10px;
+    border-radius: 10px;
+    background-color: rgb(0, 0, 0, 0.4);
+    margin-left: 30px;
+}
+
+.chat-text{
+    height: 65vh;
+    border-bottom: 1px solid #ccc;
+    overflow-y: scroll;
+}
+
+.chat-content{
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat-content li{
+  display:inline-block;
+  clear: both;
+  padding: 15px;
+  border-radius: 30px;
+  margin-bottom: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+  word-wrap: break-word;
+  max-width: 80%;
+  
+}
+
+.message-content{
+    max-width: 100%;
+    overflow: auto;
+}
+
+.message-data-name-him{
+    float: left;
+    font-size: 10px;
+    color: #ccc;
+}
+
+.message-data-name-me{
+    float: right;
+    font-size: 12px;
+    color: #ccc;
+}
+
+
+.him{
+    background: rgb(204, 197, 197);
+    float: left;
+}
+
+.me{
+    float: right;
+    background: #0084ff;
+    color: #fff;
+}
+
+.him + .me{
+  border-bottom-right-radius: 5px;
+}
+
+.me + .me{
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.me:last-of-type {
+  border-bottom-right-radius: 30px;
+}
+
+.chat-form{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    min-height: 10vh;
+    padding-bottom: 10px;
+}
+
+.chat-form form{
+    width: 90%;
+    margin: 0 auto;
+    transform: translateY(5%);
+}
+
+.chat-panel form textarea{
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    padding: 10px 20px;
+    font: 14px/22px "Lato", Arial, sans-serif;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    resize: none;
+}
+
+.chat-panel form button {
+    float: right;
+    color: #94C2ED;
+    font-size: 16px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: none;
+}
+
+.chat-panel form button:hover{
+    color: darken(#94C2ED, 10%);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 50%;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgb(0,0,0,0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #fcd600;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
     cursor: pointer;
 }

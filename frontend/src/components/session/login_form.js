@@ -17,6 +17,10 @@ class LoginForm extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.currentUser === true) {
+            this.props.history.push('/game');
+        }
+
         this.setState({ errors: nextProps.errors })
     }
 
@@ -38,7 +42,7 @@ class LoginForm extends React.Component {
             .then(() => {
                 console.log("errors", this.state.errors)
                 if (!Object.keys(this.state.errors).length) {
-                    this.props.history.push('/game');
+                    this.props.history.push('/lobbies');
                     this.props.closeModal();
                 }
             })

@@ -4,8 +4,14 @@ import { connect } from 'react-redux';
 import LoginFormContainer from '../session/login_form_container';
 import SignupFormContainer from '../session/signup_form_container';
 import BlackjackContainer from '../../components/blackjack/blackjack_container';
+import LobbyFormContainer from "../lobbies/lobby_form_container";
+import LobbyIndexContainer from '../lobbies/lobby_index_container';
+import LeaveLobby from "../lobbies/leave_lobby";
+import LeaderBoard from "../users/leaderboard";
+import PokerContainer from '../poker/poker_container';
+// import LeaveLobby from "../lobbies/leave_lobby";
 
-const Modal = ({ modal, closeModal }) => {
+const Modal = ({ modal, closeModal, socket }) => {
     if (!modal) {
         return null;
     }
@@ -19,6 +25,18 @@ const Modal = ({ modal, closeModal }) => {
             break;
         case 'blackjack':
             component = <BlackjackContainer />;
+            break;
+        case 'poker':
+            component =<PokerContainer/>
+            break;
+        case 'createLobby':
+            component = <LobbyFormContainer />;
+            break;
+        case 'leaveLobby':
+            component = <LeaveLobby socket={socket}/>;
+            break;
+        case 'leaderboard':
+            component = <LeaderBoard />;
             break;
         default:
             return null;
