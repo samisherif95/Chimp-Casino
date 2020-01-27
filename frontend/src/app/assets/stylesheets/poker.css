@@ -1,0 +1,106 @@
+.pokerbackground{
+    z-index: 2;
+    background: darkred;
+    width: 950px;
+    height: 750px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.pokerTable{
+    height: 350px;
+    margin-top: 150px;
+}
+
+.pokerTable img{
+    height: 105%;
+    width:85%
+}
+
+
+.CardsButtons{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 283px;
+    width: 950px;
+}
+
+.addPlayer{
+    /* justify-content: center; */
+    position: absolute;
+    width: 100px;
+    border-radius: 7px;
+    transform: translateX(120px);
+}
+
+.CardsButtons img{
+    height: 70%;
+    width: 142px;
+    transform: translateX(350px);
+}
+
+.buttons{
+    /* display: flex; */
+    transform: translateX(369px);
+    width: 297px;
+    height: 80%;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.buttons button{
+    display: flex;
+    width: 70px;
+    border-radius: 7px;
+}
+.buttons strong{
+    color: white;
+}
+.test{
+    display: flex;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.test button{
+    justify-content: space-evenly;
+    align-items: center;
+    display: flex;
+}
+
+.test button:hover{
+    background-color:gold;
+}
+
+.CommunityCards{
+    position: absolute;
+    /* background: black; */
+    height: 175px;
+    width: 70%;
+    transform: translateY(250px);
+    display: flex;
+    justify-content: space-evenly;
+}
+.disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+.CCpoker{
+    list-style: none;
+    transform: translateX(74px);
+}
+
+.deck{
+    padding-left: 10px;
+    height: 100px;
+    width: 75px;
+}
+
+.CommunityCards strong{
+    height: fit-content;
+    transform: translateX(-225px);
+}
