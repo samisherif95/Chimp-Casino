@@ -81,7 +81,7 @@ class Poker extends React.Component{
         this.socket.emit("playerCalled", this.props.currentUser.username)
     }
 
-    handleCall(username){
+    handleCall(){
         this.setState({CalledChecked: this.state.CalledChecked+1})
         if(this.state.game.bet !== null){
             if (this.state.game.currentPlayers[0].bananas > this.state.game.bet){
@@ -120,7 +120,7 @@ class Poker extends React.Component{
         }
     }
 
-    handleRaise(username, amount){
+    handleRaise(amount){
         this.setState({
             CalledChecked: 0,
             raised: true,
