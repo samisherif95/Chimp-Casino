@@ -283,7 +283,9 @@ class Blackjack extends React.Component {
                 (
                     players.map(player => {
                         const hand = player.hand.map(card => {
-                            return <li className="blackjack-hand-cards" key={card}> {card} </li>
+                            // return <li className="blackjack-hand-cards" key={card}> {card[2]} </li>
+                            return <img src={this.imageHash[card[2]]} alt= '' />
+
                         })
 
                         const handSplit = player.handSplit.map(card => {
