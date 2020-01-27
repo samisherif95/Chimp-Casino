@@ -140,7 +140,13 @@ lobbyServer.on("connection", (socket) => {
 
   //games
   socket.on("joinPokerGame", () => {
+    // console.log(localLobbyId + "poker")
     socket.join(localLobbyId + "poker")
+  })
+
+  socket.on("addPokerGamePlayer", username => {
+    // console.log("HITTING HERE", username)
+    lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username)
   })
 
   socket.on("joinBlackjackGame", () => {
