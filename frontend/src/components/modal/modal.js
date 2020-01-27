@@ -23,7 +23,7 @@ const Modal = ({ modal, closeModal, socket }) => {
             component = <SignupFormContainer />;
             break;
         case 'poker':
-            component =<PokerContainer/>
+            component =<PokerContainer socket={socket} />
             break;
         case 'createLobby':
             component = <LobbyFormContainer />;

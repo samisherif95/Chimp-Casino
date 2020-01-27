@@ -4,10 +4,12 @@ import Game from '../../components/poker/game';
 import '../../app/assets/stylesheets/poker.css'
 import imageHash from './pokerImages';
 import Deck from '../../cardDeck';
+import Chat from "../chat/chat_container";
 
 class Poker extends React.Component{
     constructor(props){
         super(props)
+        this.socket = this.props.socket;
         this.state ={
             game: new Game(),
             idx: 0,
@@ -24,13 +26,14 @@ class Poker extends React.Component{
         this.handleCall = this.handleCall.bind(this);
         this.handleRaise = this.handleRaise.bind(this);
         this.handleCheck = this.handleCheck.bind(this);
+        this.sendPlayerToSocket = this.sendPlayerToSocket.bind(this);
         this.handleFold = this.handleFold.bind(this);
     }
     
-    addPlayerToGame(){
+    addPlayerToGame(username){
         if(this.state.game.turnStarted === false && this.state.idx !== 6){
-            this.state.game.addPlayer(`${this.state.idx}`)
-            console.log(`Player ${this.state.idx} has been added to the game`)
+            this.state.game.addPlayer(username)
+            console.log(`Player ${username} has been added to the game`)
             this.state.game.dealFirstHand();
             this.setState({idx: this.state.idx+1})
             if (this.state.game.players.length > 5){
@@ -41,6 +44,10 @@ class Poker extends React.Component{
                 this.setState({fullGame: true})
             }
         }
+    }
+
+    sendPlayerToSocket() {
+        this.socket.emit("addPokerGamePlayer", this.props.currentUser.username)
     }
 
 
@@ -136,6 +143,14 @@ class Poker extends React.Component{
         }
     }
 
+    componentDidMount() {
+        this.socket.emit("joinPokerGame")
+
+        this.socket.on("addPokerGamePlayer", username => {
+            console.log("adding player", username)
+            this.addPlayerToGame(username);
+        })
+    }
 
    
     render(){ 
@@ -183,7 +198,7 @@ class Poker extends React.Component{
                     <div className='pokerTable'>
                         <img src={pokerTable} alt="poker table" />
                         <div className='CardsButtons'>
-                            <button className='addPlayer' onClick={this.addPlayerToGame}>Add Player</button>
+                            <button className='addPlayer' onClick={this.sendPlayerToSocket}>Add Player</button>
                             <div className='buttons'>
                                 <strong>Your Balance:{}</strong>
                                 <div className='test'>
@@ -195,6 +210,7 @@ class Poker extends React.Component{
                             </div>
                         </div>
                     </div>
+                    <Chat socket={this.socket} /> 
                 </div>
             )
         }
