@@ -6,6 +6,19 @@
     align-items: center;
 } */
 
+.blackjack-table {
+    height: 100%;
+    z-index: 1;
+}
+
+#blackjack-table-png {
+    height: 740px;
+    z-index: -1;
+    position: absolute;
+    transform: translate(-50%);
+    background-color: rgba(0, 0, 0, 0);
+}
+
 .blackjack-options {
     display: flex;
     flex-direction: column;
