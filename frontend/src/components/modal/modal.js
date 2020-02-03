@@ -16,6 +16,14 @@ const Modal = ({ modal, closeModal, socket }) => {
         return null;
     }
     let component;
+    const handleClose = () => {
+        if (modal === 'blackjack') {
+            socket.emit("leaveBJGame")
+        } else if (modal === "poker") {
+            socket.emit("leavePokerGame")
+        }
+        closeModal();
+    }
     switch (modal) {
         case 'login':
             component = <LoginFormContainer />;
@@ -24,13 +32,13 @@ const Modal = ({ modal, closeModal, socket }) => {
             component = <SignupFormContainer />;
             break;
         case 'blackjack':
-            component = <BlackjackContainer />;
+            component = <BlackjackContainer socket={socket}/>;
             break;
         case 'poker':
-            component =<PokerContainer socket={socket} />
+            component = <PokerContainer socket={socket} />
             break;
         case 'createLobby':
-            component = <LobbyFormContainer />;
+            component = <LobbyFormContainer socket={socket} />;
             break;
         case 'leaveLobby':
             component = <LeaveLobby socket={socket}/>;
@@ -38,14 +46,11 @@ const Modal = ({ modal, closeModal, socket }) => {
         case 'leaderboard':
             component = <LeaderBoard />;
             break;
-        case 'blackjack':
-            component = <BlackjackContainer socket={socket}/>;
-            break;
         default:
             return null;
     }
     return (
-        <div className="modal-screen" onClick={closeModal}>
+        <div className="modal-screen" onClick={handleClose}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 {component}
             </div>
