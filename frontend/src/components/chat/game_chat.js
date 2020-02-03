@@ -14,10 +14,38 @@ class GameChat extends React.Component {
     componentDidMount(){ 
         this.socket.on("receiveMessage", (data) => {
             this.state.messages.push(data)
-                this.setState(this.state)
-            }
-        )
-        
+            this.setState(this.state)
+        })
+
+        this.socket.on("playerFolded", username => {
+            this.state.messages.push(`${username} has folded`)
+            this.setState(this.state)
+        })
+
+        this.socket.on("playerCalled", username => {
+            this.state.messages.push(`${username} has called`)
+            this.setState(this.state)
+        })
+
+        this.socket.on("playerRaised", (username, amount) => {
+            this.state.messages.push(`${username} has raised by ${amount}`)
+            this.setState(this.state)
+        })
+
+        this.socket.on("playerChecked", username => {
+            this.state.messages.push(`${username} has checked`)
+            this.setState(this.state)
+        })
+
+        this.socket.on("addPokerGamePlayer", username => {
+            this.state.messages.push(`${username} has joined`)
+            this.setState(this.state)
+        })
+
+        this.socket.on("playerWon", (username, amount) => {
+            console.log("GAMECHAT")
+            this.state.messages.push(`${username} has won ${amount} bananas!`)
+        })
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -25,7 +53,7 @@ class GameChat extends React.Component {
     }
     
     updateScroll() {
-        var element = document.getElementById("chat-text");
+        var element = document.getElementById("game-chat-text");
         element.scrollTop = element.scrollHeight;
     }
 
@@ -56,7 +84,15 @@ class GameChat extends React.Component {
                     {
                         messages.map( (message,idx) => {
                             let selectClass = (message.user === this.props.currentUser.username) ? 'me' : 'him';
-                            if(idx === 0 || message.user !== messages[idx-1].user){
+                            if (!message.user) {
+                                return (
+                                    <div key={idx} className="game-message">
+                                        <li>
+                                            {message}
+                                        </li>
+                                    </div>
+                                )
+                            } else if(idx === 0 || message.user !== messages[idx-1].user){
                                 return (   
                                     <div key={idx} className={`message-content`}>
                                         <span className={`message-data-name-${selectClass}`} > 
@@ -89,8 +125,8 @@ class GameChat extends React.Component {
                             onChange={this.handleChange('message')}
                             id="message-to-send"
                             placeholder="Type your message"
+                            autoComplete="off"
                         />
-                        <button>Send</button>
                     </form>
                 </div>
             </div>
