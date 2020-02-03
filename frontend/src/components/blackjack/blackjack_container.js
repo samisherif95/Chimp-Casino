@@ -5,4 +5,8 @@ const mapStateToProps = state => ({
     currentUser: state.session.user,
 });
 
-export default connect(mapStateToProps, null)(Blackjack);
+const mapDispatchToProps = dispatch => ({
+
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Blackjack);
