@@ -177,16 +177,6 @@ export class Blackjack {
         }
     }
 
-    wait(ms, cb) {
-        let waitDateOne = new Date();
-        while ((new Date()) - waitDateOne <= ms) {
-            //Nothing
-        }
-        if (cb) {
-            eval(cb);
-        }
-    }
-
     dealCards() {
         for (let i = 0; i < 2; i++) {
             this.dealer.hand.push(this.deck.deal());
@@ -248,7 +238,6 @@ export class Blackjack {
                 } 
             }
         });
-        this.wait(1000);
         console.log("Round over!")
         this.roundDone = true;
     }
@@ -315,7 +304,6 @@ export class Blackjack {
                 }
             }
         });
-        this.wait(1000);
         console.log("Round over!")
         this.roundDone = true;    
         this.currentPhase = 'waiting';

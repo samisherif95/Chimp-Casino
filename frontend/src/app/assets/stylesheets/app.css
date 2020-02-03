@@ -515,6 +515,94 @@ h2 {
   border-bottom-right-radius: 30px;
 }
 
+.game-message {
+    text-align: center;
+    color: gray;
+    display: flex;
+    justify-content: center;
+}
+
+.game-chat-panel{
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 320px;
+    height: 220px;
+    margin-left: 10px;
+    border-radius: 10px;
+    background-color: rgb(0, 0, 0, 0.4);
+    z-index: 50;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.game-chat-text{
+    height: 65%;
+    border-bottom: 1px solid #ccc;
+    overflow-y: scroll;
+}
+
+.game-chat-content{
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.game-chat-content li{
+  display:inline-block;
+  clear: both;
+  padding: 15px;
+  border-radius: 30px;
+  margin-bottom: 2px;
+  font-family: Helvetica, Arial, sans-serif;
+  word-wrap: break-word;
+  max-width: 80%;
+  
+}
+
+.game-chat-form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* min-height: 10vh; */
+    height: 20%;
+    padding-bottom: 10px; 
+}
+
+.game-chat-form form {
+    width: 90%;
+    margin: 0 auto;
+}
+
+
+.game-chat-panel form input {
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    padding: 5px 5px;
+    font: 14px/22px "Lato", Arial, sans-serif;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    resize: none;
+}
+
+.game-chat-panel form button {
+    float: right;
+    color: #94C2ED;
+    font-size: 16px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: none;
+}
+
+.game-chat-panel form button:hover{
+    color: darken(#94C2ED, 10%);
+}
+
 .chat-form{
     position: absolute;
     bottom: 0;
