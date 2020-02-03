@@ -9,7 +9,6 @@ import imageHash from "./blackjackImages";
 class Blackjack extends React.Component {
     constructor(props) {
         super(props)
-        console.log(this.props);
         const blackjack = new GameLogic.Blackjack();
         this.state = {
             blackjack: blackjack,
