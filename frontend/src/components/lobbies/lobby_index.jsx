@@ -28,7 +28,7 @@ class LobbiesIndex extends React.Component {
                 <ul className="lobby-index">
                     {
                         this.props.lobbies.map(lobby => {
-                            return <LobbyIndexItem lobby={lobby} key={lobby.id}/>
+                            return <LobbyIndexItem lobby={lobby} key={lobby._id}/>
                         })
                     }
                 </ul>

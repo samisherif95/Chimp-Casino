@@ -5,7 +5,10 @@ class Chat extends React.Component {
         super(props);
         this.state = {
             message: '',
-            messages: [{ user: "King Kong", message: "Welcome! Press the jukebox to mute the game"}]
+            messages: [
+                { user: "King Kong", message: "Welcome! Press the jukebox to mute the game"}, 
+                { user: "King Kong", message: "We are still working on some features, please bear with us"}
+            ]
         }
         this.socket = this.props.socket
         this.handleSubmit  = this.handleSubmit.bind(this)

@@ -12,7 +12,7 @@ import '../app/assets/stylesheets/app.css';
 
 const io = require('socket.io-client');
 
-const socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:7000');
+const socket = process.env.NODE_ENV === 'production' ? io() : io('http://localhost:5000');
 
 const App = () => (
     <div>

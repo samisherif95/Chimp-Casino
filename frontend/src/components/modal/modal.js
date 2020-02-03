@@ -5,7 +5,7 @@ import LoginFormContainer from '../session/login_form_container';
 import SignupFormContainer from '../session/signup_form_container';
 import BlackjackContainer from '../../components/blackjack/blackjack_container';
 import LobbyFormContainer from "../lobbies/lobby_form_container";
-import LobbyIndexContainer from '../lobbies/lobby_index_container';
+// import LobbyIndexContainer from '../lobbies/lobby_index_container';
 import LeaveLobby from "../lobbies/leave_lobby";
 import LeaderBoard from "../users/leaderboard";
 import PokerContainer from '../poker/poker_container';
@@ -28,7 +28,7 @@ const Modal = ({ modal, closeModal, socket }) => {
             component = <BlackjackContainer />;
             break;
         case 'poker':
-            component =<PokerContainer socket={socket} />
+            component =<PokerContainer socket={socket} />;
             break;
         case 'createLobby':
             component = <LobbyFormContainer />;
@@ -41,6 +41,7 @@ const Modal = ({ modal, closeModal, socket }) => {
             break;
         case 'blackjack':
             component = <BlackjackContainer socket={socket}/>;
+            break
         case 'slots':
             component = <SlotContainer />
             break;

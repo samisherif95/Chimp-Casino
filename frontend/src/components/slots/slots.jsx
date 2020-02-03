@@ -179,7 +179,7 @@ class SlotGame extends React.Component{
         })
 
         var x;
-        if (e.target.value == "Start") {
+        if (e.target.value === "Start") {
             this.state.a.start();
             this.state.b.start();
             this.state.c.start();
@@ -193,7 +193,7 @@ class SlotGame extends React.Component{
                     window.clearInterval(x);
                 }
             }, 100);
-        } else if (e.target.value == "Stop") {
+        } else if (e.target.value === "Stop") {
             this.state.a.stop();
             this.state.b.stop();
             this.state.c.stop();

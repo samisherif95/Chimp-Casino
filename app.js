@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require('passport');
 const socket = require('socket.io')
+const path = require('path');
 
 //File Imports
 const User = require("./models/User");
@@ -15,9 +16,11 @@ const lobbies = require("./routes/api/lobbies");
 
 //SETUP
 const app = express();
+const server = require('http').createServer(app)
 const db = require("./config/keys").mongoURI;
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>  console.log(`listening on port ${PORT}`));  //This console log is just for testing
+server.listen(PORT, () =>  console.log(`listening on port ${PORT}`));  //This console log is just for testing
 mongoose
   .connect(db, { useNewUrlParser: true })
   .then(() => console.log("Connected to mongoDB"))
@@ -27,6 +30,13 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('frontend/build'));
+    app.get('/', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    })
+}
+
 //Routes
 app.use("/api/users", users);
 app.use("/api/chatrooms", chatrooms);
@@ -34,7 +44,6 @@ app.use("/api/lobbies", lobbies);
 
 
 //Websockets Setup
-
 const lobbyPort = 7000;
 
 const lobbySocket = app.listen(lobbyPort, function () {
@@ -50,15 +59,11 @@ chatServer.on("connection", (socket) => {
   socket.on("chat", (data) => {
     chatServer.sockets.emit("receiveMessage", data);
   });
-  // socket.on("typing", (data) => {
-  //   // send an event to everyone but the person who emitted the typing event to the server
-  //   socket.broadcast.emit("typing", data);
-  // });
 });
 
-const lobbyServer = socket(lobbySocket)
 
 
+const lobbyServer = socket(server)
 
 //Lobby Server
 const lobbiesCollection = {};
