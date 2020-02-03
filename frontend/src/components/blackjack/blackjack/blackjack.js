@@ -282,7 +282,7 @@ export class Blackjack {
         const dealerValue = this.dealer.getHandValue(this.dealer.hand);
 
         this.players.forEach(player => {
-            if (player.stood == true) {
+            if (player.stood ==ç= true) {
                 const playerValue = player.getHandValue(player.hand);
 
                 if (player.pool !== 0) {
