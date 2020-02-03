@@ -120,7 +120,8 @@ class Poker extends React.Component{
         }
     }
 
-    handleRaise(amount){
+    handleRaise(username, amount){
+        console.log(amount)
         this.setState({
             CalledChecked: 0,
             raised: true,
