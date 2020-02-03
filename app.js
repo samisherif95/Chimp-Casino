@@ -79,6 +79,10 @@ lobbyServer.on("connection", (socket) => {
 
 
   //lobbies
+//   socket.on("getLobbies"), () => {
+
+//   }
+
   socket.on("joinLobby", (lobbyId, username) => {
     localLobbyId = lobbyId
 

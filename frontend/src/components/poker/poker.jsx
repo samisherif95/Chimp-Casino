@@ -10,6 +10,7 @@ class Poker extends React.Component{
     constructor(props){
         super(props)
         this.socket = this.props.socket;
+        console.log(this.props);
         this.state ={
             game: new Game(),
             idx: 0,
@@ -120,7 +121,8 @@ class Poker extends React.Component{
         }
     }
 
-    handleRaise(amount){
+    handleRaise(username, amount){
+        console.log(amount)
         this.setState({
             CalledChecked: 0,
             raised: true,
