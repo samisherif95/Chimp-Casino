@@ -25,6 +25,9 @@ class Blackjack extends React.Component {
         this.handleStand = this.handleStand.bind(this);
         this.handleSplit = this.handleSplit.bind(this);
         this.handleDouble = this.handleDouble.bind(this);
+
+        window.blackjack = blackjack;
+        window.state = this.state;
     }
 
     //Get current player id. Goes into game, gets zeroth index 
@@ -282,21 +285,29 @@ class Blackjack extends React.Component {
         let ingamePlayers = (
             players ?
                 (
-                    players.map(player => {
+                    players.map((player, idx) => {
                         const hand = player.hand.map(card => {
-                            // return <li className="blackjack-hand-cards" key={card}> {card[2]} </li>
-                            return <img src={this.imageHash[card[2]]} alt= '' />
-
+                            return (
+                              <li>
+                                    <img
+                                        className="blackjack-card"
+                                        src={imageHash[card[2]]}
+                                        alt=""
+                                    />
+                                </li>
+                            );
                         })
 
                         const handSplit = player.handSplit.map(card => {
-                            return <li className="blackjack-handSplit-cards" key={card}> {card} </li>
+                            return <li className="blackjack-card" key={card}> {card} </li>
                         })
 
                         const splitPool = (player.split ? <div> Split Balance: {player.poolSplit} </div> : null)
 
+                        let className = `blackjack-player-${idx}`;
+
                         return (
-                            <div key={player.userId}>
+                            <div key={player.userId} className={className}>
                                 <section className="blackjack-player-info">
                                     <div className="blackjack-player-id">
                                         Player: {player.userId}
@@ -310,7 +321,7 @@ class Blackjack extends React.Component {
                                     </div>
                                 </section>
 
-                                <div className="">
+                                <div className="blackjack-player-hand">
                                     Hand:
                                     <ul className="blackjack-hand">
                                         {hand}
@@ -335,15 +346,17 @@ class Blackjack extends React.Component {
           <div className="blackjack-table">
             <img id="blackjack-table-png" src={blackjackTable} alt="blackjack table" />
             <h1>{blackjack.currentPhase}</h1>
-            <div>
-              <ul className="dealer-info">
+            <ul className="dealer-info">
                 {dealer.hand.map(card => {
-                  return <li key={card}>{card}</li>;
+                    return (
+                        <li key={card}>
+                            <img className="blackjack-card" src={imageHash[card[2]]} alt="" />
+                        </li>
+                    );              
                 })}
-              </ul>
-            </div>
+            </ul>
 
-            <div className="players-info">
+            <div className="blackjack-players-info">
               <ul>{ingamePlayers ? ingamePlayers : null}</ul>
             </div>
 

@@ -310,7 +310,7 @@ export class Blackjack {
     }
 }
 
-export class Deck {
+class Deck {
     constructor() {
         this.deck = [];
         this.reset();
@@ -324,9 +324,10 @@ export class Deck {
         const values = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"];
 
         for (let i = 0; i < suits.length; i++) {
-            for (let j = 0; j < values.length; j++) {
-                this.deck.push([values[j], suits[i]]);
-            }
+        for (let j = 0; j < values.length; j++) {
+            let cardName = [values[j], suits[i]].join("");
+            this.deck.push([values[j], suits[i], cardName]);
+        }
         }
     }
 
@@ -336,8 +337,8 @@ export class Deck {
         i;
 
         while (m) {
-            i = Math.floor(Math.random() * m--);
-            [deck[m], deck[i]] = [deck[i], deck[m]];
+        i = Math.floor(Math.random() * m--);
+        [deck[m], deck[i]] = [deck[i], deck[m]];
         }
 
         return this;
