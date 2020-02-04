@@ -13,6 +13,7 @@ const users = require("./routes/api/users");
 const chatrooms = require("./routes/api/chatrooms");
 const lobbies = require("./routes/api/lobbies");
 const PokerGame = require("./frontend/src/components/poker/game");
+const GameLogic = require("./frontend/src/components/blackjack/blackjack/blackjack")
 
 //SETUP
 const app = express();
@@ -101,6 +102,7 @@ lobbyServer.on("connection", (socket) => {
         players: {},
         id: lobbyId,
         bJ: {
+            game: new GameLogic.Blackjack(),
             players: {}
         },
         poker: {
@@ -115,7 +117,6 @@ lobbyServer.on("connection", (socket) => {
         username
       }
     }
-    console.log(lobbiesCollection[localLobbyId])
     socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id]);
     socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players);
   });
@@ -141,13 +142,14 @@ lobbyServer.on("connection", (socket) => {
   })
 
   socket.on("addPokerGamePlayer", username => {
+    lobbiesCollection[localLobbyId].poker.game.addPlayer(username)
     socket.emit("currentPokerPlayers", Object.values(lobbiesCollection[localLobbyId].poker.players));
     lobbiesCollection[localLobbyId].poker.players[socket.id] = {username};
     lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username);
   })
 
   socket.on("playerCalled", username => {
-      
+
     lobbyServer.in(localLobbyId + "poker").emit("playerCalled", username)
   })
 

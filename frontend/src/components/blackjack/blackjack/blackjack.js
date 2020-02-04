@@ -1,5 +1,5 @@
 
-export class Blackjack {
+class Blackjack {
     // Integerate "Insurance later?"
 
     // Blackjack structure :
@@ -321,8 +321,7 @@ export class Blackjack {
         this.currentPhase = 'waiting';
     }
 }
-
-export class Deck {
+class Deck {
     constructor() {
         this.deck = [];
         this.reset();
@@ -364,7 +363,7 @@ export class Deck {
     }
 }
 
-export class Player {
+class Player {
     constructor(userId, balance, deck) {
         this.deck = deck;
         this.userId = userId;
@@ -501,4 +500,10 @@ export class Player {
         this.pool *= 2;
         this.doubleDown = true;
     }
+}
+
+module.exports = {
+    Blackjack,
+    Deck,
+    Player
 }
