@@ -9,6 +9,7 @@ import imageHash from "./blackjackImages";
 class Blackjack extends React.Component {
     constructor(props) {
         super(props)
+        this.socket = this.props.socket;
         const blackjack = new GameLogic.Blackjack();
         this.state = {
             blackjack: blackjack,
@@ -189,7 +190,18 @@ class Blackjack extends React.Component {
 
     componentDidMount() {
         // this.socket.emit('joinBlackjackGame', this.props.currentUser.username, this.props.currentUser.balance)
-        this.addPlayer(this.props.currentUser.username, 1000)
+        // this.addPlayer(this.props.currentUser.username, 1000)
+        this.socket.emit("joinBJGame", this.props.currentUser.username, 1000) // change to other 1 once balance is working
+
+        this.socket.on("newBJPlayer", (username, balance) => {
+            this.addPlayer(username, balance);
+        })
+
+        this.socket.on("currentBJPlayers", players => {
+            players.forEach(player => {
+                this.addPlayer(player.username, player.balance);
+            })
+        })
     }
 
     render() {
