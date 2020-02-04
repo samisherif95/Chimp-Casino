@@ -207,4 +207,5 @@ class PokerLogic {
     }
 }
 
-export default PokerLogic;
+// export default PokerLogic;
+module.exports = PokerLogic;
