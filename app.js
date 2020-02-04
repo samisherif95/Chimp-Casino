@@ -12,7 +12,7 @@ const Lobby = require("./models/Lobby");
 const users = require("./routes/api/users");
 const chatrooms = require("./routes/api/chatrooms");
 const lobbies = require("./routes/api/lobbies");
-
+const PokerGame = require("./frontend/src/components/poker/game");
 
 //SETUP
 const app = express();
@@ -100,8 +100,13 @@ lobbyServer.on("connection", (socket) => {
       lobbiesCollection[lobbyId] = {
         players: {},
         id: lobbyId,
-        bJ: {},
-        poker: {}
+        bJ: {
+            players: {}
+        },
+        poker: {
+            game: new PokerGame(),
+            players: {}
+        }
       }
       lobbiesCollection[lobbyId].players[socket.id] = {
         x: 200,
@@ -110,6 +115,7 @@ lobbyServer.on("connection", (socket) => {
         username
       }
     }
+    console.log(lobbiesCollection[localLobbyId])
     socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id]);
     socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players);
   });
@@ -122,8 +128,8 @@ lobbyServer.on("connection", (socket) => {
   })
 
   socket.on("leaveLobby", () => {
-    socket.leave(localLobbyId)
-    delete lobbiesCollection[localLobbyId].players[socket.id]
+    socket.leave(localLobbyId);
+    delete lobbiesCollection[localLobbyId].players[socket.id];
     localLobbyId = null;
   })
 
@@ -135,12 +141,13 @@ lobbyServer.on("connection", (socket) => {
   })
 
   socket.on("addPokerGamePlayer", username => {
-    socket.emit("currentPokerPlayers", Object.values(lobbiesCollection[localLobbyId].poker))
-    lobbiesCollection[localLobbyId].poker[socket.id] = {username}
-    lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username)
+    socket.emit("currentPokerPlayers", Object.values(lobbiesCollection[localLobbyId].poker.players));
+    lobbiesCollection[localLobbyId].poker.players[socket.id] = {username};
+    lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username);
   })
 
   socket.on("playerCalled", username => {
+      
     lobbyServer.in(localLobbyId + "poker").emit("playerCalled", username)
   })
 
@@ -163,8 +170,8 @@ lobbyServer.on("connection", (socket) => {
   // bj
   socket.on("joinBJGame", (username, balance) => {
     socket.join(localLobbyId + "bj")
-    socket.emit("currentBJPlayers", Object.values(lobbiesCollection[localLobbyId].bJ))
-    lobbiesCollection[localLobbyId].bJ[socket.id] = {username, balance}
+    socket.emit("currentBJPlayers", Object.values(lobbiesCollection[localLobbyId].bJ.players))
+    lobbiesCollection[localLobbyId].bJ.players[socket.id] = {username, balance}
     lobbyServer.in(localLobbyId + "bj").emit("newBJPlayer", username, balance)
   })
 
@@ -175,12 +182,12 @@ lobbyServer.on("connection", (socket) => {
   //leave games
 
   socket.on("leavePokerGame", () => {
-    delete lobbiesCollection[localLobbyId].poker[socket.id];
+    delete lobbiesCollection[localLobbyId].poker.players[socket.id];
     socket.leave(localLobbyId + "poker");
   })
 
   socket.on("leaveBJGame", () => {
-    delete lobbiesCollection[localLobbyId].bJ[socket.id];
+    delete lobbiesCollection[localLobbyId].bJ.players[socket.id];
     socket.leave(localLobbyId + "bj")
   })
 
@@ -190,8 +197,8 @@ lobbyServer.on("connection", (socket) => {
     console.log(localLobbyId)
     if (localLobbyId) {
       delete lobbiesCollection[localLobbyId].players[socket.id]
-      delete lobbiesCollection[localLobbyId].bJ[socket.id]
-      delete lobbiesCollection[localLobbyId].poker[socket.id]
+      delete lobbiesCollection[localLobbyId].bJ.players[socket.id]
+      delete lobbiesCollection[localLobbyId].poker.players[socket.id]
       socket.to(localLobbyId).emit('removePlayer', socket.id)
     }
   })
