@@ -1,6 +1,9 @@
-import Deck from '../../cardDeck';
-import Player from './player';
-import PokerLogic from './pokerLogic';
+const Deck = require("../../cardDeck");
+const Player = require("./player");
+const PokerLogic = require("./pokerLogic");
+// import Deck from '../../cardDeck';
+// import Player from './player';
+// import PokerLogic from './pokerLogic';
 
 class Game {
     constructor(){
@@ -177,4 +180,6 @@ class Game {
     }
 }
 
-export default Game
+module.exports = Game;
+
+// export default Game
