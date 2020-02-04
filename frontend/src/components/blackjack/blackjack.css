@@ -6,6 +6,11 @@
     align-items: center;
 } */
 
+.modal-content {
+    height: 400px;
+    transform: translate(0px, -50%);
+}
+
 .blackjack-table {
     height: 100%;
     z-index: 1;
@@ -15,13 +20,19 @@
     height: 740px;
     z-index: -1;
     position: absolute;
-    transform: translate(-50%);
+    transform: translate(-50%, -5%);
     background-color: rgba(0, 0, 0, 0);
 }
 
 .blackjack-options {
     display: flex;
     flex-direction: column;
+}
+
+.blackjack-players-info {
+    height: 500px;
+    width: 1050px;
+    transform: translate(7px, -170px);
 }
 
 .blackjack-player-info {
@@ -31,19 +42,39 @@
     flex-direction: column;
 }
 
-.blackjack-hand {
-    display: flex;
-    flex-direction: column;
-}
-
 .dealer-info {
     display: flex;
-    flex-direction: column;
+    position: absolute;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
+    height: 400px;
+    width: 1000px;
+    transform: translate(23px, -120px);
 }
 
 .blackjack-options {
     display: flex;
     flex-direction: column;
+}
+
+.blackjack-player-0 {
+    position: absolute;
+    transform: translate(55px, 330px);
+}
+
+.blackjack-player-hand {
+    height: 160px;
+}
+
+.blackjack-hand {
+    display: flex;
+    flex-direction: row;
+    height: 140px;
+}
+
+.blackjack-card {
+    height: 100px;
+    width: 70px;
+    margin: 3px;
 }
