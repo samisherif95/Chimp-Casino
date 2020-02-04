@@ -12,7 +12,8 @@ const Lobby = require("./models/Lobby");
 const users = require("./routes/api/users");
 const chatrooms = require("./routes/api/chatrooms");
 const lobbies = require("./routes/api/lobbies");
-
+const PokerGame = require("./frontend/src/components/poker/game");
+const GameLogic = require("./frontend/src/components/blackjack/blackjack/blackjack")
 
 //SETUP
 const app = express();
@@ -68,9 +69,22 @@ lobbyServer.on("connection", (socket) => {
 
 
   //lobbies
-//   socket.on("getLobbies"), () => {
+  socket.on("getLobbies", () => {
+    const lobbies = Object.keys(lobbiesCollection).map(lobbyId => {
+        const { lobbyName, password, maxCapacity, balanceLimit } = lobbiesCollection[lobbyId];
+        return {
+            lobbyName,
+            password,
+            maxCapacity,
+            balanceLimit
+        }
+    })
+    socket.emit("receiveLobbies", lobbies);
+  })
 
-//   }
+//   socket.on("createLobby", (lobbyData) => {
+    
+//   })
 
   socket.on("joinLobby", (lobbyId, username) => {
     localLobbyId = lobbyId
@@ -86,7 +100,13 @@ lobbyServer.on("connection", (socket) => {
     } else {
       lobbiesCollection[lobbyId] = {
         players: {},
-        id: lobbyId
+        id: lobbyId,
+        bJ: {
+            game: new GameLogic.Blackjack(),
+        },
+        poker: {
+            game: new PokerGame(),
+        }
       }
       lobbiesCollection[lobbyId].players[socket.id] = {
         x: 200,
@@ -107,8 +127,8 @@ lobbyServer.on("connection", (socket) => {
   })
 
   socket.on("leaveLobby", () => {
-    socket.leave(localLobbyId)
-    delete lobbiesCollection[localLobbyId].players[socket.id]
+    socket.leave(localLobbyId);
+    delete lobbiesCollection[localLobbyId].players[socket.id];
     localLobbyId = null;
   })
 
@@ -120,10 +140,14 @@ lobbyServer.on("connection", (socket) => {
   })
 
   socket.on("addPokerGamePlayer", username => {
-    lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username)
+    lobbiesCollection[localLobbyId].poker.game.addPlayer(username)
+    socket.emit("currentPokerPlayers", Object.values(lobbiesCollection[localLobbyId].poker.players));
+    lobbiesCollection[localLobbyId].poker.players[socket.id] = {username};
+    lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username);
   })
 
   socket.on("playerCalled", username => {
+
     lobbyServer.in(localLobbyId + "poker").emit("playerCalled", username)
   })
 
@@ -144,18 +168,58 @@ lobbyServer.on("connection", (socket) => {
   })
 
   // bj
-  socket.on("joinBlackjackGame", (username, balance) => {
-      console.log("JOINED")
-    console.log(username, balance)
-    socket.join(localLobbyId + "bj")
-    lobbyServer.in(localLobbyId + "bj").emit("newPlayer", username, balance)
+  socket.on("joinBJGame", (username, balance) => {
+    console.log("SDLFJSDLKFJSLDKFJLSKDJF")
   })
+    // const locBJLobby = lobbiesCollection[localLobbyId].bJ
+    // console.log(locBJLobby.game);
+
+    // socket.emit(
+    //   "currentBJPlayers",
+    //   locBJLobby.game.players.map(player => {
+    //       return {
+    //           userId: player.userId,
+    //           pool: player.pool,
+    //           poolSplit: player.poolSplit,
+    //           balance: player.balance,
+    //           hand: player.hand,
+    //           handSplit: player.handSplit,
+    //           handValue: player.getHandValue(player.hand),
+    //           splitHandValue: player.getHandValue(player.splitHand)
+    //       }
+    //   })
+    // );
+    // locBJLobby.game.addPlayer(username, balance)
+    // socket.join(localLobbyId + "bj")
+    // console.log(locBJLobby.game.players)
+    // const player = locBJLobby.game.players[locBJLobby.game.players.length-1]
+    // console.log(player);
+    // lobbyServer.in(localLobbyId + "bj").emit("newBJPlayer", {
+    //     userId: player.userId,
+    //     pool: player.pool,
+    //     poolSplit: player.poolSplit,
+    //     balance: player.balance,
+    //     hand: player.hand,
+    //     handSplit: player.handSplit,
+    //     handValue: player.getHandValue(player.hand),
+    //     splitHandValue: player.getHandValue(player.splitHand)
+    // })
+
+//   })
+
+  socket.on("bet", () => {
+      
+  })
+
+  //leave games
 
   socket.on("leavePokerGame", () => {
-    socket.leave(localLobbyId + "poker")
+    // delete lobbiesCollection[localLobbyId].poker.players[socket.id];
+    socket.leave(localLobbyId + "poker");
   })
 
-  socket.on("leaveBlackjackGame", () => {
+  socket.on("leaveBJGame", () => {
+    // delete lobbiesCollection[localLobbyId].bJ.players[socket.id];
     socket.leave(localLobbyId + "bj")
   })
 
@@ -165,6 +229,8 @@ lobbyServer.on("connection", (socket) => {
     console.log(localLobbyId)
     if (localLobbyId) {
       delete lobbiesCollection[localLobbyId].players[socket.id]
+    //   delete lobbiesCollection[localLobbyId].bJ.players[socket.id]
+    //   delete lobbiesCollection[localLobbyId].poker.players[socket.id]
       socket.to(localLobbyId).emit('removePlayer', socket.id)
     }
   })
