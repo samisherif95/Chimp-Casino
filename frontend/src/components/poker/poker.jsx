@@ -10,7 +10,6 @@ class Poker extends React.Component{
     constructor(props){
         super(props)
         this.socket = this.props.socket;
-        console.log(this.props);
         this.state ={
             game: new Game(),
             idx: 0,
