@@ -196,7 +196,6 @@ lobbyServer.on("connection", (socket) => {
 
   //disconect
   socket.on("disconnect", () => {
-    console.log(localLobbyId)
     if (localLobbyId) {
       delete lobbiesCollection[localLobbyId].players[socket.id]
       delete lobbiesCollection[localLobbyId].bJ.players[socket.id]
