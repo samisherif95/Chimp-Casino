@@ -3,6 +3,7 @@ import React from "react";
 class LobbyForm extends React.Component {
     constructor(props) {
         super(props);
+        this.socket = this.props.socket;
         this.state = {
             lobbyName: "",
             password: "",

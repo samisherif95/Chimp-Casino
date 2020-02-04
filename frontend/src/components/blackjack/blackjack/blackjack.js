@@ -1,5 +1,5 @@
 
-export class Blackjack {
+class Blackjack {
     // Integerate "Insurance later?"
 
     // Blackjack structure :
@@ -177,16 +177,6 @@ export class Blackjack {
         }
     }
 
-    wait(ms, cb) {
-        let waitDateOne = new Date();
-        while ((new Date()) - waitDateOne <= ms) {
-            //Nothing
-        }
-        if (cb) {
-            eval(cb);
-        }
-    }
-
     dealCards() {
         for (let i = 0; i < 2; i++) {
             this.dealer.hand.push(this.deck.deal());
@@ -248,7 +238,6 @@ export class Blackjack {
                 } 
             }
         });
-        this.wait(1000);
         console.log("Round over!")
         this.roundDone = true;
     }
@@ -282,7 +271,11 @@ export class Blackjack {
         const dealerValue = this.dealer.getHandValue(this.dealer.hand);
 
         this.players.forEach(player => {
+<<<<<<< HEAD
             if (player.stood ==ç= true) {
+=======
+            if (player.stood === true) {
+>>>>>>> styling-blackjack
                 const playerValue = player.getHandValue(player.hand);
 
                 if (player.pool !== 0) {
@@ -315,14 +308,12 @@ export class Blackjack {
                 }
             }
         });
-        this.wait(1000);
         console.log("Round over!")
         this.roundDone = true;    
         this.currentPhase = 'waiting';
     }
 }
-
-export class Deck {
+class Deck {
     constructor() {
         this.deck = [];
         this.reset();
@@ -336,9 +327,10 @@ export class Deck {
         const values = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"];
 
         for (let i = 0; i < suits.length; i++) {
-            for (let j = 0; j < values.length; j++) {
-                this.deck.push([values[j], suits[i]]);
-            }
+        for (let j = 0; j < values.length; j++) {
+            let cardName = [values[j], suits[i]].join("");
+            this.deck.push([values[j], suits[i], cardName]);
+        }
         }
     }
 
@@ -348,8 +340,8 @@ export class Deck {
         i;
 
         while (m) {
-            i = Math.floor(Math.random() * m--);
-            [deck[m], deck[i]] = [deck[i], deck[m]];
+        i = Math.floor(Math.random() * m--);
+        [deck[m], deck[i]] = [deck[i], deck[m]];
         }
 
         return this;
@@ -364,7 +356,7 @@ export class Deck {
     }
 }
 
-export class Player {
+class Player {
     constructor(userId, balance, deck) {
         this.deck = deck;
         this.userId = userId;
@@ -501,4 +493,10 @@ export class Player {
         this.pool *= 2;
         this.doubleDown = true;
     }
+}
+
+module.exports = {
+    Blackjack,
+    Deck,
+    Player
 }

@@ -5,9 +5,14 @@ import { connect } from "react-redux";
 class LobbiesIndex extends React.Component {
     constructor(props) {
         super(props)
+        this.socket = this.props.socket;
+        this.state = { lobbies: [] }
+        console.log(props);
     }
 
     componentDidMount() {
+        this.socket.emit("getLobbies");
+        this.socket.on("receiveLobbies", lobbyData => this.setState({ lobbies: lobbyData}));
         this.props.fetchLobbies()
     }
 
