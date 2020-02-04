@@ -7,7 +7,7 @@ import BlackjackContainer from '../../components/blackjack/blackjack_container';
 import LobbyFormContainer from "../lobbies/lobby_form_container";
 import LobbyIndexContainer from '../lobbies/lobby_index_container';
 import LeaveLobby from "../lobbies/leave_lobby";
-import LeaderBoard from "../users/leaderboard";
+// import LeaderBoard from "../users/leaderboard";
 import PokerContainer from '../poker/poker_container';
 // import LeaveLobby from "../lobbies/leave_lobby";
 
@@ -43,8 +43,11 @@ const Modal = ({ modal, closeModal, socket }) => {
         case 'leaveLobby':
             component = <LeaveLobby socket={socket}/>;
             break;
-        case 'leaderboard':
-            component = <LeaderBoard />;
+        // case 'leaderboard':
+        //     component = <LeaderBoard />;
+        //     break;
+        case 'blackjack':
+            component = <BlackjackContainer socket={socket}/>;
             break;
         default:
             return null;
