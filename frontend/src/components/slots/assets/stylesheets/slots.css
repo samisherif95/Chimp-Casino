@@ -1,0 +1,98 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+.btn-group-justified {
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  padding-bottom: 25px;
+}
+
+.container {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+a{
+  color: #ccd500;
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
+  color: #a9b119;
+}
+
+.slotMachine .slot{
+  height:100px;
+  background-position-x: 55%;
+  background-repeat: no-repeat;
+}
+
+/*
+ * SlotMachine
+ */
+ 
+#randomize {
+    text-align:center;
+    background-image: url('../../../../app/assets/images/slots-bg.png');
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 950px;
+    height: 750px;
+    display: flex;
+	justify-content: center;
+}
+
+#randomize .row > div.col-sm-4 > div {
+  padding: 40px;
+  width: 100px;
+  height: 100px;
+  background: white;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  text-align: center;
+}
+
+#randomize .row > div.col-xs-4 > div {
+  padding-top: 40px;
+  padding-left: 40px;
+  width: 120px;
+  height: 120px;
+  background-color: #fff;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.randomizeMachine {
+  width: 100px;
+  height: 100px;
+}
+
+#randomize .btn-group {
+  margin-top: 30px;
+  width: auto;
+  margin-bottom: 15px;
+}
+
+.machineResult {
+  color: #fff;
+  text-align: center;
+  font-weight: 900;
+  height: 50px !important;
+  background: transparent !important;
+  font-size: 18px;
+  padding: 10px !important;
+}
+
+.row{
+    display: flex;
+}

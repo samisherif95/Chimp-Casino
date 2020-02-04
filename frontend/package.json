@@ -10,6 +10,7 @@
     "axios": "^0.19.1",
     "has-cors": "^1.1.0",
     "jquery": "^3.4.1",
+    "jquery-slotmachine": "^4.0.1",
     "jwt-decode": "^2.2.0",
     "phaser": "^3.22.0",
     "react": "^16.12.0",
