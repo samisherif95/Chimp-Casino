@@ -103,11 +103,9 @@ lobbyServer.on("connection", (socket) => {
         id: lobbyId,
         bJ: {
             game: new GameLogic.Blackjack(),
-            players: {}
         },
         poker: {
             game: new PokerGame(),
-            players: {}
         }
       }
       lobbiesCollection[lobbyId].players[socket.id] = {
@@ -171,10 +169,38 @@ lobbyServer.on("connection", (socket) => {
 
   // bj
   socket.on("joinBJGame", (username, balance) => {
+
+    const locBJLobby = lobbiesCollection[localLobbyId].bJ
+
+
+    socket.emit(
+      "currentBJPlayers",
+      locBJLobby.game.players.map(player => {
+          return {
+              userId: player.userId,
+              pool: player.pool,
+              poolSplit: player.poolSplit,
+              balance: player.balance,
+              hand: player.hand,
+              handSplit: player.handSplit,
+              handValue: player.getHandValue(),
+              splitHandValue: player.getHandValue()
+          }
+      })
+    );
+    locBJLobby.game.addPlayer(socket.id, username, balance)
     socket.join(localLobbyId + "bj")
-    socket.emit("currentBJPlayers", Object.values(lobbiesCollection[localLobbyId].bJ.players))
-    lobbiesCollection[localLobbyId].bJ.players[socket.id] = {username, balance}
-    lobbyServer.in(localLobbyId + "bj").emit("newBJPlayer", username, balance)
+    const player = locBJLobby.game.players[locBJLobby.game.players.length-1]
+    lobbyServer.in(localLobbyId + "bj").emit("newBJPlayer", {
+        userId: player.userId,
+        pool: player.pool,
+        poolSplit: player.poolSplit,
+        balance: player.balance,
+        hand: player.hand,
+        handSplit: player.handSplit,
+        handValue: player.getHandValue(),
+        splitHandValue: player.getHandValue()
+    })
   })
 
   socket.on("bet", () => {
@@ -184,22 +210,31 @@ lobbyServer.on("connection", (socket) => {
   //leave games
 
   socket.on("leavePokerGame", () => {
-    delete lobbiesCollection[localLobbyId].poker.players[socket.id];
+    // delete lobbiesCollection[localLobbyId].poker.players[socket.id];
     socket.leave(localLobbyId + "poker");
   })
 
   socket.on("leaveBJGame", () => {
-    delete lobbiesCollection[localLobbyId].bJ.players[socket.id];
+    // delete lobbiesCollection[localLobbyId].bJ.players[socket.id];
     socket.leave(localLobbyId + "bj")
+    const bJPlayer = lobbiesCollection[localLobbyId].bJ.game.getPlayerBySocketId(socket.id)
+    lobbiesCollection[localLobbyId].bJ.game.removePlayer(bJPlayer)
+    lobbyServer.in(localLobbyId + "bj").emit("removePlayer", bJPlayer.userId)
+    // emit method that removes player to all players still playing
   })
 
 
   //disconect
   socket.on("disconnect", () => {
     if (localLobbyId) {
-      delete lobbiesCollection[localLobbyId].players[socket.id]
-      delete lobbiesCollection[localLobbyId].bJ.players[socket.id]
-      delete lobbiesCollection[localLobbyId].poker.players[socket.id]
+        delete lobbiesCollection[localLobbyId].players[socket.id]
+        const bJPlayer = lobbiesCollection[localLobbyId].bJ.game.getPlayerBySocketId(socket.id)
+        if (bJPlayer) {
+            lobbiesCollection[localLobbyId].bJ.game.removePlayer(bJPlayer)
+            lobbyServer.in(localLobbyId + "bj").emit("removePlayer", bJPlayer.userId)
+        }
+    //   delete lobbiesCollection[localLobbyId].bJ.players[socket.id]
+    //   delete lobbiesCollection[localLobbyId].poker.players[socket.id]
       socket.to(localLobbyId).emit('removePlayer', socket.id)
     }
   })

@@ -22,7 +22,7 @@ class Blackjack {
 
     constructor() {
         this.deck = new Deck();
-        this.dealer = new Player("dealer", 10000000, this.deck);
+        this.dealer = new Player(null, "dealer", 10000000, this.deck);
         this.players = [];
         this.playersQueue = [];
         this.cycle = 0;
@@ -31,6 +31,16 @@ class Blackjack {
         this.roundDone = false;
         
         this.currentPhase = 'waiting'
+    }
+
+    getPlayerBySocketId(socketId) {
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].socketId === socketId) {
+                return this.players[i]
+            }
+        }
+        return null;
+
     }
 
     currentTurnId() {
@@ -105,7 +115,7 @@ class Blackjack {
     resetGame() {
         this.currentPhase = 'waiting'
         this.deck = new Deck();
-        this.dealer = new Player('dealer', 10000000, this.deck);
+        this.dealer = new Player(null, 'dealer', 10000000, this.deck);
         let dupePlayers = this.players.slice()
         this.players = []
         dupePlayers.forEach(player => {
@@ -163,28 +173,23 @@ class Blackjack {
         return false;
     }
 
-    addPlayer(playerId, balance) {
+    addPlayer(socketId, playerId, balance) {
         if (this.players.length > 7) {
             console.log("Table full, too many players!")
         } else if (!['waiting', 'betting'].includes(this.currentPhase)) {
             console.log("Please wait until the next round")
-            this.playersQueue.push(new Player(playerId, balance, this.deck)); 
+            this.playersQueue.push(new Player(socketId, playerId, balance, this.deck)); 
         } else {
-            this.players.push(new Player(playerId, balance, this.deck));
+            this.players.push(new Player(socketId, playerId, balance, this.deck));
             if (this.players.length === 1) {
                 this.currentPhase = 'betting'
             }
         }
     }
 
-    wait(ms, cb) {
-        let waitDateOne = new Date();
-        while ((new Date()) - waitDateOne <= ms) {
-            //Nothing
-        }
-        if (cb) {
-            eval(cb);
-        }
+    removePlayer(player) {
+        const index = this.players.indexOf(player);
+        this.players.splice(index, 1);
     }
 
     dealCards() {
@@ -248,7 +253,6 @@ class Blackjack {
                 } 
             }
         });
-        this.wait(1000);
         console.log("Round over!")
         this.roundDone = true;
     }
@@ -282,7 +286,7 @@ class Blackjack {
         const dealerValue = this.dealer.getHandValue(this.dealer.hand);
 
         this.players.forEach(player => {
-            if (player.stood == true) {
+            if (player.stood === true) {
                 const playerValue = player.getHandValue(player.hand);
 
                 if (player.pool !== 0) {
@@ -315,7 +319,6 @@ class Blackjack {
                 }
             }
         });
-        this.wait(1000);
         console.log("Round over!")
         this.roundDone = true;    
         this.currentPhase = 'waiting';
@@ -335,9 +338,10 @@ class Deck {
         const values = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"];
 
         for (let i = 0; i < suits.length; i++) {
-            for (let j = 0; j < values.length; j++) {
-                this.deck.push([values[j], suits[i]]);
-            }
+        for (let j = 0; j < values.length; j++) {
+            let cardName = [values[j], suits[i]].join("");
+            this.deck.push([values[j], suits[i], cardName]);
+        }
         }
     }
 
@@ -347,8 +351,8 @@ class Deck {
         i;
 
         while (m) {
-            i = Math.floor(Math.random() * m--);
-            [deck[m], deck[i]] = [deck[i], deck[m]];
+        i = Math.floor(Math.random() * m--);
+        [deck[m], deck[i]] = [deck[i], deck[m]];
         }
 
         return this;
@@ -364,7 +368,8 @@ class Deck {
 }
 
 class Player {
-    constructor(userId, balance, deck) {
+    constructor(socketId, userId, balance, deck) {
+        this.socketId = socketId;
         this.deck = deck;
         this.userId = userId;
         this.pool = 0;
@@ -381,10 +386,30 @@ class Player {
         this.bustSplit = false;
     }
 
-    getHandValue(hand) {
+    getHandValue() {
         let total = 0;
 
-        hand.forEach(card => {
+        this.hand.forEach(card => {
+            if (Number.isInteger(card[0])) {
+                total += card[0];
+            } else if (card[0] !== "A") {
+                total += 10;
+            } else {
+                if (total + 11 > 21) {
+                    total += 1;
+                } else {
+                    total += 11;
+                }
+            }
+        });
+
+        return total;
+    }
+
+    getSplitHandValue() {
+        let total = 0;
+
+        this.splitHand.forEach(card => {
             if (Number.isInteger(card[0])) {
                 total += card[0];
             } else if (card[0] !== "A") {
