@@ -22,7 +22,7 @@ const App = () => (
 
         <Switch>
             <ProtectedRoute path='/lobbies/:lobbyId/game' component={GameContainer} socket={socket} />
-            <ProtectedRoute exact path="/lobbies" component={LobbyIndexContainer} />
+            <ProtectedRoute exact path="/lobbies" component={LobbyIndexContainer} socket={socket} />
             <Route exact path="/" component={MainPageContainer} />
         </Switch>
     </div>

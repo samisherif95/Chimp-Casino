@@ -7,7 +7,7 @@ import BlackjackContainer from '../../components/blackjack/blackjack_container';
 import LobbyFormContainer from "../lobbies/lobby_form_container";
 // import LobbyIndexContainer from '../lobbies/lobby_index_container';
 import LeaveLobby from "../lobbies/leave_lobby";
-import LeaderBoard from "../users/leaderboard";
+// import LeaderBoard from "../users/leaderboard";
 import PokerContainer from '../poker/poker_container';
 import SlotContainer from '../slots/slots_container';
 // import LeaveLobby from "../lobbies/leave_lobby";
@@ -17,6 +17,14 @@ const Modal = ({ modal, closeModal, socket }) => {
         return null;
     }
     let component;
+    const handleClose = () => {
+        if (modal === 'blackjack') {
+            socket.emit("leaveBJGame")
+        } else if (modal === "poker") {
+            socket.emit("leavePokerGame")
+        }
+        closeModal();
+    }
     switch (modal) {
         case 'login':
             component = <LoginFormContainer />;
@@ -25,20 +33,20 @@ const Modal = ({ modal, closeModal, socket }) => {
             component = <SignupFormContainer />;
             break;
         case 'blackjack':
-            component = <BlackjackContainer />;
+            component = <BlackjackContainer socket={socket}/>;
             break;
         case 'poker':
             component =<PokerContainer socket={socket} />;
             break;
         case 'createLobby':
-            component = <LobbyFormContainer />;
+            component = <LobbyFormContainer socket={socket} />;
             break;
         case 'leaveLobby':
             component = <LeaveLobby socket={socket}/>;
             break;
-        case 'leaderboard':
-            component = <LeaderBoard />;
-            break;
+        // case 'leaderboard':
+        //     component = <LeaderBoard />;
+        //     break;
         case 'blackjack':
             component = <BlackjackContainer socket={socket}/>;
             break
@@ -49,7 +57,7 @@ const Modal = ({ modal, closeModal, socket }) => {
             return null;
     }
     return (
-        <div className="modal-screen" onClick={closeModal}>
+        <div className="modal-screen" onClick={handleClose}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 {component}
             </div>

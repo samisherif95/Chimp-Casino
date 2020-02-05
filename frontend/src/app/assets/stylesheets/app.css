@@ -146,6 +146,7 @@ button{
 
     position: absolute;
     min-width: 40%;
+    min-height: 750px;
     /* width: 525px; */
     /* background-image: url('../images/monkeypoker.jpg');
     background-position: center; 
