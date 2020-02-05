@@ -143,8 +143,8 @@ lobbyServer.on("connection", (socket) => {
 
   socket.on("addPokerGamePlayer", username => {
     lobbiesCollection[localLobbyId].poker.game.addPlayer(username)
-    socket.emit("currentPokerPlayers", Object.values(lobbiesCollection[localLobbyId].poker.players));
-    lobbiesCollection[localLobbyId].poker.players[socket.id] = {username};
+    socket.emit("currentPokerPlayers", Object.values(lobbiesCollection[localLobbyId]));
+    //  lobbiesCollection[localLobbyId].poker.players[socket.id] = {username};
     lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username);
   })
 
