@@ -61,6 +61,7 @@ const lobbiesCollection = {};
 lobbyServer.on("connection", (socket) => {
   console.log("made connection with socket " + socket.id);
   let localLobbyId
+  let localBJLobby
 
   //chat 
   socket.on("chat", (data) => {
@@ -115,6 +116,7 @@ lobbyServer.on("connection", (socket) => {
         username
       }
     }
+    localBJLobby = lobbiesCollection[lobbyId].bJ;
     socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id]);
     socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players);
   });
@@ -170,12 +172,11 @@ lobbyServer.on("connection", (socket) => {
   // bj
   socket.on("joinBJGame", (username, balance) => {
 
-    const locBJLobby = lobbiesCollection[localLobbyId].bJ
 
 
     socket.emit(
       "currentBJPlayers",
-      locBJLobby.game.players.map(player => {
+      localBJLobby.game.players.map(player => {
           return {
               userId: player.userId,
               pool: player.pool,
@@ -188,9 +189,9 @@ lobbyServer.on("connection", (socket) => {
           }
       })
     );
-    locBJLobby.game.addPlayer(socket.id, username, balance)
+    localBJLobby.game.addPlayer(socket.id, username, balance)
     socket.join(localLobbyId + "bj")
-    const player = locBJLobby.game.players[locBJLobby.game.players.length-1]
+    const player = localBJLobby.game.players[localBJLobby.game.players.length-1]
     lobbyServer.in(localLobbyId + "bj").emit("newBJPlayer", {
         userId: player.userId,
         pool: player.pool,
@@ -200,11 +201,44 @@ lobbyServer.on("connection", (socket) => {
         handSplit: player.handSplit,
         handValue: player.getHandValue(),
         splitHandValue: player.getHandValue()
-    })
+    }, localBJLobby.game.currentPhase, localBJLobby.game.players[0].userId )
   })
 
-  socket.on("bet", () => {
-      
+  socket.on("bet", (amount) => {
+    if (localBJLobby.game.getBetFromCurrentTurn(amount)) {
+        if (localBJLobby.game.currentPhase === "options") {
+            const playerCards = {};
+            // console.log(localBJLobby.game.players)
+            // const naturals = localBJLobby.game.naturalBlackJack()
+            localBJLobby.game.players.forEach(player => playerCards[player.userId] = player.hand)
+            lobbyServer.in(localLobbyId + "bj").emit("dealCards", playerCards)
+            lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase);
+            lobbyServer.in(localLobbyId + "bj").emit("lastBetter", 
+            localBJLobby.game.players[localBJLobby.game.players.length-1].userId,
+            localBJLobby.game.players[localBJLobby.game.players.length - 1].balance)
+
+        } else {
+            lobbyServer.in(localLobbyId + "bj").emit("changeTurn", 
+            localBJLobby.game.players[0].userId,
+            localBJLobby.game.players[localBJLobby.game.players.length-1].userId, 
+            localBJLobby.game.players[localBJLobby.game.players.length - 1].balance)
+        }
+    } else {
+        lobbyServer.in(localLobbyId + "bj").emit("betFailed")
+    }
+  })
+
+  socket.on("playerHit", () => {
+    localBJLobby.game.players[0].hit();
+    const playerCards = {};
+    if (localBJLobby.game.players[0].bust) {
+        const player = localBJLobby.game.players[localBJLobby.game.players.length-1];
+        playerCards[player.userId] = player.hand;
+    } else {
+        const player = localBJLobby.game.players[0];
+        playerCards[player.userId] = player.hand;
+    }
+    lobbyServer.in(localLobbyId + "bj").emit("dealCards", playerCards)
   })
 
   //leave games
@@ -219,6 +253,9 @@ lobbyServer.on("connection", (socket) => {
     socket.leave(localLobbyId + "bj")
     const bJPlayer = lobbiesCollection[localLobbyId].bJ.game.getPlayerBySocketId(socket.id)
     lobbiesCollection[localLobbyId].bJ.game.removePlayer(bJPlayer)
+    if (!lobbiesCollection[localLobbyId].bJ.game.players.length) {
+        lobbiesCollection[localLobbyId].bJ.game.resetGame();
+    }
     lobbyServer.in(localLobbyId + "bj").emit("removePlayer", bJPlayer.userId)
     // emit method that removes player to all players still playing
   })
@@ -232,6 +269,9 @@ lobbyServer.on("connection", (socket) => {
         if (bJPlayer) {
             lobbiesCollection[localLobbyId].bJ.game.removePlayer(bJPlayer)
             lobbyServer.in(localLobbyId + "bj").emit("removePlayer", bJPlayer.userId)
+            if (!lobbiesCollection[localLobbyId].bJ.game.players.length) {
+                lobbiesCollection[localLobbyId].bJ.game.resetGame();
+            }
         }
     //   delete lobbiesCollection[localLobbyId].bJ.players[socket.id]
     //   delete lobbiesCollection[localLobbyId].poker.players[socket.id]

@@ -157,6 +157,7 @@ class Blackjack {
             if (this.players.every(player => { return this.checkDone(player) })) {
                 this.currentPhase = 'dealer'
             } else if (this.players.every(player => { return player.betted === true })) {
+                this.dealCards();
                 this.currentPhase = 'options'
             }
 
@@ -205,26 +206,26 @@ class Blackjack {
     // before the player options phase
     naturalBlackjack() {
         // In the case that dealer does not have a natural
-        if (this.dealer.getHandValue(this.dealer.hand) !== 21) {
+        if (this.dealer.getHandValue() !== 21) {
             // Dealer keeps cards face down 
             this.players.forEach(player => {
             // If the player has a natural blackjack and dealer does not,
             // they're automatically paid out 1.5x their pool and
             // are out of the runnings for the current round.
-                if (player.getHandValue(player.hand) === 21) {
+                if (player.getHandValue() === 21) {
                     player.pool *= 1.5;
                     player.balance += player.pool;
                     player.pool = 0;
                 }
             });
         // In the case that dealer has a natural. They round is over
-        } else if (this.dealer.getHandValue(this.dealer.hand) === 21) {
+        } else if (this.dealer.getHandValue() === 21) {
             // Dealer must flip cards 
             this.players.forEach(player => {
-                if (player.getHandValue(player.hand) < 21) {
+                if (player.getHandValue() < 21) {
                     // In the case that player does not have a natural, they lose their wager and are out
                     player.pool = 0;
-                } else if (player.getHandValue(player.hand) === 21) {
+                } else if (player.getHandValue() === 21) {
                     // In the case that player and dealer have naturals, neither party collect
                     player.balance += player.pool;
                     player.pool = 0;
