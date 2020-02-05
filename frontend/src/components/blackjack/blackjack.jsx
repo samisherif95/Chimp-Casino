@@ -13,8 +13,10 @@ class Blackjack extends React.Component {
         // const blackjack = new GameLogic.Blackjack();
         this.state = {
             // blackjack: blackjack,
-            // betAmount: 0,
+            betAmount: 0,
             players: [],
+            phase: "",
+            currentTurn: "",
         };
         this.handleBetSubmit = this.handleBetSubmit.bind(this);
         this.addPlayer = this.addPlayer.bind(this);
@@ -82,10 +84,13 @@ class Blackjack extends React.Component {
 
     handleBetSubmit(e) {
         // debugger /
+    
         e.preventDefault();
-        if (this.state.blackjack.getBetFromCurrentTurn(parseInt(this.state.betAmount))) {
-            this.setState({ betAmount: 0 })
-        }
+        console.log("here1")
+        this.socket.emit("bet", this.state.betAmount)
+        // if (this.state.blackjack.getBetFromCurrentTurn(parseInt(this.state.betAmount))) {
+        //     this.setState({ betAmount: 0 })
+        // }
     }
 
     updateBlackjack() {
@@ -119,30 +124,31 @@ class Blackjack extends React.Component {
     }
 
     handleHit() {
-        if (this.state.blackjack.players[0].bust === false) {
-            this.state.blackjack.players[0].hit()
-            // if (this.state.blackjack.players[0].bust && this.state.blackjack.players[0].handSplit.length == 0) {
-            //     this.nullAllOptions();
-            // }
-            // if (this.state.blackjack.players[0].bust) {
-            //     document.getElementsByClassName("blackjack-hand")[0].style.color = 'red';
-            // }
-            this.updateBlackjack();
-        } else if (this.state.blackjack.players[0].bustSplit === false) {
-            this.state.blackjack.players[0].hitSplit()
-            // if (this.state.blackjack.players[0].bustSplit) {
-            //     document.getElementsByClassName("blackjack-handSplit")[0].style.color = 'red';
-            //     this.nullAllOptions();
-            // }
-            this.state.updateBlackjack();
-        }
+        this.socket.emit("playerHit")
+        // if (this.state.blackjack.players[0].bust === false) {
+        //     this.state.blackjack.players[0].hit()
+        //     // if (this.state.blackjack.players[0].bust && this.state.blackjack.players[0].handSplit.length == 0) {
+        //     //     this.nullAllOptions();
+        //     // }
+        //     // if (this.state.blackjack.players[0].bust) {
+        //     //     document.getElementsByClassName("blackjack-hand")[0].style.color = 'red';
+        //     // }
+        //     this.updateBlackjack();
+        // } else if (this.state.blackjack.players[0].bustSplit === false) {
+        //     this.state.blackjack.players[0].hitSplit()
+        //     // if (this.state.blackjack.players[0].bustSplit) {
+        //     //     document.getElementsByClassName("blackjack-handSplit")[0].style.color = 'red';
+        //     //     this.nullAllOptions();
+        //     // }
+        //     this.state.updateBlackjack();
+        // }
 
-        if (this.state.blackjack.checkCurrentPlayerBust()) {
-            if (this.state.blackjack.checkAllBust()) {
-                this.newRound();
-            }
-        }
-        this.updateBlackjack();
+        // if (this.state.blackjack.checkCurrentPlayerBust()) {
+        //     if (this.state.blackjack.checkAllBust()) {
+        //         this.newRound();
+        //     }
+        // }
+        // this.updateBlackjack();
     }
 
     handleStand() {
@@ -191,16 +197,13 @@ class Blackjack extends React.Component {
     componentDidMount() {
         // this.socket.emit('joinBlackjackGame', this.props.currentUser.username, this.props.currentUser.balance)
         // this.addPlayer(this.props.currentUser.username, 1000)
-        console.log("HITTING HERE")
         this.socket.emit("joinBJGame", this.props.currentUser.username, 1000) // change to other 1 once balance is working
 
-        this.socket.on("newBJPlayer", player => {
-            console.log(player)
+        this.socket.on("newBJPlayer", (player, phase, currentTurnName) => {
             this.state.players.push(player);
-            this.setState(this.state);
+            this.setState({phase, currentTurn: currentTurnName});
         })
-        this.socket.on("currentBJPlayers", playersData => {
-            console.log(playersData)
+        this.socket.on("currentBJPlayers", (playersData) => {
             this.setState({players: playersData})
         })
 
@@ -212,10 +215,33 @@ class Blackjack extends React.Component {
             }
             this.setState(this.state);
         })
+        this.socket.on("changeTurn", (currentTurnName) => {
+            this.setState({ currentTurn: currentTurnName});
+        })
+
+        this.socket.on("changePhase", (phase, currentTurnName) => {
+            this.setState({ phase, currentTurn: currentTurnName })
+        });
+
+        this.socket.on("dealCards", cards => {
+            this.state.players.forEach(player => {
+                player.hand = cards[player.userId]
+            })
+            this.setState(this.state)
+        })
+
+        this.socket.on("lastBetter", (lastBetterName, lastBetterBalance) => {
+            this.state.players.forEach(player => {
+                if (player.userId === lastBetterName) {
+                    player.balance = lastBetterBalance;
+                }
+            })
+            this.setState(this.state);
+        })
     }
 
     render() {
-        console.log(this.state)
+        console.log("phase", this.state.phase)
         // const { blackjack } = this.state;
         // const { players, dealer } = blackjack;
 
@@ -226,49 +252,50 @@ class Blackjack extends React.Component {
         // Don't need to cycle through the players. KEep track of the current player's turn in the state. 
         // In rendering, reflect on 
 
-        // let render;
+        let render;
+        switch (this.state.phase) {
+            case 'betting':
+                console.log("currently in: betting phase")
+                // Edit 2.0: Maybe not necessary, sent getBet function down as a prop for the 
+                // Player Component. Maybe transfer this form into the player component and 
+                // on submit, trigger the getBet on the amount wagered 
 
-        // switch (blackjack.currentPhase) {
-        //     case 'betting':
-        //         console.log("currently in: betting phase")
-        //         // Edit 2.0: Maybe not necessary, sent getBet function down as a prop for the 
-        //         // Player Component. Maybe transfer this form into the player component and 
-        //         // on submit, trigger the getBet on the amount wagered 
-
-        //         // keep track of whose turn to bet
-        //         render = (
-        //             <div className="blackjack-betAmount">
-        //                 <form onSubmit={this.handleBetSubmit}>
-        //                     <input
-        //                         id='input'
-        //                         type="text"
-        //                         value={this.state.betAmount}
-        //                         onChange={this.update("betAmount")}
-        //                     />
-        //                     <input type='submit' value='bet'/>
-        //                 </form>
-        //             </div>
-        //         );
+                // keep track of whose turn to bet
+                render = (
+                    <div className="blackjack-betAmount">
+                        <form onSubmit={this.handleBetSubmit}>
+                            <input
+                                id='input'
+                                type="text"
+                                value={this.state.betAmount}
+                                onChange={this.update("betAmount")}
+                            />
+                            <input type='submit' value='bet'/>
+                        </form>
+                    </div>
+                );
+        
   
-        //         break;
-        //     case 'options':
-        //         render = (
-        //             <section className="blackjack-options">
-        //                  <button className="blackjack-hit" onClick={this.handleHit}>
-        //                         Hit!
-        //                 </button>
-        //                     <button className="blackjack-stand" onClick={this.handleStand}>
-        //                         Stand!
-        //                 </button>
-        //                     <button className="blackjack-split" onClick={this.handleSplit}>
-        //                         Split hand!
-        //                 </button>
-        //                     <button className="blackjack-double" onClick={this.handleDouble}>
-        //                         Double down!
-        //                 </button>
-        //             </section>
-        //         )
-                
+                break;
+            case 'options':
+                render = (
+                    <section className="blackjack-options">
+                         <button className="blackjack-hit" onClick={this.handleHit}>
+                                Hit!
+                        </button>
+                            <button className="blackjack-stand" onClick={this.handleStand}>
+                                Stand!
+                        </button>
+                            <button className="blackjack-split" onClick={this.handleSplit}>
+                                Split hand!
+                        </button>
+                            <button className="blackjack-double" onClick={this.handleDouble}>
+                                Double down!
+                        </button>
+                    </section>
+                )
+        }
+
         //         if (players.every(player => { return player.hand.length < 2 })) {
         //             this.dealCards()
         //             this.checkNaturals();
@@ -383,6 +410,7 @@ class Blackjack extends React.Component {
               <ul>{ingamePlayers ? ingamePlayers : null}</ul>
             </div>
 
+                {render}
             <div className="player-bet">
               {/* Bet Amount: {this.state.players.length === 0 ? "None" : this.state.players[0].pool} */}
             </div>
