@@ -16,13 +16,14 @@ class SlotGame extends React.Component {
         super(props);
         this.state = {
             balance: this.props.currentUser.balance,
-            bet: ""
+            bet: "",
+            results: {}
         };
+        this.onComplete = this.onComplete.bind(this);
     }
 
     componentDidMount(){
-        const btn = document.querySelector('#randomizeButton');
-        const results = {
+        this.results = {
             machine1: document.querySelector('#machine1Result'),
             machine2: document.querySelector('#machine2Result'),
             machine3: document.querySelector('#machine3Result')
@@ -30,25 +31,90 @@ class SlotGame extends React.Component {
         const el1 = document.querySelector('#machine1');
         const el2 = document.querySelector('#machine2');
         const el3 = document.querySelector('#machine3');
-        const machine1 = new SlotMachine(el1, { active: 0 });
-        const machine2 = new SlotMachine(el2, { active: 1 });
-        const machine3 = new SlotMachine(el3, { active: 2 });
+        this.machine1 = new SlotMachine(el1, { active: 0 });
+        this.machine2 = new SlotMachine(el2, { active: 1 });
+        this.machine3 = new SlotMachine(el3, { active: 2 });
 
-        function onComplete(active) {
-            results[this.element.id].innerText = `Index: ${this.active}`;
+    }
+
+    onComplete(active, machineNumber) {
+        if(machineNumber === 1){
+            this.results['machine1'].innerText = active;
+        } else if(machineNumber === 2){
+            this.results['machine2'].innerText = active;
+        } else if(machineNumber === 3){
+            this.results['machine3'].innerText = active;
+            this.checkResult();
+        }
+    }
+
+    handleClick(){
+        if (this.state.bet === '') {
+            alert('Please enter a BET')
+        } else {
+            let newBalance = this.state.balance - this.state.bet;
+            if(newBalance < 0){
+                alert('YOU DON\'T HAVE ENOUGH BALANCE')
+            }else{
+                this.setState({
+                    balance: newBalance
+                })
+                this.props.currentUser.balance = this.state.balance
+                this.machine1.shuffle(5, this.onComplete, 1);
+                setTimeout(() => this.machine2.shuffle(5, this.onComplete, 2), 500);
+                setTimeout(() => this.machine3.shuffle(5, this.onComplete, 3), 1000);
+            }
+        }
+    }
+
+    checkResult() {
+        const slot1 = parseInt(this.results.machine1.innerText);
+        const slot2 = parseInt(this.results.machine2.innerText);
+        const slot3 = parseInt(this.results.machine3.innerText);
+
+        if (slot1 <= 5 && slot2 <= 5 && slot3 <= 5) {
+            let newBalance = this.state.balance + this.state.bet * 2;
+            this.setState({
+                balance: newBalance
+            })
+            this.props.currentUser.balance = this.state.balance;
+        } else if (slot1 <= 10 && slot2 <= 10 && slot3 <= 10 && slot1 > 5 && slot2 > 5 && slot3 > 5) {
+            let newBalance = this.state.balance + this.state.bet * 3;
+            this.setState({
+                balance: newBalance
+            })
+            this.props.currentUser.balance = this.state.balance;
+        } else if (slot1 <= 14 && slot2 <= 14 && slot3 <= 14 && slot1 > 10 && slot2 > 10 && slot3 > 10) {
+            let newBalance = this.state.balance + this.state.bet * 4;
+            this.setState({
+                balance: newBalance
+            })
+            this.props.currentUser.balance = this.state.balance;
+        } else if (slot1 <= 17 && slot2 <= 17 && slot3 <= 17 && slot1 > 14 && slot2 > 14 && slot3 > 14) {
+            let newBalance = this.state.balance + this.state.bet * 8;
+            this.setState({
+                balance: newBalance
+            })
+            this.props.currentUser.balance = this.state.balance;
+        } else if (slot1 <= 19 && slot2 <= 19 && slot3 <= 19 && slot1 > 17 && slot2 > 17 && slot3 > 17) {
+            let newBalance = this.state.balance + this.state.bet * 10;
+            this.setState({
+                balance: newBalance
+            })
+            this.props.currentUser.balance = this.state.balance;
+        } else if (slot1 === 20 && slot2 === 20 && slot3 === 20) {
+            let newBalance = this.state.balance + this.state.bet * 20;
+            this.setState({
+                balance: newBalance
+            })
+            this.props.currentUser.balance = this.state.balance;
         }
 
-        btn.addEventListener('click', () => {
-            machine1.shuffle(5, onComplete);
-            setTimeout(() => machine2.shuffle(5, onComplete), 500);
-            setTimeout(() => machine3.shuffle(5, onComplete), 1000);
-        });
     }
 
     handleType(type) {
         return (e) => {
             if (Number(e.currentTarget.value) || e.currentTarget.value === "") {
-                console.log(this.state)
                 this.setState({
                     [type]: e.currentTarget.value
                 })
@@ -60,61 +126,123 @@ class SlotGame extends React.Component {
 
         return(
             <div id="randomize">
-                <div class="container">
-                    <h1>Randomize your stuff!</h1>
+                <div className="container">
+                    <h1>Monkey Slots!</h1>
 
-                    <div class="row">
-                        <div class="col-sm-4">
+                    <div className="row">
+                        <div className="col-sm-4">
                             <div>
-                                <div id="machine1" class="randomizeMachine">
+                                <div id="machine1" className="randomizeMachine">
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
                                     <div><img src={slot1} /></div>
                                     <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot3} /></div>
+                                    <div><img src={slot3} /></div>
+                                    <div><img src={slot3} /></div>
                                     <div><img src={slot3} /></div>
                                     <div><img src={slot4} /></div>
+                                    <div><img src={slot4} /></div>
+                                    <div><img src={slot4} /></div>
+                                    <div><img src={slot5} /></div>
                                     <div><img src={slot5} /></div>
                                     <div><img src={slot6} /></div>
                                 </div>
                             </div>
-                            <div id="machine1Result" class="col-xs-4 machineResult">Index: 0</div>
+                            <div id="machine1Result" className="col-xs-4 machineResult"></div>
                         </div>
 
-                        <div class="col-sm-4">
+                        <div className="col-sm-4">
                             <div>
-                                <div id="machine2" class="randomizeMachine">
+                                <div id="machine2" className="randomizeMachine">
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
                                     <div><img src={slot1} /></div>
                                     <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot3} /></div>
+                                    <div><img src={slot3} /></div>
+                                    <div><img src={slot3} /></div>
                                     <div><img src={slot3} /></div>
                                     <div><img src={slot4} /></div>
+                                    <div><img src={slot4} /></div>
+                                    <div><img src={slot4} /></div>
+                                    <div><img src={slot5} /></div>
                                     <div><img src={slot5} /></div>
                                     <div><img src={slot6} /></div>
                                 </div>
                             </div>
-                            <div id="machine2Result" class="col-xs-4 machineResult">Index: 1</div>
+                            <div id="machine2Result" className="col-xs-4 machineResult"></div>
                         </div>
 
-                        <div class="col-sm-4">
+                        <div className="col-sm-4">
                             <div>
-                                <div id="machine3" class="randomizeMachine">
+                                <div id="machine3" className="randomizeMachine">
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
+                                    <div><img src={slot1} /></div>
                                     <div><img src={slot1} /></div>
                                     <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot2} /></div>
+                                    <div><img src={slot3} /></div>
+                                    <div><img src={slot3} /></div>
+                                    <div><img src={slot3} /></div>
                                     <div><img src={slot3} /></div>
                                     <div><img src={slot4} /></div>
+                                    <div><img src={slot4} /></div>
+                                    <div><img src={slot4} /></div>
+                                    <div><img src={slot5} /></div>
                                     <div><img src={slot5} /></div>
                                     <div><img src={slot6} /></div>
                                 </div>
                             </div>
-                            <div id="machine3Result" class="col-xs-4 machineResult">Index: 2</div>
+                            <div id="machine3Result" className="col-xs-4 machineResult"></div>
                         </div>
 
                     </div>
-                    <div class="btn-group btn-group-justified" role="group">
-                        <button id="randomizeButton" type="button" class="btn btn-danger btn-lg">Shuffle</button>
+                    <div className="btn-group btn-group-justified" role="group">
+                        <button id="randomizeButton" type="button" className="btn btn-danger btn-lg" onClick={() => this.handleClick()}>TAKE A SPIN</button>
                     </div>
-                    {/* <div class="row">
-                        <div class="col-sm-10 offset-sm-1">
+                    <div className="row">
+                        <div className="col-sm-10 offset-sm-1">
                             <pre><code id="codeBlock2"></code></pre>
                         </div>
-                    </div> */}
+                    </div>
+
+                    <div className='user-stats'>
+                        <div className='user-balance'>
+                            <div>
+                                <h5>Your Balance:</h5> 
+                                <h3>{this.state.balance}</h3>
+                            </div>
+                        </div>
+                        <div className='user-bet'>
+                            <input
+                                type="text"
+                                value={this.state.bet}
+                                onChange={this.handleType("bet")}
+                                placeholder='BET'
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         )

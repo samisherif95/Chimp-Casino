@@ -292,7 +292,7 @@ class SlotMachine {
         return delay;
     }
 
-    shuffle(spins, onComplete) {
+    shuffle(spins, onComplete, machineNumber) {
         // Make spins optional
         if (typeof spins === 'function') {
             onComplete = spins;
@@ -314,9 +314,9 @@ class SlotMachine {
 
                     if (left > 1) {
                         // Repeat animation
-                        this.shuffle(left, onComplete);
+                        this.shuffle(left, onComplete, machineNumber);
                     } else {
-                        this.stop(onComplete);
+                        this.stop(onComplete, machineNumber);
                     }
                 }
             }, delay);
@@ -325,7 +325,7 @@ class SlotMachine {
         return this.nextActive;
     }
 
-    stop(onStop) {
+    stop(onStop, machineNumber) {
         if (!this.running || this.stopping) {
             return this.nextActive;
         }
@@ -360,11 +360,11 @@ class SlotMachine {
             this.nextActive = null;
 
             if (typeof this.onComplete === 'function') {
-                this.onComplete(this.active);
+                this.onComplete(this.active, machineNumber);
             }
 
             if (typeof onStop === 'function') {
-                onStop.apply(this, [this.active]);
+                onStop.apply(this, [this.active, machineNumber]);
             }
         }, delay);
 
