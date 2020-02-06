@@ -58,9 +58,11 @@ const lobbyServer = socket(server)
 //Lobby Server
 const lobbiesCollection = {};
 
+
 lobbyServer.on("connection", (socket) => {
   console.log("made connection with socket " + socket.id);
   let localLobbyId
+  let localPokerLobby;
 
   //chat 
   socket.on("chat", (data) => {
@@ -115,6 +117,7 @@ lobbyServer.on("connection", (socket) => {
         username
       }
     }
+    localPokerLobby = lobbiesCollection[lobbyId].poker
     socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id]);
     socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players);
   });
@@ -136,36 +139,160 @@ lobbyServer.on("connection", (socket) => {
 
   // poker
   socket.on("joinPokerGame", () => {
+    //send him information about other players in game
+    socket.emit("currentPokerPlayers", localPokerLobby.game.players.map(player => {
+        return {
+            handle: player.handle,
+            bananas: player.bananas,
+            hand: player.hand,
+            bigBlind: player.bigBlind,
+            smallBlind: player.smallBlind,
+        }
+    }), localPokerLobby.game.communityCards, localPokerLobby.game.turnStarted);
+
     socket.join(localLobbyId + "poker")
   })
 
   socket.on("addPokerGamePlayer", username => {
-    lobbiesCollection[localLobbyId].poker.game.addPlayer(username)
-    socket.emit("currentPokerPlayers", Object.values(lobbiesCollection[localLobbyId]));
-    //  lobbiesCollection[localLobbyId].poker.players[socket.id] = {username};
-    lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", username);
+    // add him to the game
+    if (localPokerLobby.game.addPlayer(username, socket.id)) {
+        const player = localPokerLobby.game.players[0]
+        lobbyServer.in(localLobbyId + "poker").emit("addPokerGamePlayer", {
+            handle: player.handle,
+            bananas: player.bananas,
+            hand: player.hand,
+            bigBlind: player.bigBlind,
+            smallBlind: player.smallBlind,
+        });
+        if (localPokerLobby.game.players.length > 1 && !localPokerLobby.game.turnStarted) {
+            setTimeout(() => {
+                localPokerLobby.game.startGame();
+                lobbyServer.in(localLobbyId + "poker").emit("gameStarted", localPokerLobby.game.currentPlayers[0].handle )
+            }, 3000)
+        }
+        //     lobbyServer.in(localLobbyId + "poker").emit("gameStarted", localPokerLobby.game.currentPlayers[0].handle )
+        // }
+    }   
+    // send other players information that he joined
   })
 
   socket.on("playerCalled", username => {
-
-    lobbyServer.in(localLobbyId + "poker").emit("playerCalled", username)
+    localPokerLobby.game.handleCall();
+    lobbyServer.in(localLobbyId + "poker").emit("playerCalled", 
+    username, 
+    localPokerLobby.game.bet, 
+    localPokerLobby.game.currentPlayers[0].handle,
+    localPokerLobby.game.communityCards,
+    localPokerLobby.game.raised)
+      if (localPokerLobby.game.cycle === 4) {
+          const winner = localPokerLobby.game.getWinner();
+          lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
+          setTimeout(() => {
+              localPokerLobby.game.handleNewHand();
+              lobbyServer.in(localLobbyId + "poker").emit("newGame",
+                  localPokerLobby.game.players.map(player => {
+                      return {
+                          handle: player.handle,
+                          bananas: player.bananas,
+                          hand: player.hand,
+                          bigBlind: player.bigBlind,
+                          smallBlind: player.smallBlind,
+                      }
+                  }), localPokerLobby.game.currentPlayers[0].handle);
+          }, 10000)
+      } 
   })
 
   socket.on("playerRaised", (username, amount) => {
-    lobbyServer.in(localLobbyId + "poker").emit("playerRaised", username, amount)
+    if (localPokerLobby.game.handleRaise(amount)) {
+        lobbyServer.in(localLobbyId + "poker").emit("playerRaised", 
+        username, 
+        amount,
+        localPokerLobby.game.currentPlayers[0].handle,
+        localPokerLobby.game.communityCards,
+        localPokerLobby.game.raised)
+        if (localPokerLobby.game.cycle === 4) {
+            const winner = localPokerLobby.game.getWinner();
+            lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
+            setTimeout(() => {
+                localPokerLobby.game.handleNewHand();
+                lobbyServer.in(localLobbyId + "poker").emit("newGame",
+                    localPokerLobby.game.players.map(player => {
+                        return {
+                            handle: player.handle,
+                            bananas: player.bananas,
+                            hand: player.hand,
+                            bigBlind: player.bigBlind,
+                            smallBlind: player.smallBlind,
+                        }
+                    }), localPokerLobby.game.currentPlayers[0].handle);
+            }, 10000)
+        } 
+    } else {
+        socket.emit("alert", "You must enter a valid amount")
+    }
   })
 
   socket.on("playerChecked", username => {
-    lobbyServer.in(localLobbyId + "poker").emit("playerChecked", username)
+    localPokerLobby.game.handleCheck();
+    lobbyServer.in(localLobbyId + "poker").emit("playerChecked",
+        username,
+        localPokerLobby.game.currentPlayers[0].handle,
+        localPokerLobby.game.communityCards,
+        localPokerLobby.game.raised)
+        console.log(localPokerLobby.game.cycle)
+    if (localPokerLobby.game.cycle === 4) {
+        const winner = localPokerLobby.game.getWinner();
+        lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
+        setTimeout(() => {
+            localPokerLobby.game.handleNewHand();
+            lobbyServer.in(localLobbyId + "poker").emit("newGame", 
+            localPokerLobby.game.players.map(player => {
+                return {
+                    handle: player.handle,
+                    bananas: player.bananas,
+                    hand: player.hand,
+                    bigBlind: player.bigBlind,
+                    smallBlind: player.smallBlind,
+                }
+            }), localPokerLobby.game.currentPlayers[0].handle);
+        }, 10000)
+    } 
+
   })
 
   socket.on("playerFolded", username => {
-    lobbyServer.in(localLobbyId + "poker").emit("playerFolded", username)
+    localPokerLobby.game.handleFold();
+    lobbyServer.in(localLobbyId + "poker").emit("playerFolded",
+        username,
+        localPokerLobby.game.currentPlayers[0].handle,
+        localPokerLobby.game.communityCards,
+        localPokerLobby.game.raised);
+      if (localPokerLobby.game.cycle === 4) {
+          const winner = localPokerLobby.game.getWinner();
+          lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
+          setTimeout(() => {
+              localPokerLobby.game.handleNewHand();
+              lobbyServer.in(localLobbyId + "poker").emit("newGame",
+                  localPokerLobby.game.players.map(player => {
+                      return {
+                          handle: player.handle,
+                          bananas: player.bananas,
+                          hand: player.hand,
+                          bigBlind: player.bigBlind,
+                          smallBlind: player.smallBlind,
+                      }
+                  }), localPokerLobby.game.currentPlayers[0].handle);
+          }, 10000)
+      } 
+
   })
 
-  socket.on("playerWon", (amount, username) => {
-    lobbyServer.in(localLobbyId + "poker").emit("playerWon", username, amount)
-  })
+
+
+//   socket.on("playerWon", (amount, username) => {
+//     lobbyServer.in(localLobbyId + "poker").emit("playerWon", username, amount)
+//   })
 
   // bj
   socket.on("joinBJGame", (username, balance) => {
@@ -212,6 +339,32 @@ lobbyServer.on("connection", (socket) => {
   socket.on("leavePokerGame", () => {
     // delete lobbiesCollection[localLobbyId].poker.players[socket.id];
     socket.leave(localLobbyId + "poker");
+    const pokerPlayer = localPokerLobby.game.getPlayerBySocketId(socket.id)
+    if (pokerPlayer) {
+        localPokerLobby.game.removePlayer(pokerPlayer)
+        lobbyServer.in(localLobbyId + "poker").emit("removePlayer", pokerPlayer.handle)
+        if (localPokerLobby.game.players.length === 0) {
+            localPokerLobby.game = new PokerGame();
+        } else if (localPokerLobby.game.players.length === 1) {
+            lobbyServer.in(localLobbyId + "poker").emit("playerWon", {
+                username: localPokerLobby.game.players[0].handle,
+                amount: localPokerLobby.game.pot
+            })
+            setTimeout(() => {
+                localPokerLobby.game.handleNewHand();
+                lobbyServer.in(localLobbyId + "poker").emit("newGame",
+                    localPokerLobby.game.players.map(player => {
+                        return {
+                            handle: player.handle,
+                            bananas: player.bananas,
+                            hand: player.hand,
+                            bigBlind: player.bigBlind,
+                            smallBlind: player.smallBlind,
+                        }
+                    }), localPokerLobby.game.currentPlayers[0].handle);
+            }, 10000)
+        }
+    }
   })
 
   socket.on("leaveBJGame", () => {
@@ -232,6 +385,32 @@ lobbyServer.on("connection", (socket) => {
         if (bJPlayer) {
             lobbiesCollection[localLobbyId].bJ.game.removePlayer(bJPlayer)
             lobbyServer.in(localLobbyId + "bj").emit("removePlayer", bJPlayer.userId)
+        }
+        const pokerPlayer = localPokerLobby.game.getPlayerBySocketId(socket.id)
+        if (pokerPlayer) {
+            localPokerLobby.game.removePlayer(pokerPlayer)
+            lobbyServer.in(localLobbyId + "poker").emit("removePlayer", pokerPlayer.handle);
+            if (localPokerLobby.game.players.length === 0) {
+                localPokerLobby.game = new PokerGame();
+            } else if (localPokerLobby.game.players.length === 1) {
+                lobbyServer.in(localLobbyId + "poker").emit("playerWon", {
+                    username: localPokerLobby.game.players[0],
+                    amount: localPokerLobby.game.pot
+                })
+                setTimeout(() => {
+                    localPokerLobby.game.handleNewHand();
+                    lobbyServer.in(localLobbyId + "poker").emit("newGame",
+                        localPokerLobby.game.players.map(player => {
+                            return {
+                                handle: player.handle,
+                                bananas: player.bananas,
+                                hand: player.hand,
+                                bigBlind: player.bigBlind,
+                                smallBlind: player.smallBlind,
+                            }
+                        }), localPokerLobby.game.currentPlayers[0].handle);
+                }, 10000)
+            }
         }
     //   delete lobbiesCollection[localLobbyId].bJ.players[socket.id]
     //   delete lobbiesCollection[localLobbyId].poker.players[socket.id]

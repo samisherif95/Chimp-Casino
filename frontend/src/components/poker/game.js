@@ -10,7 +10,7 @@ class Game {
         this.pot = 0;
         this.turnStarted = false
         this.deck = new Deck();
-        this.pokerlogic = new PokerLogic();
+         this.pokerlogic = new PokerLogic();
         this.players = []
         this.currentPlayers =[]
         this.tempPlayers = []
@@ -23,22 +23,27 @@ class Game {
         this.CalledChecked = 0;
         this.cycle = 0;
         this.raised = false
-        this.fullGame = false
+        // this.fullGame = false
     }
     
-    addPlayer(username){
+    addPlayer(username, socketId){
         if(this.players.length < 6){
-            this.players.unshift(new Player(username))
+            this.players.unshift(new Player(username, socketId))
             this.dealFirstHand();
-            if (this.players.length > 5) {
-                this.turnStarted = true;
-                this.currentPlayers = this.players.slice()
-                this.fullGame = true
-            }
+            // if (this.players.length > 1 && !this.turnStarted) {
+            //     this.turnStarted = true;
+            //     this.currentPlayers = this.players.slice()
+            //     // this.fullGame = true
+            // }
             return true
         }else{
             return false;
         }
+    }
+
+    startGame() {
+        this.turnStarted = true;
+        this.currentPlayers = this.players.slice();
     }
     
     dealFirstHand(){
@@ -169,10 +174,11 @@ class Game {
                 max = player;
             }
         })
-        max.bananas+= this.pot
+        max.bananas+= this.pot;
+        const temp = this.pot;
         this.pot = 0
         // this.turnStarted = false
-        return (max.handle)
+        return {username: max.handle, amount: temp}
     }
 
     resetNextBetRound(){
@@ -184,27 +190,61 @@ class Game {
         })
     }
 
+    getPlayerBySocketId(socketId) {
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].socketId === socketId) {
+                return this.players[i]
+            }
+        }
+        return null;
+    }
+
+    removePlayer(player) {
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i] === player) {
+                this.players.splice(i, 1);
+            }
+        }
+        for (let i = 0; i < this.currentPlayers.length; i++) {
+            if (this.currentPlayers[i] === player) {
+                this.currentPlayers.splice(i, 1);
+            }
+        }
+    }
+
     exitGame(){
         this.exit = true
         this.turnStarted = false
         return this.players.shift(0)
     }
 
+
+
     nextTurn() {
         let temp = this.currentPlayers.shift();
         this.currentPlayers.push(temp)
-        if (this.CalledChecked === this.currentPlayers.length - 1 && this.cycle === 0) {
+        if (this.CalledChecked === this.currentPlayers.length && this.cycle === 0) {
             this.dealCommunityPhase1();
             this.CalledChecked =0;
-            this.cycle +=1
-        } else if (this.CalledChecked === this.currentPlayers.length - 1 && this.state.cycle === 1) {
+            this.cycle +=1;
+            this.raised = false
+            this.bet = 0;
+        } else if (this.CalledChecked === this.currentPlayers.length  && this.cycle === 1) {
             this.dealCommunityPhase2()
             this.CalledChecked = 0;
             this.cycle += 1
-        } else if (this.CalledChecked === this.currentPlayers.length - 1 && this.state.cycle === 2) {
+            this.raised = false
+            this.bet = 0;
+        } else if (this.CalledChecked === this.currentPlayers.length && this.cycle === 2) {
             this.dealCommunityPhase3()
             this.CalledChecked = 0;
             this.cycle += 1
+            this.raised = false;
+            this.bet = 0;
+        } else if (this.CalledChecked === this.currentPlayers.length && this.cycle === 3) {
+            this.cycle += 1
+        //     // setTimeout()
+        //     // this.handleNewHand()
         }
     }
 
@@ -238,25 +278,29 @@ class Game {
         this.nextTurn()
     }
 
-    handleRaise(username, amount) {
-        console.log(amount)
-        this.CalledChecked =0;
-        this.raised = true
-        this.bet = amount;
-        this.pot += amount;
-        this.currentPlayers[0].bananas -= amount;
-        this.nextTurn()
+    handleRaise(amount) {
+        if (amount > 0 && amount <= this.currentPlayers[0].bananas && amount > this.bet) {
+            this.CalledChecked = 0;
+            this.raised = true
+            this.bet = amount;
+            this.pot += amount;
+            this.currentPlayers[0].bananas -= amount;
+            this.nextTurn()
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    handleCheck(username) {
+    handleCheck() {
         this.CalledChecked +=1
         this.nextTurn()
     }
 
-    handleFold(username) {
+    handleFold() {
         this.currentPlayers = this.currentPlayers.slice(1);
         if (this.currentPlayers.length === 1) {
-            this.handleWinner();
+            this.cycle = 4;
         }
     }
 

@@ -37,20 +37,26 @@ class GameChat extends React.Component {
             this.setState(this.state)
         })
 
-        this.socket.on("addPokerGamePlayer", username => {
-            this.state.messages.push(`${username} has joined`)
+        this.socket.on("addPokerGamePlayer", playerObj => {
+            this.state.messages.push(`${playerObj.handle} has joined`)
             this.setState(this.state)
         })
 
-        this.socket.on("playerWon", (username, amount) => {
-            console.log("GAMECHAT")
+        this.socket.on("playerWon", ({ username, amount }) => {
             this.state.messages.push(`${username} has won ${amount} bananas!`)
+            this.setState(this.state)
+        })
+
+        this.socket.on("removePlayer", username => {
+            this.state.messages.push(`${username} has left the game`);
+            this.setState(this.state)
         })
     }
 
     componentDidUpdate(prevProps, prevState){
         this.updateScroll();
     }
+    
     
     updateScroll() {
         var element = document.getElementById("game-chat-text");

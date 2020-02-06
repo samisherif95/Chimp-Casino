@@ -1,4 +1,3 @@
-// Linted with standardJS - https://standardjs.com/
 import { openModal } from "../actions/modal_actions";
 import { connect } from "react-redux";
 import Phaser from "phaser";
