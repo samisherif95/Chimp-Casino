@@ -7,7 +7,6 @@ import MainPageContainer from './main/main_page_container';
 import Modal from './modal/modal';
 import GameContainer from "./game";
 import LobbyIndexContainer from "./lobbies/lobby_index_container";
-import ChatContainer from "./chat/chat_container"
 import '../app/assets/stylesheets/app.css';
 
 
