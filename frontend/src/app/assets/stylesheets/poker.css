@@ -4,20 +4,18 @@
     width: 950px;
     height: 750px;
     border-radius: 10px;
-    display: flex;
     justify-content: center;
 }
 
 .pokerTable{
     height: 350px;
-    margin-top: 150px;
+    padding-top: 150px;
 }
 
 .pokerTable img{
     height: 105%;
     width:85%
 }
-
 
 .CardsButtons{
     position: relative;

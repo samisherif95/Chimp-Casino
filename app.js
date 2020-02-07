@@ -70,6 +70,10 @@ lobbyServer.on("connection", (socket) => {
     lobbyServer.in(localLobbyId).emit("receiveMessage", data);
   });
 
+  socket.on("pokerChat", data => {
+      lobbyServer.in(localLobbyId + "poker").emit("receivePokerMessage", data);
+  })
+
 
   //lobbies
   socket.on("getLobbies", () => {
