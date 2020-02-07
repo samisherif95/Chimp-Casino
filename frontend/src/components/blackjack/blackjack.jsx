@@ -28,7 +28,7 @@ class Blackjack extends React.Component {
         this.handleHit = this.handleHit.bind(this);
         this.handleStand = this.handleStand.bind(this);
         this.handleSplit = this.handleSplit.bind(this);
-        this.handleDouble = this.handleDouble.bind(this);
+        // this.handleDouble = this.handleDouble.bind(this);
 
         window.state = this.state;
     }
@@ -169,10 +169,10 @@ class Blackjack extends React.Component {
         }
     }
 
-    handleDouble() {
-        this.state.blackjack.players[0].doubleDownHand();
-        this.updateBlackjack();
-    }
+    // handleDouble() {
+    //     this.state.blackjack.players[0].doubleDownHand();
+    //     this.updateBlackjack();
+    // }
 
     nullAllOptions() {
         document.getElementsByClassName('blackjack-hit')[0].setAttribute('disabled', true)
