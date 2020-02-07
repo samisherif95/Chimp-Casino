@@ -28,11 +28,7 @@ class Blackjack extends React.Component {
         this.handleHit = this.handleHit.bind(this);
         this.handleStand = this.handleStand.bind(this);
         this.handleSplit = this.handleSplit.bind(this);
-<<<<<<< HEAD
-        // this.handleDouble = this.handleDouble.bind(this);
-=======
         this.handleDouble = this.handleDouble.bind(this);
->>>>>>> 0874a5ef12a3a00f88d9beb9f8f31cbcf2210d06
 
         window.state = this.state;
     }
