@@ -91,7 +91,6 @@ router.post("/login", (req, res) => {
 router.get("/topten", (req, res) => {
   const users = User.find().sort({"balance": -1}).limit(10)
     .then(users => res.json(users))
-
 })
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
   res.json({

@@ -1,9 +1,6 @@
 const Deck = require("../../cardDeck");
 const Player = require("./player");
 const PokerLogic = require("./pokerLogic");
-// import Deck from '../../cardDeck';
-// import Player from './player';
-// import PokerLogic from './pokerLogic';
 
 class Game {
     constructor(){
@@ -20,21 +17,15 @@ class Game {
         this.bet =null;
         this.smallBlindAmount = 25;
         this.BigBlindAmount = 50;
-        this.CalledChecked = 0;
+        this.CalledChecked = 1;
         this.cycle = 0;
         this.raised = false
-        // this.fullGame = false
     }
     
     addPlayer(username, socketId){
         if(this.players.length < 6){
             this.players.unshift(new Player(username, socketId))
             this.dealFirstHand();
-            // if (this.players.length > 1 && !this.turnStarted) {
-            //     this.turnStarted = true;
-            //     this.currentPlayers = this.players.slice()
-            //     // this.fullGame = true
-            // }
             return true
         }else{
             return false;
@@ -82,62 +73,6 @@ class Game {
         this.currentPlayers.push(temp);
     }
 
-
-    // play(){
-    //     console.log('playing....')
-    //     if(this.players[0].checked === true|| this.players[0].folded === true){
-    //         console.log('Checked or Folded')
-    //     }
-    //     else if (this.players[0].betPlaced){ // if higher than == raise
-    //         console.log('betting....')
-    //         this.bet = prompt('please enter bet')
-    //         if (parseInt(this.bet) > this.players[0].bananas) {
-    //             console.log('Not enough bananas. Please get more Bananas and try again')
-    //         } else {
-    //             this.pot += parseInt(this.bet)
-    //             this.players[0].bananas -= parseInt(this.bet);
-    //             this.raised = true;
-    //         }
-    //     }
-    //     else if (this.players[0].called === true && this.bet !== null){
-    //         if (this.players[0].bananas > this.bet){
-    //             console.log('calling....')
-    //             this.pot += parseInt(this.bet)
-    //             this.players[0].bananas -= parseInt(this.bet);
-    //         }else{
-    //             console.log('not enough bananas')
-    //         }
-            
-    //     }
-    //     else if (this.players[0].called === true && this.bet === null ){
-    //         if (this.players[0].bananas > this.BigBlindAmount) {
-    //             this.pot += parseInt(this.BigBlindAmount)
-    //             this.players[0].bananas -= parseInt(this.BigBlindAmount);
-    //         }else{
-    //             console.log('not enough bananas')
-    //         }
-    //     }
-    //     else if (this.players[0].called === true && this.bet === null && this.players[0].smallBlind === true ){
-    //         if (this.players[0].bananas > this.smallBlindAmount) {
-    //             this.pot += parseInt(this.smallBlindAmount)
-    //             this.players[0].bananas -= parseInt(this.smallBlindAmount);
-    //         } else {
-    //             console.log('not enough bananas')
-    //         }
-    //     }
-    //     else{
-    //         console.log('Please choose ONE of the buttons')
-    //     }
-        
-    //     console.log('something is fucked')
-    //     if (this.raised === true){
-    //         this.resetNextBetRound();
-
-    //         this.play();
-    //     }
-    // }
-
-
     dealCommunityPhase1(){
         for(let i=0; i < 3 ;i++){
             this.communityCards.push(this.deck.deal());
@@ -177,7 +112,6 @@ class Game {
         max.bananas+= this.pot;
         const temp = this.pot;
         this.pot = 0
-        // this.turnStarted = false
         return {username: max.handle, amount: temp}
     }
 
@@ -243,8 +177,6 @@ class Game {
             this.bet = 0;
         } else if (this.CalledChecked === this.currentPlayers.length && this.cycle === 3) {
             this.cycle += 1
-        //     // setTimeout()
-        //     // this.handleNewHand()
         }
     }
 
@@ -280,7 +212,7 @@ class Game {
 
     handleRaise(amount) {
         if (amount > 0 && amount <= this.currentPlayers[0].bananas && amount > this.bet) {
-            this.CalledChecked = 0;
+            this.CalledChecked = 1;
             this.raised = true
             this.bet = amount;
             this.pot += amount;

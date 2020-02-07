@@ -1,15 +1,10 @@
 class Player {
     constructor(handle, socketId){
-        // this.id = id;
         this.socketId = socketId;
         this.handle = handle;
         this.bananas = 2500;
         this.hand = [];
         this.fullcardHand = [];
-        // this.folded = false;
-        // this.betPlaced = false;
-        // this.isturn = false;
-        // this.check =  false;
         this.bigBlind = false;
         this.smallBlind = false;
         this.called = false;
@@ -32,7 +27,5 @@ class Player {
         this.betPlaced = true;
     }
 }
-
-// export default Player
 
 module.exports = Player;

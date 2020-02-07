@@ -1,7 +1,7 @@
 .pokerbackground{
-    /* z-index: 2; */
-    background: darkred;
-    /* width: 950px; */
+    z-index: 2;
+    background: #8b0000;
+    width: 950px;
     height: 750px;
     border-radius: 10px;
     display: flex;

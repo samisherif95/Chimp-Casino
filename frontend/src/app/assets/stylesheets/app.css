@@ -144,15 +144,15 @@ button{
 
 .modal-content {
 
-    position: absolute;
-    min-width: 40%;
-    min-height: 750px;
+    /* position: absolute; */
+    /* min-width: 40%; */
+    /* min-height: 750px; */
     /* width: 525px; */
     /* background-image: url('../images/monkeypoker.jpg');
     background-position: center; 
     background-repeat: no-repeat; */
     /* background-color: rgb(0,0,0,0.9); */
-    background-color: #fff;
+    /* background-color: #fff;
     background-size: cover;
     box-shadow: 0 8px 16px rgba(0,0,0,0.8);
     border-radius: 10px;
@@ -160,7 +160,21 @@ button{
     top: 10%;
     left: 50%;
     transform: translateX(-50%);
+    border: 5px solid #fcd600; */
+    position: absolute;
+    min-width: 40%;
+    min-height: 750px;
+    background-color: #fff;
+    background-size: cover;
+    box-shadow: 0 8px 16px rgba(0,0,0,.8);
+    border-radius: 10px;
+    text-align: center;
+    top: 10%;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
     border: 5px solid #fcd600;
+
 }
 
 .modal-banner {
@@ -443,7 +457,6 @@ h2 {
     width: 30%;
     max-width: 300px;
     height: 768px;
-    margin-left: 10px;
     border-radius: 10px;
     background-color: rgb(0, 0, 0, 0.4);
     margin-left: 30px;
