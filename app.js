@@ -172,8 +172,6 @@ lobbyServer.on("connection", (socket) => {
   // bj
   socket.on("joinBJGame", (username, balance) => {
 
-
-
     socket.emit(
       "currentBJPlayers",
       localBJLobby.game.players.map(player => {
