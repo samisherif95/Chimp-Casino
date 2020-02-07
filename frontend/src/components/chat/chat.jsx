@@ -20,7 +20,6 @@ class Chat extends React.Component {
                 this.setState(this.state)
             }
         )
-        
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -61,7 +60,7 @@ class Chat extends React.Component {
                             let selectClass = (message.user === this.props.currentUser.username) ? 'me' : 'him';
                             if(idx === 0 || message.user !== messages[idx-1].user){
                                 return (   
-                                    <div key={idx} className={`message-content`}>
+                                    <div key={idx} className={`message-content`}>          
                                         <span className={`message-data-name-${selectClass}`} > 
                                             {message.user.toUpperCase()}
                                         </span> 
@@ -86,15 +85,13 @@ class Chat extends React.Component {
                 </div>
                 <div className='chat-form'>
                     <form onSubmit={this.handleSubmit}>
-                        <textarea 
-                            name="message-to-send"
+                        <textarea
                             value={this.state.message}
                             onChange={this.handleChange('message')}
                             id="message-to-send"
                             placeholder="Type your message"
-                            rows="3"
                         />
-                        <button>Send</button>
+                        <input type="submit" value="Send" id='send'/>
                     </form>
                 </div>
             </div>
