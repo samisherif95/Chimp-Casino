@@ -169,17 +169,10 @@ class Blackjack extends React.Component {
         }
     }
 
-<<<<<<< HEAD
-    // handleDouble() {
-    //     this.state.blackjack.players[0].doubleDownHand();
-    //     this.updateBlackjack();
-    // }
-=======
     handleDouble() {
         this.state.blackjack.players[0].doubleDownHand();
         this.updateBlackjack();
     }
->>>>>>> 0874a5ef12a3a00f88d9beb9f8f31cbcf2210d06
 
     nullAllOptions() {
         document.getElementsByClassName('blackjack-hit')[0].setAttribute('disabled', true)
