@@ -11,155 +11,69 @@ class Poker extends React.Component{
         super(props)
         this.socket = this.props.socket;
         this.state ={
-            idx: 0,
-            cycle: 0,
-            CalledChecked: 0,
-            fullGame: false,
-            won: false,
-            raised: false
+            players: [],
+            myCards: [],
+            currentPlayer: null,
+            communityCards: [],
+            gameStarted: false,
+            raised: false,
+            addedPlayer: false,
+            pot: 0,
+            timer: null,
         }
-
+        
         window.state = this.state
         this.imageHash = imageHash;
-        // this.addPlayerToGame = this.addPlayerToGame.bind(this);
-        // this.handleCall = this.handleCall.bind(this);
-        // this.handleRaise = this.handleRaise.bind(this);
-        // this.handleCheck = this.handleCheck.bind(this);
         this.sendPlayerToSocket = this.sendPlayerToSocket.bind(this);
         this.sendCallToSocket = this.sendCallToSocket.bind(this);
         this.sendRaiseToSocket = this.sendRaiseToSocket.bind(this);
         this.sendCheckToSocket = this.sendCheckToSocket.bind(this);
         this.sendFoldToSocket = this.sendFoldToSocket.bind(this);
-        // this.handleFold = this.handleFold.bind(this);
+        this.getPlayerByName = this.getPlayerByName.bind(this);
     }
-    
-    // addPlayerToGame(username){
-    //     if(this.state.game.turnStarted === false && this.state.idx !== 6){
-    //         this.state.game.addPlayer(username)
-    //         this.state.game.dealFirstHand();
-    //         this.setState({idx: this.state.idx+1})
-    //         if (this.state.game.players.length > 5){
-    //             this.state.game.turnStarted = true;
-    //             this.state.game.currentPlayers = this.state.game.players.slice()
-    //             // this.state.game.dealCommunity()
-    //             this.setState({fullGame: true})
-    //         }
-    //     }
-    // }
+
 
     sendPlayerToSocket() {
+        this.setState({addedPlayer: true})
         this.socket.emit("addPokerGamePlayer", this.props.currentUser.username)
         this.forceUpdate();
     }
 
 
-    // nextTurn(){
-    //     let temp = this.state.game.currentPlayers.shift();
-    //     this.state.game.currentPlayers.push(temp)
-    //     if(this.state.CalledChecked === this.state.game.currentPlayers.length-1 && this.state.cycle === 0){
-    //         this.state.game.dealCommunityPhase1()
-    //         this.setState({
-    //             CalledChecked: 0,
-    //             cycle: this.state.cycle+1
-    //         })
-    //     } else if (this.state.CalledChecked === this.state.game.currentPlayers.length-1 && this.state.cycle === 1){
-    //         this.state.game.dealCommunityPhase2()
-    //         this.setState({
-    //             CalledChecked: 0,
-    //             cycle: this.state.cycle + 1
-    //         })
-    //     } else if (this.state.CalledChecked === this.state.game.currentPlayers.length-1 && this.state.cycle === 2){
-    //         this.state.game.dealCommunityPhase3()
-    //         this.setState({
-    //             CalledChecked: 0,
-    //             cycle: this.state.cycle + 1
-    //         })
-    //     }
-    //     this.forceUpdate()
-    // }
 
     sendCallToSocket() {
         this.socket.emit("playerCalled", this.props.currentUser.username)
     }
 
-    // handleCall(){
-    //     this.setState({CalledChecked: this.state.CalledChecked+1})
-    //     if(this.state.game.bet !== null){
-    //         if (this.state.game.currentPlayers[0].bananas > this.state.game.bet){
-    //             this.state.game.pot += parseInt(this.state.game.bet)
-    //             this.state.game.currentPlayers[0].bananas -= parseInt(this.state.game.bet);
-    //         }else{
-    //             this.state.game.pot += this.state.game.currentPlayers[0].bananas
-    //             this.state.game.currentPlayers[0].bananas -= this.state.game.currentPlayers[0].bananas
-    //         }
-    //     } else if (this.state.game.bet === null && this.state.game.currentPlayers[0].bigBlind === false) {
-    //         if (this.state.game.currentPlayers[0].bananas > this.state.game.BigBlindAmount) {
-    //             this.state.game.pot += parseInt(this.state.game.BigBlindAmount)
-    //             this.state.game.currentPlayers[0].bananas -= parseInt(this.state.game.BigBlindAmount);
-    //         } else {
-    //             this.state.game.pot += this.state.game.currentPlayers[0].bananas
-    //             this.state.game.currentPlayers[0].bananas -= this.state.game.currentPlayers[0].bananas
-    //         }
-    //     }else if (this.state.game.bet === null && this.state.game.currentPlayers[0].smallBlind === false) {
-    //         if (this.state.game.currentPlayers[0].bananas > this.state.game.smallBlindAmount) {
-    //             this.state.game.pot += parseInt(this.state.game.smallBlindAmount)
-    //             this.state.game.currentPlayers[0].bananas -= parseInt(this.state.game.smallBlindAmount);
-    //         } else {
-    //             this.state.game.pot += this.state.game.currentPlayers[0].bananas
-    //             this.state.game.currentPlayers[0].bananas -= this.state.game.currentPlayers[0].bananas
-    //         }
-    //     }
-    //     this.nextTurn()
-    // }
 
     sendRaiseToSocket() {
         let currentBet;
         currentBet = parseInt(prompt('please enter an amount to raise'))
-        if (currentBet > 0 && currentBet <= this.state.game.currentPlayers[0].bananas) {
-            this.socket.emit("playerRaised", this.props.currentUser.username, currentBet)
-        } else {
-        }
+        this.socket.emit("playerRaised", this.props.currentUser.username, currentBet)
     }
 
-    // handleRaise(username, amount){
-    //     console.log(amount)
-    //     this.setState({
-    //         CalledChecked: 0,
-    //         raised: true,
-    //     })
-    //     this.state.game.bet = amount;
-    //     this.state.game.pot += amount;
-    //     this.state.game.currentPlayers[0].bananas -= amount;
-    //     this.nextTurn()
-    // }
-    
+
     sendCheckToSocket() {
         this.socket.emit("playerChecked", this.props.currentUser.username)
     }
 
-    // handleCheck(username){
-    //     this.setState({
-    //         CalledChecked: this.state.CalledChecked+1,
-    //     })
-    //     this.nextTurn()
-    // }
+ 
 
     sendFoldToSocket() {
         this.socket.emit("playerFolded", this.props.currentUser.username)
     }
     
-    // handleFold(username) {
-    //     this.state.game.currentPlayers = this.state.game.currentPlayers.slice(1);
-    //     if (this.state.game.currentPlayers.length === 1) {
-    //         this.handleWinner();
-    //     }
-    //     this.forceUpdate();
-    // }
+    getPlayerByName(handle) {
+        for (let i = 0; i < this.state.players.length; i++) {
+            if (handle === this.state.players[i].handle) {
+                return this.state.players[i];
+            }
+        }
+        return null;
+    }
 
-
-    handleWinner(){ 
-        this.socket.emit("playerWon", this.state.game.pot, this.state.game.getWinner())
-        this.handleNewHand()
+    isMyTurn() {
+        return this.props.currentUser.username === this.state.currentPlayer;
     }
 
     // handleNewHand(){
@@ -174,46 +88,100 @@ class Poker extends React.Component{
     componentDidMount() {
         this.socket.emit("joinPokerGame")
 
-        this.socket.on("addPokerGamePlayer", username => {
-            this.state.game.addPlayer(username);
+        this.socket.on("addPokerGamePlayer", playerObj => {
+            this.state.players.push(playerObj);
+            if (playerObj.handle === this.props.currentUser.username) {
+                this.setState({ myCards: playerObj.hand })
+            }
+            this.setState(this.state);
         })
 
-        this.socket.on("playerCalled", username => {
-            this.state.game.handleCall(username);
+        this.socket.on("currentPokerPlayers", (players, communityCards, gameStarted) => {
+            console.log(gameStarted)
+            this.setState({ players, communityCards, gameStarted })
         })
 
-        this.socket.on("playerRaised", (username, amount) => {
-            this.state.game.handleRaise(username, amount);
+        this.socket.on("playerCalled", (username, amount, nextUsername, communityCards, raised) => {
+            const player = this.getPlayerByName(username);
+            player.bananas -= amount;
+            const pot = this.state.pot + amount;
+            this.setState({ pot, currentPlayer: nextUsername, communityCards, raised });
         })
 
-        this.socket.on("playerFolded", username => {
-            this.state.game.handleFold(username)
+        this.socket.on("playerRaised", (username, amount, nextUsername, communityCards, raised) => {
+            const player = this.getPlayerByName(username);
+            player.bananas -= amount; 
+            const pot = this.state.pot + amount;
+            this.setState({ pot, currentPlayer: nextUsername, communityCards, raised })
+        })
+
+        this.socket.on("playerFolded", (username, nextUsername, communityCards, raised) => {
+            this.setState({ currentPlayer: nextUsername, communityCards, raised })
         }) 
 
-        this.socket.on("playerChecked", username => {
-            this.state.game.handleCheck(username)
+        this.socket.on("playerChecked", (username, nextUsername, communityCards, raised) => {
+            this.setState({ currentPlayer: nextUsername, communityCards, raised })
         }) 
 
+        this.socket.on('removePlayer', username => {
+            for (let i = 0; i < this.state.players.length; i++) {
+                if (this.state.players[i].handle === username) {
+                    this.state.players.splice(i, 1);
+                }
+            }
+            this.setState(this.state);
+        })
+
+        this.socket.on("alert", message => alert(message))
+
+        this.socket.on("gameStarted", nextUsername => {
+            this.setState({ gameStarted: true, currentPlayer: nextUsername })
+        })
+
+        this.socket.on("playerWon", () => {
+            this.setState({ gameStarted: false })
+        })
+
+        this.socket.on("newGame", (players, nextUsername) => {
+            let myCards;
+            for (let i = 0; i < players.length; i++) {
+                if (players[i].handle === this.props.currentUser.username) {
+                    myCards = players[i].hand;
+                }
+            }
+            this.setState({ 
+                players,
+                currentPlayer: nextUsername,
+                myCards,
+                communityCards: [],
+                gameStarted: true,
+                pot: 0,
+                raised: false
+            })
+        })
     }
 
+    componentWillUnmount() {
+        this.socket.emit("leavePokerGame");
+    }
    
     render(){ 
-        let gameStarted = this.state.fullGame ? null : <button className='addPlayer' onClick={this.sendPlayerToSocket}>Add Player</button>
-        let winner = (this.state.CalledChecked === this.state.game.currentPlayers.length && this.state.game.players.length !==0 && this.state.game.turnStarted && this.state.cycle === 3) ? this.handleWinner() : (null)                           
+        console.log(this.state.players)
+        let gameStarted = this.state.addedPlayer || this.state.gameStarted ? null : <button className='addPlayer' onClick={this.sendPlayerToSocket}>Add Player</button>
         let check = this.state.raised ? (<button onClick={this.sendCallToSocket}>Call</button>) : (<button onClick={this.sendCheckToSocket}>Check</button>);
         return (
             <div className='pokerbackground'>
                 {
-                    this.state.game.fullGame && <div className="pot">
-                        Pot: {this.state.game.pot}
+                    this.state.gameStarted && <div className="pot">
+                        Pot: {this.state.pot}
                     </div>
                 }
 
                 {
-                    this.state.game.fullGame && <div className='CommunityCards'>
+                    this.state.gameStarted && <div className='CommunityCards'>
                         <ul className='CCpoker'>
                             {
-                                this.state.game.communityCards.map(card =>(
+                                this.state.communityCards.map(card =>(
                                     <li><img className='deck' src={this.imageHash[card[2]]} alt={card[2]}/></li>
                                 ))
                                     
@@ -225,17 +193,18 @@ class Poker extends React.Component{
                     <img src={pokerTable} alt="poker table" />
                     <div className='CardsButtons'>
                         {gameStarted}
-                        {this.state.game.fullGame && <img src={this.imageHash[this.state.game.currentPlayers[0].hand[0][2]]} alt= '' />}
-                        {this.state.game.fullGame && <img src={this.imageHash[this.state.game.currentPlayers[0].hand[1][2]]} alt= '' />}
+                        {this.state.gameStarted && this.state.myCards.length && <img src={this.imageHash[this.state.myCards[0][2]]}/>}
+                        {this.state.gameStarted && this.state.myCards.length && <img src={this.imageHash[this.state.myCards[1][2]]}/>}
                         <div className='buttons'>
-                        {this.state.game.fullGame && <div>{this.state.game.currentPlayers[0].handle} Your Balance: {this.state.game.currentPlayers[0].bananas}</div>}
-                        {winner}
+                        {this.state.gameStarted && this.state.myCards.length && <div>{this.props.currentUser.username} Your Balance: {this.getPlayerByName(this.props.currentUser.username).bananas}</div>}
                             <div className='test'>
-                                {this.state.game.fullGame ? check : <button disabled>Check</button>}
-                                {/* {this.state.game.fullGame ? <button onClick ={this.sendCallToSocket}>Call</button> : <button disabled>Call</button>} */}
-                                {this.state.game.fullGame ? <button onClick ={this.sendRaiseToSocket}>Raise</button> : <button disabled>Raise</button>}
-                                {this.state.game.fullGame ? <button onClick ={this.sendFoldToSocket}> Fold</button> : <button disabled>Fold</button>}
+                                {this.state.gameStarted && this.isMyTurn() ? check : <button disabled>Check</button>}
+                                {/* {this.state.gameStarted ? <button onClick ={this.sendCallToSocket}>Call</button> : <button disabled>Call</button>} */}
+                                {this.state.gameStarted && this.isMyTurn() ? <button onClick ={this.sendRaiseToSocket}>Raise</button> : <button disabled>Raise</button>}
+                                {this.state.gameStarted && this.isMyTurn() ? <button onClick ={this.sendFoldToSocket}> Fold</button> : <button disabled>Fold</button>}
                             </div>
+                            {this.state.currentPlayer && <p>{this.state.currentPlayer}'s turn</p>}
+                            {this.state.timer && <p>{this.state.timer} until game start</p>}
                         </div>
                     </div>
                     <GameChat socket={this.socket} /> 
