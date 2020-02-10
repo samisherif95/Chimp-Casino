@@ -17,7 +17,7 @@ class Game {
         this.bet =null;
         this.smallBlindAmount = 25;
         this.BigBlindAmount = 50;
-        this.CalledChecked = 1;
+        this.CalledChecked = 0;
         this.cycle = 0;
         this.raised = false
     }
