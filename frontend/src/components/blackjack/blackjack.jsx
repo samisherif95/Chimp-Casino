@@ -12,12 +12,14 @@ class Blackjack extends React.Component {
         this.socket = this.props.socket;
         // const blackjack = new GameLogic.Blackjack();
         this.state = {
-            // blackjack: blackjack,
+            dealer: {hand: []},
             betAmount: 0,
             players: [],
             phase: "",
             currentTurn: "",
         };
+        this.t = null;
+
         this.handleBetSubmit = this.handleBetSubmit.bind(this);
         this.addPlayer = this.addPlayer.bind(this);
         this.dealCards = this.dealCards.bind(this);
@@ -83,14 +85,9 @@ class Blackjack extends React.Component {
     }
 
     handleBetSubmit(e) {
-        // debugger /
-    
         e.preventDefault();
-        console.log("here1")
         this.socket.emit("bet", this.state.betAmount)
-        // if (this.state.blackjack.getBetFromCurrentTurn(parseInt(this.state.betAmount))) {
-        //     this.setState({ betAmount: 0 })
-        // }
+        this.setState({betAmount: 0});
     }
 
     updateBlackjack() {
@@ -113,14 +110,6 @@ class Blackjack extends React.Component {
             }
         })
         return done
-    }
-
-    dealerHit() {
-        this.state.blackjack.dealerHit();
-    }
-
-    compareHands() {
-        this.state.blackjack.compareHands();
     }
 
     handleHit() {
@@ -152,14 +141,15 @@ class Blackjack extends React.Component {
     }
 
     handleStand() {
-        this.state.blackjack.players[0].stand();
-        // this.nullAllOptions();
+        this.socket.emit("playerStand")
+        // this.state.blackjack.players[0].stand();
+        // // this.nullAllOptions();
 
-        // Renders that logic into the front end 
-        this.state.blackjack.checkCurrentPlayerStand();
-        // This updates the state and rerenders the blackjack component with the current phase still being 
-        // the options phase. It doesn't know it's last in the cycle 
-        this.updateBlackjack();
+        // // Renders that logic into the front end 
+        // this.state.blackjack.checkCurrentPlayerStand();
+        // // This updates the state and rerenders the blackjack component with the current phase still being 
+        // // the options phase. It doesn't know it's last in the cycle 
+        // this.updateBlackjack();
     }
 
     handleSplit() {
@@ -195,6 +185,24 @@ class Blackjack extends React.Component {
     }
 
     componentDidMount() {
+        /** 
+        
+        Everytime this modal is open, you must send the dealer information from the 
+        backend over to this component's state. Everything affecting the dealer must 
+        also be trasmitted over from the back end to the front end.
+
+        this.socket.emit("requestDealer");
+        this.socket.on("sendDealer", dealer => {
+            this.setState({ dealer })
+        })
+        console.log(this.state.dealer);
+         */
+
+        this.socket.emit("requestDealer", null);
+        this.socket.on("sendDealer", dealer => {
+            this.setState({ dealer: dealer });
+        })
+
         // this.socket.emit('joinBlackjackGame', this.props.currentUser.username, this.props.currentUser.balance)
         // this.addPlayer(this.props.currentUser.username, 1000)
         this.socket.emit("joinBJGame", this.props.currentUser.username, 1000) // change to other 1 once balance is working
@@ -203,6 +211,7 @@ class Blackjack extends React.Component {
             this.state.players.push(player);
             this.setState({phase, currentTurn: currentTurnName});
         })
+
         this.socket.on("currentBJPlayers", (playersData) => {
             this.setState({players: playersData})
         })
@@ -215,33 +224,58 @@ class Blackjack extends React.Component {
             }
             this.setState(this.state);
         })
+
         this.socket.on("changeTurn", (currentTurnName) => {
-            this.setState({ currentTurn: currentTurnName});
+            console.log("A player's turn has been switched")
+            console.log('Current player\'s turn: ', currentTurnName);
+            this.setState({ currentTurn: currentTurnName });
         })
 
         this.socket.on("changePhase", (phase, currentTurnName) => {
             this.setState({ phase, currentTurn: currentTurnName })
         });
 
-        this.socket.on("dealCards", cards => {
+        this.socket.on("dealPlayerCards", cards => {
             this.state.players.forEach(player => {
                 player.hand = cards[player.userId]
             })
             this.setState(this.state)
         })
 
-        this.socket.on("lastBetter", (lastBetterName, lastBetterBalance) => {
+        this.socket.on("dealDealerCards", cards => {
+            this.state.dealer.hand = cards;
+            this.setState({ dealer: this.state.dealer })
+        })
+
+        this.socket.on("lastBetter", (lastBetterId, lastBetterBalance) => {
             this.state.players.forEach(player => {
-                if (player.userId === lastBetterName) {
+                if (player.userId === lastBetterId) {
                     player.balance = lastBetterBalance;
                 }
+            })
+            this.setState(this.state);
+        })
+
+        this.socket.on("updatePlayersBalance", playersObj => {
+            this.state.players.forEach(player => {
+                player.balance = playersObj[player.userId]
+            })
+
+            this.setState(this.state);
+        })
+
+        this.socket.on("resetPlayers", () => {
+            this.state.players.forEach(player => {
+                player.hand = [];
+                player.handSplit = [];
+                player.pool = 0;
+                player.poolSplit = 0;
             })
             this.setState(this.state);
         })
     }
 
     render() {
-        console.log("phase", this.state.phase)
         // const { blackjack } = this.state;
         // const { players, dealer } = blackjack;
 
@@ -255,13 +289,15 @@ class Blackjack extends React.Component {
         let render;
         switch (this.state.phase) {
             case 'betting':
-                console.log("currently in: betting phase")
+                console.log("Currently In: Betting Phase")
+
                 // Edit 2.0: Maybe not necessary, sent getBet function down as a prop for the 
                 // Player Component. Maybe transfer this form into the player component and 
                 // on submit, trigger the getBet on the amount wagered 
 
                 // keep track of whose turn to bet
-                render = (
+                render = (this.props.currentUser.username === this.state.currentTurn ?
+                (
                     <div className="blackjack-betAmount">
                         <form onSubmit={this.handleBetSubmit}>
                             <input
@@ -273,56 +309,66 @@ class Blackjack extends React.Component {
                             <input type='submit' value='bet'/>
                         </form>
                     </div>
-                );
+                ) : (
+                    <div>
+                        Not you turn! 
+                    </div>
+                ))
         
   
                 break;
             case 'options':
-                render = (
-                    <section className="blackjack-options">
-                         <button className="blackjack-hit" onClick={this.handleHit}>
-                                Hit!
-                        </button>
-                            <button className="blackjack-stand" onClick={this.handleStand}>
-                                Stand!
-                        </button>
-                            <button className="blackjack-split" onClick={this.handleSplit}>
-                                Split hand!
-                        </button>
-                            <button className="blackjack-double" onClick={this.handleDouble}>
-                                Double down!
-                        </button>
-                    </section>
-                )
-        }
+                console.log("Currently In: Options Phase");
 
-        //         if (players.every(player => { return player.hand.length < 2 })) {
-        //             this.dealCards()
-        //             this.checkNaturals();
-        //             this.checkRoundDone();
-        //         }
-        //         console.log("currently in: options phase")
-        //         this.checkRoundDone();
-        //         break;
-        //     case 'dealer':
-        //         console.log("currently in: dealer phase")
-        //         this.dealerHit()
-        //         if (this.checkRoundDone()) {
-        //             // If the dealer busts on a hit, BE will rerun the game and forceUpdate 
-        //             // will make sure the change takes place on the FE 
-        //             this.forceUpdate();
-        //         } else if (this.checkDealerStood()) {
-        //             blackjack.currentPhase = 'payout';
-        //             this.forceUpdate();
-        //         }
-        //         break;
-        //     case 'payout':
-        //         console.log("currently in: payout phase")
-        //         this.compareHands();
-        //         if (this.checkRoundDone()) {
-        //             this.forceUpdate();
-        //         }
-        //         break;
+                console.log('Current Turn for Options: ',this.state.currentTurn);
+                render = (this.props.currentUser.username === this.state.currentTurn ?
+                    (
+                        <section className="blackjack-options">
+                            <button className="blackjack-hit" onClick={this.handleHit}>
+                                    Hit!
+                            </button>
+
+                                <button className="blackjack-stand" onClick={this.handleStand}>
+                                    Stand!
+                            </button>
+
+                                {/* 
+                            <button className="blackjack-split" onClick={this.handleSplit}>
+                                    Split hand!
+                            </button>
+                            
+                            <button className="blackjack-double" onClick={this.handleDouble}>
+                                    Double down!
+                            </button> */}
+                        </section>
+                    ) : (
+                        <div>
+                            Not you turn!
+                    </div>
+                    ))
+                break
+            case 'dealer':
+                console.log("Currently In: Dealer Phase")
+
+                if (this.state.dealer.stood === false || this.state.dealer.busted === false) {
+                    this.socket.emit("dealerHit")
+                    this.socket.emit("payoutPlayers")
+                }
+
+                break;
+            case 'new round':
+                console.log("Currently In: New Round")
+                
+                render = (
+                    <div>
+                        Round done: NEW ROUND PHASE
+                        New Round Starting in 5 seconds! 
+                    </div>
+                )
+
+                this.socket.emit("newRound");
+                break;
+        }
         //     default:
         //         render = (
         //             <div>
@@ -338,7 +384,7 @@ class Blackjack extends React.Component {
                     this.state.players.map((player, idx) => {
                         const hand = player.hand.map(card => {
                             return (
-                              <li>
+                              <li key={card[2]}>
                                     <img
                                         className="blackjack-card"
                                         src={imageHash[card[2]]}
@@ -395,15 +441,14 @@ class Blackjack extends React.Component {
         return (
           <div className="blackjack-table">
             <img id="blackjack-table-png" src={blackjackTable} alt="blackjack table" />
-            {/* <h1>{blackjack.currentPhase}</h1> */}
             <ul className="dealer-info">
-                {/* {dealer.hand.map(card => {
+                {this.state.dealer.hand.map(card => {
                     return (
                         <li key={card}>
                             <img className="blackjack-card" src={imageHash[card[2]]} alt="" />
                         </li>
                     );              
-                })} */}
+                })}
             </ul>
 
             <div className="blackjack-players-info">

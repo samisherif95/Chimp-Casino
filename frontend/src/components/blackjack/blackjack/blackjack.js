@@ -76,11 +76,9 @@ class Blackjack {
     checkCurrentPlayerBust() {
         if (this.players[0].bust === true && this.players[0].handSplit.length === 0) {
             this.nextTurn();
-            console.log("bust on regular hand")
             return true;
         } else if (this.players[0].bustSplit === true) {
             this.nextTurn();
-            console.log("bust on split")
             return true;
         }
         return false;
@@ -88,7 +86,6 @@ class Blackjack {
 
     checkCurrentPlayerStand() {
         if (this.players[0].stood === true) {
-            console.log("stand")
             this.nextTurn();
         }
     }
@@ -113,13 +110,13 @@ class Blackjack {
     // In the back end, after each 'round done' you would just trigger the
     // checkRoundDone function
     resetGame() {
-        this.currentPhase = 'waiting'
+        this.currentPhase = 'betting'
         this.deck = new Deck();
         this.dealer = new Player(null, 'dealer', 10000000, this.deck);
         let dupePlayers = this.players.slice()
         this.players = []
         dupePlayers.forEach(player => {
-            this.addPlayer(player.userId, player.balance);
+            this.addPlayer(player.socketId, player.userId, player.balance);
         });
         this.cycle = 0;
         this.finishedCycle = false;
@@ -149,7 +146,7 @@ class Blackjack {
         this.players.push(this.players.shift());
         this.cycle += 1 
         if (this.cycle === this.players.length) {
-            console.log("full cycle has completed");
+            console.log("Full cycle has completed");
             this.cycle = 0;
             this.finishedCycle = true;
             
@@ -170,7 +167,7 @@ class Blackjack {
             this.nextTurn();
             return true;
         }
-        console.log("cannot!")
+        console.log("Cannot wage this!")
         return false;
     }
 
@@ -259,22 +256,23 @@ class Blackjack {
     }
 
     dealerHit() {
-        let dealerHand = this.dealer.getHandValue(this.dealer.hand);
-
-        while (dealerHand < 17) {
-            console.log('dealer hitting')
-            this.dealer.hit();
-
-            dealerHand = this.dealer.getHandValue(this.dealer.hand)
-            if (dealerHand > 21) {
-                this.dealer.bust = true;
-                return this.dealerBust();
+        if (this.dealer.busted === true || this.dealer.stood === true) {
+            return
+        } else {
+            let dealerHand = this.dealer.getHandValue(this.dealer.hand);
+    
+            while (dealerHand < 17) {
+                this.dealer.hit();
+    
+                dealerHand = this.dealer.getHandValue(this.dealer.hand)
+                if (dealerHand > 21) {
+                    this.dealer.bust = true;
+                    return this.dealerBust();
+                }
             }
+            this.dealer.stood = true;
+            this.currentPhase = 'payout'
         }
-
-        console.log("dealer stood")
-        this.dealer.stood = true;
-        this.currentPhase = 'payout'
     }
 
     // This is called on after natural blackjacks have been paid out, and after the 
@@ -292,7 +290,7 @@ class Blackjack {
 
                 if (player.pool !== 0) {
                     if (playerValue === dealerValue) {
-                        player.balance += player.pool;
+                        player.balance += parseInt(player.pool);
                         player.pool = 0;
                         console.log("player has tied with dealer")
                     } else if (playerValue > dealerValue) {
@@ -320,9 +318,8 @@ class Blackjack {
                 }
             }
         });
-        console.log("Round over!")
-        this.roundDone = true;    
-        this.currentPhase = 'waiting';
+
+        this.currentPhase = 'new round';
     }
 }
 class Deck {
@@ -469,7 +466,7 @@ class Player {
         this.hand.push(this.deck.deal());
         if (this.getHandValue(this.hand) > 21) {
             this.bust = true;
-            console.log("player has busted!");
+            console.log("Player has busted!");
         }
     }
 
@@ -477,7 +474,7 @@ class Player {
         this.handSplit.push(this.deck.deal());
         if (this.getHandValue(this.handSplit) > 21) {
             this.bustSplit = true;
-            console.log("player has busted!");
+            console.log("Player has busted!");
         }
     }
 
