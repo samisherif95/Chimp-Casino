@@ -329,7 +329,7 @@ class Blackjack extends React.Component {
                     </div>
                 ) : (
                     <div>
-                        Not you turn! 
+                        Waiting for other players...
                     </div>
                 ))
         
@@ -361,7 +361,7 @@ class Blackjack extends React.Component {
                         </section>
                     ) : (
                         <div>
-                            Not you turn!
+                            Waiting for other players...
                     </div>
                     ))
                 break
@@ -422,7 +422,7 @@ class Blackjack extends React.Component {
 
                         return (
                             <div key={player.userId} className={className}>
-                                <section className="blackjack-player-info">
+                                <section className={this.state.currentTurn === player.userId ? "blackjack-player-info current-turn": "blackjack-player-info" }>
                                     <div className="blackjack-player-id">
                                         Player: {player.userId}
 

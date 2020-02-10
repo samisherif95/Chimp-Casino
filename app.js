@@ -60,10 +60,43 @@ const lobbiesCollection = {};
 
 
 lobbyServer.on("connection", (socket) => {
-  console.log("made connection with socket " + socket.id);
-  let localLobbyId
-  let localPokerLobby;
-  let localBJLobby
+    console.log("made connection with socket " + socket.id);
+    let localLobbyId
+    let localPokerLobby;
+    let localBJLobby
+    //helper methods
+    const findUserAndUpdateBalance = (balance, _id) => {
+        User.findById(_id).then(user => {
+            const balanceDiff = balance - user.balance;
+            user.set({ balance })
+            user.save().then(user => socket.emit("updateBalance", balance));
+            if (balanceDiff > 0) {
+                lobbyServer.in(localLobbyId).emit("slotsWinner", user.username, balanceDiff)
+            }
+
+        })
+    }
+
+    const findUserByUsernameAndUpdateBalance = (balance, username) => {
+        User.findOne({ username }).then(user => {
+            const balanceDiff = balance - user.balance;
+            user.set({ balance })
+            user.save().then(user => socket.emit("updateBalance", balance));
+            if (balanceDiff > 0) {
+                lobbyServer.in(localLobbyId).emit("slotsWinner", user.username, balanceDiff)
+            }
+
+        })
+    }
+
+    const findLobbyByIdAndChangeCapacity = num => {
+        Lobby.findById(localLobbyId).then(lobby => {
+            lobby.set({ currentCapacity: lobby.currentCapacity + num});
+            lobby.save();
+        })
+    }
+
+
 
   //chat 
   socket.on("chat", (data) => {
@@ -122,6 +155,7 @@ lobbyServer.on("connection", (socket) => {
         username
       }
     }
+    findLobbyByIdAndChangeCapacity(1);
     localPokerLobby = lobbiesCollection[lobbyId].poker
     localBJLobby = lobbiesCollection[lobbyId].bJ;
     socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id]);
@@ -138,16 +172,24 @@ lobbyServer.on("connection", (socket) => {
   socket.on("leaveLobby", () => {
     socket.leave(localLobbyId);
     delete lobbiesCollection[localLobbyId].players[socket.id];
-    localLobbyId = null;
+    console.log(lobbiesCollection[localLobbyId])
+    if (!Object.keys(lobbiesCollection[localLobbyId].players).length) {
+        console.log("inside");
+        // Lobby.findByIdAndRemove(localLobbyId, () => {})
+        Lobby.deleteOne({ _id: localLobbyId })
+    } else {
+        findLobbyByIdAndChangeCapacity(-1);
+    }
   })
 
   //games
 
   // slots
 
-  socket.on("slotChange", amount => {
-
+  socket.on("slotChange", (balance, _id) => {
+    findUserAndUpdateBalance(balance, _id);
   })
+
   // poker
   socket.on("joinPokerGame", () => {
     //send him information about other players in game
@@ -250,7 +292,6 @@ lobbyServer.on("connection", (socket) => {
         localPokerLobby.game.currentPlayers[0].handle,
         localPokerLobby.game.communityCards,
         localPokerLobby.game.raised)
-        console.log(localPokerLobby.game.cycle)
     if (localPokerLobby.game.cycle === 4) {
         const winner = localPokerLobby.game.getWinner();
         lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
@@ -475,6 +516,7 @@ lobbyServer.on("connection", (socket) => {
   //disconect
   socket.on("disconnect", () => {
     if (localLobbyId) {
+        findLobbyByIdAndChangeCapacity(-1);
         delete lobbiesCollection[localLobbyId].players[socket.id]
         const bJPlayer = lobbiesCollection[localLobbyId].bJ.game.getPlayerBySocketId(socket.id)
         if (bJPlayer) {
@@ -510,9 +552,7 @@ lobbyServer.on("connection", (socket) => {
                 }, 10000)
             }
         }
-    //   delete lobbiesCollection[localLobbyId].bJ.players[socket.id]
-    //   delete lobbiesCollection[localLobbyId].poker.players[socket.id]
-      socket.to(localLobbyId).emit('removePlayer', socket.id)
+      socket.to(localLobbyId).emit('removePlayerSprite', socket.id)
     }
   })
  

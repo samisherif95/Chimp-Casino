@@ -20,6 +20,11 @@ class Chat extends React.Component {
                 this.setState(this.state)
             }
         )
+
+        this.socket.on("slotsWinner", (username, amount) => {
+            this.state.messages.push(`${username} has won ${amount} bananas in slots!`)
+            this.setState(this.state);
+        })
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -58,7 +63,15 @@ class Chat extends React.Component {
                     {
                         messages.map( (message,idx) => {
                             let selectClass = (message.user === this.props.currentUser.username) ? 'me' : 'him';
-                            if(idx === 0 || message.user !== messages[idx-1].user){
+                            if (!message.user) {
+                                return (
+                                    <div key={idx} className="game-message">
+                                        <li>
+                                            {message}
+                                        </li>
+                                    </div>
+                                )
+                            } else if(idx === 0 || message.user !== messages[idx-1].user){
                                 return (   
                                     <div key={idx} className={`message-content`}>          
                                         <span className={`message-data-name-${selectClass}`} > 

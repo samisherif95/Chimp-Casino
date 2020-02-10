@@ -12,7 +12,11 @@ const LobbySchema = new Schema({
   },
   maxCapacity: {
     type: Number,
-    default: 16
+    default: 12
+  },
+  currentCapacity: {
+    type: Number,
+    default: 0
   },
   balanceLimit: {
     type: Number,
