@@ -363,12 +363,8 @@ class Blackjack extends React.Component {
                 break
             case 'dealer':
                 console.log("Currently In: Dealer Phase")
-
-                if (this.state.dealer.stood === false || this.state.dealer.busted === false) {
-                    this.socket.emit("dealerHit")
-                    this.socket.emit("payoutPlayers")
-                }
-
+                this.socket.emit("dealerHit")
+                this.socket.emit("payoutPlayers")
                 break;
             case 'new round':
                 console.log("Currently In: New Round")
