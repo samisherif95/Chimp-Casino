@@ -74,6 +74,10 @@ lobbyServer.on("connection", (socket) => {
       lobbyServer.in(localLobbyId + "poker").emit("receivePokerMessage", data);
   })
 
+  socket.on("bjChat", data => {
+    lobbyServer.in(localLobbyId + "bj").emit("receiveBJMessage", data);
+  })
+
 
   //lobbies
   socket.on("getLobbies", () => {
@@ -337,7 +341,7 @@ lobbyServer.on("connection", (socket) => {
             lobbyServer.in(localLobbyId + "bj").emit("lastBetter", 
             localBJLobby.game.players[localBJLobby.game.players.length-1].userId,
             localBJLobby.game.players[localBJLobby.game.players.length - 1].balance)
-
+            
         } else {
             lobbyServer.in(localLobbyId + "bj").emit("changeTurn", 
             localBJLobby.game.players[0].userId,
@@ -355,10 +359,14 @@ lobbyServer.on("connection", (socket) => {
     if (localBJLobby.game.players[0].bust) {
         const player = localBJLobby.game.players[localBJLobby.game.players.length-1];
         playerCards[player.userId] = player.hand;
+        lobbyServer.in(localLobbyId + "bj").emit("playerBust", player.userId)
+
     } else {
         const player = localBJLobby.game.players[0];
         playerCards[player.userId] = player.hand;
+        lobbyServer.in(localLobbyId + "bj").emit("playerHit", player.userId)
     }
+    
     lobbyServer.in(localLobbyId + "bj").emit("dealCards", playerCards)
   })
 
