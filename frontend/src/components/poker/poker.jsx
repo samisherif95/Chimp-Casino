@@ -13,6 +13,7 @@ class Poker extends React.Component{
         this.state ={
             players: [],
             myCards: [],
+            bet: 0,
             currentPlayer: null,
             communityCards: [],
             gameStarted: false,
@@ -159,11 +160,20 @@ class Poker extends React.Component{
         })
     }
 
+    currentUserIndex(){
+        for(let i=0; i< this.state.players.length; i++){
+            if (this.state.players[i].handle === this.props.currentUser.username){
+                return i;
+            }
+        }
+    }
+
     componentWillUnmount() {
         this.socket.emit("leavePokerGame");
     }
    
     render(){ 
+
         console.log(this.state.players)
         let gameStarted = this.state.addedPlayer || this.state.gameStarted ? null : <button className='addPlayer' onClick={this.sendPlayerToSocket}>Add Player</button>
         let check = this.state.raised ? (<button onClick={this.sendCallToSocket}>Call</button>) : (<button onClick={this.sendCheckToSocket}>Check</button>);
@@ -181,27 +191,42 @@ class Poker extends React.Component{
                             {
                                 this.state.communityCards.map(card =>(
                                     <li><img className='deck' src={this.imageHash[card[2]]} alt={card[2]}/></li>
-                                ))
+                                    ))
                                     
-                            }
+                                }
                         </ul>
                     </div>
                 }
                 <div className='pokerTable'>
+                    {
+                        this.state.players.map((player,idx) =>{
+                            if(idx < this.currentUserIndex()){
+                                return <div className={`player player-${idx+1}`}>{this.state.players[idx].handle}</div>
+                            }else if(idx > this.currentUserIndex()){
+                                return <div className={`player player-${idx+1}`}>{this.state.players[idx].handle}</div>
+                            }
+                        })
+                    }
+                    {/* {this.state.gameStarted && this.state.players[0] && <div className='player player-1'>{this.state.players[0].handle}</div>}
+                    {this.state.gameStarted && this.state.players[1] && <div className='player player-2'>{this.state.players[1].handle}</div>}
+                    {this.state.gameStarted && this.state.players[2] && <div className='player player-3'>Sami</div>}
+                    {this.state.gameStarted && this.state.players[3] && <div className='player player-4'>Sami</div>}
+                    {this.state.gameStarted && this.state.players[4] && <div className='player player-5'>Sami</div>} */}
+
                     <img src={pokerTable} alt="poker table" />
                     <div className='CardsButtons'>
                         {gameStarted}
                         {this.state.gameStarted && this.state.myCards.length && <img src={this.imageHash[this.state.myCards[0][2]]}/>}
                         {this.state.gameStarted && this.state.myCards.length && <img src={this.imageHash[this.state.myCards[1][2]]}/>}
                         <div className='buttons'>
-                        {this.state.gameStarted && this.state.myCards.length && <div>{this.props.currentUser.username} Your Balance: {this.getPlayerByName(this.props.currentUser.username).bananas}</div>}
+                        {this.state.gameStarted && this.state.myCards.length && <strong>{this.props.currentUser.username} Your Balance: {this.getPlayerByName(this.props.currentUser.username).bananas}</strong>}
                             <div className='test'>
                                 {this.state.gameStarted && this.isMyTurn() ? check : <button disabled>Check</button>}
                                 {/* {this.state.gameStarted ? <button onClick ={this.sendCallToSocket}>Call</button> : <button disabled>Call</button>} */}
                                 {this.state.gameStarted && this.isMyTurn() ? <button onClick ={this.sendRaiseToSocket}>Raise</button> : <button disabled>Raise</button>}
                                 {this.state.gameStarted && this.isMyTurn() ? <button onClick ={this.sendFoldToSocket}> Fold</button> : <button disabled>Fold</button>}
                             </div>
-                            {this.state.currentPlayer && <p>{this.state.currentPlayer}'s turn</p>}
+                            {this.state.currentPlayer && <strong>{this.state.currentPlayer}'s turn</strong>}
                             {this.state.timer && <p>{this.state.timer} until game start</p>}
                         </div>
                     </div>
