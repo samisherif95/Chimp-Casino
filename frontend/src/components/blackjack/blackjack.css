@@ -97,7 +97,22 @@
 
 .blackjack-player-1 {
     position: absolute;
-    transform: translate(80px, 500px);
+    transform: translate(180px, 550px);
+}
+
+.blackjack-player-2 {
+    position: absolute;
+    transform: translate(445px, 640px);
+}
+
+.blackjack-player-3 {
+    position: absolute;
+    transform: translate(710px, 550px);
+}
+
+.blackjack-player-4 {
+    position: absolute;
+    transform: translate(830px, 240px);
 }
 
 .blackjack-player-hand {
