@@ -3,6 +3,7 @@ import React from 'react'
 import './blackjack.css';
 import blackjackTable from '../../app/assets/images/blackjackTable.png';
 import imageHash from "./blackjackImages";
+import GameChat from "../chat/bj_chat_container";
 
 // Remember to change the start playing onClick back over to the login screen //
 
@@ -13,7 +14,7 @@ class Blackjack extends React.Component {
         // const blackjack = new GameLogic.Blackjack();
         this.state = {
             // blackjack: blackjack,
-            betAmount: 0,
+            betAmount: "",
             players: [],
             phase: "",
             currentTurn: "",
@@ -47,7 +48,13 @@ class Blackjack extends React.Component {
     }
 
     update(field) {
-        return e => this.setState({ [field]: e.currentTarget.value });
+      return (e) => {
+        if (Number(e.currentTarget.value) || e.currentTarget.value === "") {
+          this.setState({
+            [field]: e.currentTarget.value
+          })
+        }
+      }
     }
 
     dealCards() {
@@ -87,7 +94,11 @@ class Blackjack extends React.Component {
     
         e.preventDefault();
         console.log("here1")
-        this.socket.emit("bet", this.state.betAmount)
+        if(this.state.betAmount > 0){
+          this.socket.emit("bet", this.state.betAmount)
+        }else{
+          alert('Please enter a bet')
+        }
         // if (this.state.blackjack.getBetFromCurrentTurn(parseInt(this.state.betAmount))) {
         //     this.setState({ betAmount: 0 })
         // }
@@ -197,7 +208,7 @@ class Blackjack extends React.Component {
     componentDidMount() {
         // this.socket.emit('joinBlackjackGame', this.props.currentUser.username, this.props.currentUser.balance)
         // this.addPlayer(this.props.currentUser.username, 1000)
-        this.socket.emit("joinBJGame", this.props.currentUser.username, 1000) // change to other 1 once balance is working
+        this.socket.emit("joinBJGame", this.props.currentUser.username, this.props.currentUser.balance) // change to other 1 once balance is working
 
         this.socket.on("newBJPlayer", (player, phase, currentTurnName) => {
             this.state.players.push(player);
@@ -269,8 +280,10 @@ class Blackjack extends React.Component {
                                 type="text"
                                 value={this.state.betAmount}
                                 onChange={this.update("betAmount")}
+                                placeholder="BET"
                             />
-                            <input type='submit' value='bet'/>
+                            <br/>
+                            <input type='submit' value='Place Bet'/>
                         </form>
                     </div>
                 );
@@ -414,7 +427,7 @@ class Blackjack extends React.Component {
             <div className="player-bet">
               {/* Bet Amount: {this.state.players.length === 0 ? "None" : this.state.players[0].pool} */}
             </div>
-
+            <GameChat socket={this.socket} />
           </div>
         );
     }
