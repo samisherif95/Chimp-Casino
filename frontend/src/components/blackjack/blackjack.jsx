@@ -100,6 +100,10 @@ class Blackjack extends React.Component {
         }else{
           alert('Please enter a bet')
         }
+        // if (this.state.blackjack.getBetFromCurrentTurn(parseInt(this.state.betAmount))) {
+        //     this.setState({ betAmount: 0 })
+        // }
+
     }
 
     updateBlackjack() {
@@ -342,7 +346,7 @@ class Blackjack extends React.Component {
                                     Hit!
                             </button>
 
-                                <button className="blackjack-stand" onClick={this.handleStand}>
+                            <button className="blackjack-stand" onClick={this.handleStand}>
                                     Stand!
                             </button>
 
@@ -364,10 +368,10 @@ class Blackjack extends React.Component {
             case 'dealer':
                 console.log("Currently In: Dealer Phase")
 
-                if (this.state.dealer.stood === false || this.state.dealer.busted === false) {
+                // if (this.state.dealer.stood === false || this.state.dealer.busted === false) {
                     this.socket.emit("dealerHit")
                     this.socket.emit("payoutPlayers")
-                }
+                // }
 
                 break;
             case 'new round':
