@@ -9,7 +9,7 @@
 
 .pokerTable{
     height: 350px;
-    padding-top: 150px;
+    padding-top: 130px;
 }
 
 .pokerTable img{
@@ -29,8 +29,9 @@
     /* justify-content: center; */
     position: absolute;
     width: 100px;
-    border-radius: 7px;
-    transform: translate(20px, -500px);
+    height: 30px;
+    border-radius: 4px;
+    transform: translate(20px, -460px);
 }
 
 .CardsButtons img{
@@ -52,10 +53,12 @@
 .buttons button{
     display: flex;
     width: 70px;
-    border-radius: 7px;
+    height: 30px;
+    border-radius: 4px;
 }
 .buttons strong{
-    color: white;
+    color: gold;
+    font-family: sans-serif;
 }
 .test{
     display: flex;
@@ -78,7 +81,7 @@
     /* background: black; */
     height: 175px;
     width: 70%;
-    transform: translateY(250px);
+    transform: translate(135px,250px);
     display: flex;
     justify-content: space-evenly;
 }
@@ -111,4 +114,32 @@
 .CommunityCards strong{
     height: fit-content;
     transform: translateX(-225px);
+}
+
+.player{
+    position: absolute;
+    font-weight: bolder;
+    font-family: sans-serif;
+    color: gold;
+}
+
+.player-1{
+    transform: translate(150px,250px);
+}
+
+.player-2{
+    transform: translate(200px,60px);
+}
+
+.player-3{
+    transform: translate(450px,60px);
+}
+
+.player-4{
+    transform: translate(700px,60px);
+}
+
+.player-5{
+    transform: translate(750px,250px);
+
 }

@@ -51,6 +51,7 @@ class GameChat extends React.Component {
             this.state.messages.push(`${username} has left the game`);
             this.setState(this.state)
         })
+
     }
 
     componentDidUpdate(prevProps, prevState){
