@@ -336,7 +336,6 @@ lobbyServer.on("connection", (socket) => {
                   }), localPokerLobby.game.currentPlayers[0].handle);
           }, 10000)
       } 
-
   })
 
   // bj
@@ -379,9 +378,6 @@ lobbyServer.on("connection", (socket) => {
     if (localBJLobby.game.getBetFromCurrentTurn(amount)) {
         if (localBJLobby.game.currentPhase === "options") {
             const playerCards = {};
-
-            // console.log(localBJLobby.game.players)
-            // const naturals = localBJLobby.game.naturalBlackJack()
             localBJLobby.game.players.forEach(player => playerCards[player.userId] = player.hand)
             console.log(localBJLobby.game.dealer.hand);
             const dealerCards = localBJLobby.game.dealer.hand
