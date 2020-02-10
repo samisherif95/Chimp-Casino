@@ -48,7 +48,7 @@ const Modal = ({ modal, closeModal, socket }) => {
             component = <LeaderBoard />;
             break;
         case 'slots':
-            component = <SlotContainer />
+            component = <SlotContainer socket={socket} />
             break;
         default:
             return null;
