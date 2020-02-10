@@ -291,7 +291,6 @@ lobbyServer.on("connection", (socket) => {
                   }), localPokerLobby.game.currentPlayers[0].handle);
           }, 10000)
       } 
-
   })
 
   // bj
