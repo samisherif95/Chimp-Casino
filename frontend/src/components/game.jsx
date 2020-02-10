@@ -205,7 +205,7 @@ class GameContainer extends React.Component {
                     //balance
                     this.balance =this.add.sprite(50, 720, 'logo-svg')
                     this.balance.setScale(0.25)
-                    this.add.text(100, 700, 1000, { font: "42px 'Sans Serif'", fill: "#fcd600", align: "center" })
+                    this.add.text(100, 700, game.props.currentUser.balance, { font: "42px 'Sans Serif'", fill: "#fcd600", align: "center" })
 
 
                     this.anims.create({

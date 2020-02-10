@@ -101,10 +101,8 @@ class Poker extends React.Component{
             this.setState({ players, communityCards, gameStarted })
         })
 
-        this.socket.on("playerCalled", (username, amount, nextUsername, communityCards, raised) => {
-            const player = this.getPlayerByName(username);
-            player.bananas -= amount;
-            const pot = this.state.pot + amount;
+        this.socket.on("playerCalled", (username, pot, nextUsername, communityCards, raised) => {
+            //changed amount to pot
             this.setState({ pot, currentPlayer: nextUsername, communityCards, raised });
         })
 

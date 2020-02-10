@@ -14,6 +14,7 @@ import SlotMachine from './slotmachine';
 class SlotGame extends React.Component {
     constructor(props){
         super(props);
+        this.socket = this.props.socket;
         this.state = {
             balance: this.props.currentUser.balance,
             bet: "",
@@ -34,6 +35,10 @@ class SlotGame extends React.Component {
         this.machine1 = new SlotMachine(el1, { active: 0 });
         this.machine2 = new SlotMachine(el2, { active: 1 });
         this.machine3 = new SlotMachine(el3, { active: 2 });
+
+    }
+
+    componentWillUnmount() {
 
     }
 
@@ -71,45 +76,46 @@ class SlotGame extends React.Component {
         const slot1 = parseInt(this.results.machine1.innerText);
         const slot2 = parseInt(this.results.machine2.innerText);
         const slot3 = parseInt(this.results.machine3.innerText);
-
+        let newBalance;
         if (slot1 <= 5 && slot2 <= 5 && slot3 <= 5) {
-            let newBalance = this.state.balance + this.state.bet * 2;
+            newBalance = this.state.balance + this.state.bet * 2;
             this.setState({
                 balance: newBalance
             })
             this.props.currentUser.balance = this.state.balance;
         } else if (slot1 <= 10 && slot2 <= 10 && slot3 <= 10 && slot1 > 5 && slot2 > 5 && slot3 > 5) {
-            let newBalance = this.state.balance + this.state.bet * 3;
+            newBalance = this.state.balance + this.state.bet * 3;
             this.setState({
                 balance: newBalance
             })
             this.props.currentUser.balance = this.state.balance;
         } else if (slot1 <= 14 && slot2 <= 14 && slot3 <= 14 && slot1 > 10 && slot2 > 10 && slot3 > 10) {
-            let newBalance = this.state.balance + this.state.bet * 4;
+            newBalance = this.state.balance + this.state.bet * 4;
             this.setState({
                 balance: newBalance
             })
             this.props.currentUser.balance = this.state.balance;
         } else if (slot1 <= 17 && slot2 <= 17 && slot3 <= 17 && slot1 > 14 && slot2 > 14 && slot3 > 14) {
-            let newBalance = this.state.balance + this.state.bet * 8;
+            newBalance = this.state.balance + this.state.bet * 8;
             this.setState({
                 balance: newBalance
             })
             this.props.currentUser.balance = this.state.balance;
         } else if (slot1 <= 19 && slot2 <= 19 && slot3 <= 19 && slot1 > 17 && slot2 > 17 && slot3 > 17) {
-            let newBalance = this.state.balance + this.state.bet * 10;
+            newBalance = this.state.balance + this.state.bet * 10;
             this.setState({
                 balance: newBalance
             })
             this.props.currentUser.balance = this.state.balance;
         } else if (slot1 === 20 && slot2 === 20 && slot3 === 20) {
-            let newBalance = this.state.balance + this.state.bet * 20;
+            newBalance = this.state.balance + this.state.bet * 20;
             this.setState({
                 balance: newBalance
             })
             this.props.currentUser.balance = this.state.balance;
         }
 
+        this.socket.emit("slotChange", this.state.balance);
     }
 
     handleType(type) {
