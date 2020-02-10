@@ -70,6 +70,10 @@
     flex-direction: column;
 }
 
+.current-turn {
+    background-image: radial-gradient(gold, transparent);
+}
+
 .dealer-info {
     display: flex;
     position: absolute;
@@ -88,7 +92,12 @@
 
 .blackjack-player-0 {
     position: absolute;
-    transform: translate(55px, 330px);
+    transform: translate(50px, 330px);
+}
+
+.blackjack-player-1 {
+    position: absolute;
+    transform: translate(80px, 500px);
 }
 
 .blackjack-player-hand {
