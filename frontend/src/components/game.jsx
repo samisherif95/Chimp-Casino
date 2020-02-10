@@ -111,7 +111,7 @@ class GameContainer extends React.Component {
 
                     // player creation
                     this.createPlayer = playerName => {
-                        this.container = this.add.container(200, 250)
+                        this.container = this.add.container(600, 400)
                         this.physics.world.enable(this.container);
                 
                         this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
