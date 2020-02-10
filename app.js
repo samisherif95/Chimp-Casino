@@ -107,6 +107,10 @@ lobbyServer.on("connection", (socket) => {
       lobbyServer.in(localLobbyId + "poker").emit("receivePokerMessage", data);
   })
 
+  socket.on("bjChat", data => {
+    lobbyServer.in(localLobbyId + "bj").emit("receiveBJMessage", data);
+  })
+
 
   //lobbies
   socket.on("getLobbies", () => {
@@ -353,6 +357,7 @@ lobbyServer.on("connection", (socket) => {
           }
       })
     );
+
     localBJLobby.game.addPlayer(socket.id, username, balance)
     socket.join(localLobbyId + "bj")
     const player = localBJLobby.game.players[localBJLobby.game.players.length-1]
@@ -366,24 +371,33 @@ lobbyServer.on("connection", (socket) => {
         handValue: player.getHandValue(),
         splitHandValue: player.getHandValue()
     }, localBJLobby.game.currentPhase, localBJLobby.game.players[0].userId )
+
+ 
   })
 
   socket.on("bet", (amount) => {
     if (localBJLobby.game.getBetFromCurrentTurn(amount)) {
         if (localBJLobby.game.currentPhase === "options") {
             const playerCards = {};
+
+            // console.log(localBJLobby.game.players)
+            // const naturals = localBJLobby.game.naturalBlackJack()
             localBJLobby.game.players.forEach(player => playerCards[player.userId] = player.hand)
-            lobbyServer.in(localLobbyId + "bj").emit("dealCards", playerCards)
+            console.log(localBJLobby.game.dealer.hand);
+            const dealerCards = localBJLobby.game.dealer.hand
+
+            lobbyServer.in(localLobbyId + "bj").emit("dealPlayerCards", playerCards)
+            lobbyServer.in(localLobbyId + "bj").emit("dealDealerCards", dealerCards)
+
             lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase);
             lobbyServer.in(localLobbyId + "bj").emit("lastBetter", 
-            localBJLobby.game.players[localBJLobby.game.players.length-1].userId,
-            localBJLobby.game.players[localBJLobby.game.players.length - 1].balance)
-
+                localBJLobby.game.players[localBJLobby.game.players.length-1].userId,
+                localBJLobby.game.players[localBJLobby.game.players.length - 1].balance)
+            lobbyServer.in(localLobbyId + "bj").emit("changeTurn",
+                localBJLobby.game.players[0].userId)
         } else {
             lobbyServer.in(localLobbyId + "bj").emit("changeTurn", 
-            localBJLobby.game.players[0].userId,
-            localBJLobby.game.players[localBJLobby.game.players.length-1].userId, 
-            localBJLobby.game.players[localBJLobby.game.players.length - 1].balance)
+                localBJLobby.game.players[0].userId)
         }
     } else {
         lobbyServer.in(localLobbyId + "bj").emit("betFailed")
@@ -393,14 +407,66 @@ lobbyServer.on("connection", (socket) => {
   socket.on("playerHit", () => {
     localBJLobby.game.players[0].hit();
     const playerCards = {};
-    if (localBJLobby.game.players[0].bust) {
+    // if (localBJLobby.game.players[0].bust) {
+    if (localBJLobby.game.checkCurrentPlayerBust()) {
+        // Switches to next player, since cCPB will run nextTurn if the current player 
         const player = localBJLobby.game.players[localBJLobby.game.players.length-1];
         playerCards[player.userId] = player.hand;
+        lobbyServer.in(localLobbyId + "bj").emit("playerBust", player.userId)
+        lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase);
     } else {
         const player = localBJLobby.game.players[0];
         playerCards[player.userId] = player.hand;
+        lobbyServer.in(localLobbyId + "bj").emit("playerHit", player.userId)
     }
-    lobbyServer.in(localLobbyId + "bj").emit("dealCards", playerCards)
+    lobbyServer.in(localLobbyId + "bj").emit("dealPlayerCards", playerCards)
+  })
+
+    socket.on("dealerHit", () => {
+        localBJLobby.game.dealerHit();
+        const dealerHand = localBJLobby.game.dealer.hand;
+        socket.emit("dealDealerCards", dealerHand)
+        socket.emit("sendDealer", localBJLobby.game.dealer)
+    })
+
+    socket.on("payoutPlayers", () => {
+        localBJLobby.game.compareHands();
+        // Update player's balances on the front end 
+        let playersObj = {};
+
+        localBJLobby.game.players.forEach(player => {
+            playersObj[player.userId] = player.balance;
+        })
+
+        socket.emit("updatePlayersBalance",
+            playersObj
+        )
+
+        socket.emit("changePhase", localBJLobby.game.currentPhase);
+    })
+
+    let t = null;
+
+    socket.on("newRound", () => {
+        console.log("newRound is hit");
+        if (t === null) {
+            t = setTimeout(() => {
+                localBJLobby.game.resetGame()
+                socket.emit("changePhase", localBJLobby.game.currentPhase)
+                socket.emit("sendDealer", localBJLobby.game.dealer)
+                socket.emit("resetPlayers", null)
+                lobbyServer.in(localLobbyId + "bj").emit("changeTurn", localBJLobby.game.players[0].userId)
+                console.log(localBJLobby.game.players);
+                t = null;
+            }, 5000)
+        }
+    })
+
+  socket.on("playerStand", () => {
+    localBJLobby.game.players[0].stand();
+    localBJLobby.game.nextTurn();
+    socket.emit("changeTurn", localBJLobby.game.players[0].userId)
+    socket.emit("changePhase", localBJLobby.game.currentPhase);
   })
 
   //leave games
