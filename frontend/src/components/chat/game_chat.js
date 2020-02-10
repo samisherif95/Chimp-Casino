@@ -12,7 +12,7 @@ class GameChat extends React.Component {
     }
 
     componentDidMount(){ 
-        this.socket.on("receiveMessage", (data) => {
+        this.socket.on("receivePokerMessage", (data) => {
             this.state.messages.push(data)
             this.setState(this.state)
         })
@@ -71,7 +71,7 @@ class GameChat extends React.Component {
 
     handleSubmit(e){
         e.preventDefault();
-        this.socket.emit("chat", {
+        this.socket.emit("pokerChat", {
             user: this.props.currentUser.username,
             message: this.state.message
         })
