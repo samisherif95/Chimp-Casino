@@ -51,10 +51,6 @@ class Blackjack extends React.Component {
 
     // }
 
-    addPlayer(playerId, balance) {
-        this.state.blackjack.addPlayer(playerId, balance);
-        this.updateBlackjack();
-    }
 
     update(field) {
       return (e) => {
@@ -206,8 +202,7 @@ class Blackjack extends React.Component {
         this.state.players.forEach(player => {
             player.balance = playersObj[player.userId]
         })
-
-        this.setState(this.state);
+        this.setState(this.state)
     }
 
     resetBJPlayers() {
