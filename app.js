@@ -380,7 +380,6 @@ lobbyServer.on("connection", (socket) => {
               }
           }, 7000)
       } 
-
   })
 
   // bj
@@ -447,16 +446,22 @@ lobbyServer.on("connection", (socket) => {
   socket.on("playerHit", () => {
     localBJLobby.game.players[0].hit();
     const playerCards = {};
+
+    // Below was added in place of the commented
+    localBJLobby.game.players.forEach(player => {
+        playerCards[player.userId] = player.hand;
+    })
+
     // if (localBJLobby.game.players[0].bust) {
     if (localBJLobby.game.checkCurrentPlayerBust()) {
         // Switches to next player, since cCPB will run nextTurn if the current player 
         const player = localBJLobby.game.players[localBJLobby.game.players.length-1];
-        playerCards[player.userId] = player.hand;
+        // playerCards[player.userId] = player.hand;
         lobbyServer.in(localLobbyId + "bj").emit("playerBust", player.userId)
-      lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase, localBJLobby.game.players[0].userId);
+        lobbyServer.in(localLobbyId + "bj").emit("changeTurn", localBJLobby.game.players[0].userId)
+        lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase)
     } else {
         const player = localBJLobby.game.players[0];
-        playerCards[player.userId] = player.hand;
         lobbyServer.in(localLobbyId + "bj").emit("playerHit", player.userId)
     }
     lobbyServer.in(localLobbyId + "bj").emit("dealPlayerCards", playerCards)
