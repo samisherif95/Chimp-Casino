@@ -294,7 +294,7 @@ class Blackjack extends React.Component {
                             </button>
 
                             <button className="blackjack-stand" onClick={this.handleStand}>
-                                    Stand!
+                                    Stand!  
                             </button>
 
                                 {/* 
