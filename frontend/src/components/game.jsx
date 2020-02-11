@@ -112,19 +112,10 @@ class GameContainer extends React.Component {
 
                     // player creation
                     this.createPlayer = playerName => {
-                        this.container = this.add.container(600, 400)
+                        this.container = this.add.container(250, 250)
                         this.physics.world.enable(this.container);
                 
                         this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
-                            // .setInteractive({ useHandCursor: true })
-                            // .on('pointerdown', () => {
-                            //     if (this.music.isPlaying) {
-                            //         this.music.pause();
-                            //     } else {
-                            //         this.music.resume();
-                            //     }
-                                    
-                            // })
                         
                         this.text = this.add.text(0, 0, playerName);
                         this.text.font = "Arial"
@@ -152,11 +143,13 @@ class GameContainer extends React.Component {
 
                     // move other players
                     this.moveOtherPlayer = playerInfo => {
-                        this.otherPlayers.getChildren().forEach(player => {
-                            if (playerInfo.playerId === player.playerId) {
-                                player.setPosition(playerInfo.x, playerInfo.y);
-                            }
-                        })
+                        if (this) {
+                            this.otherPlayers.getChildren().forEach(player => {
+                                if (playerInfo.playerId === player.playerId) {
+                                    player.setPosition(playerInfo.x, playerInfo.y);
+                                }
+                            })
+                        }
                     }
 
                     // destroy player on disconnect
@@ -195,15 +188,6 @@ class GameContainer extends React.Component {
 
                     // audio
                     this.music = this.sound.add('island-dreams')
-                    // const musicConfig = {
-                    //     mute: false,
-                    //     volume: 1,
-                    //     rate: 1,
-                    //     detune: 0,
-                    //     seek: 0,
-                    //     loop: true,
-                    //     delay: 0
-                    // }
                     this.music.play()
 
                     //balance
@@ -311,21 +295,23 @@ class GameContainer extends React.Component {
 
     componentWillUnmount() {
         this.socket.emit("leaveLobby");
+        this.socket.removeAllListeners();
     }
 
     componentDidMount() {
         this.socket.on("lobbyPlayers", (players) => {
             Object.values(players).forEach(player => {
                 if (player.playerId === this.socket.id) {
-                    setTimeout(() => this.createPlayer(player.username), 4000)
+                    setTimeout(() => this.createPlayer(player.username), 3000)
+                    
                 } else {
-                    setTimeout(() => this.createOtherPlayer(player), 4000)
+                    setTimeout(() => this.createOtherPlayer(player), 3000);
                 }
             })
         })
 
         this.socket.on("newPlayer", player => {
-            setTimeout(() => this.createOtherPlayer(player), 4000)
+            setTimeout(() => this.createOtherPlayer(player), 3000);
         })
 
         this.socket.on("playerMoved", (player) => {
@@ -333,7 +319,7 @@ class GameContainer extends React.Component {
         })
 
         this.socket.on("removePlayerSprite", player => {
-            this.destroyPlayer(player)
+            setTimeout(() => this.destroyPlayer(player), 3000);
         })
 
         this.socket.on("updateBalance", balance => {

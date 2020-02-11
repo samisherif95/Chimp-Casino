@@ -22,9 +22,9 @@ class Game {
         this.raised = false
     }
     
-    addPlayer(username, socketId){
+    addPlayer(username, socketId, balance){
         if(this.players.length < 6){
-            this.players.unshift(new Player(username, socketId))
+            this.players.unshift(new Player(username, socketId,balance))
             this.dealFirstHand();
             return true
         }else{
@@ -112,7 +112,7 @@ class Game {
         max.bananas+= this.pot;
         const temp = this.pot;
         this.pot = 0
-        return {username: max.handle, amount: temp}
+        return {username: max.handle, amount: temp, bananas: max.bananas}
     }
 
     resetNextBetRound(){

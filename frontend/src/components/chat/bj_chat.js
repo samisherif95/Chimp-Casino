@@ -27,6 +27,32 @@ class BlackJackChat extends React.Component {
       this.setState(this.state)
     })
 
+    this.socket.on("changeTurn", () => {
+      this.state.messages.push(`stand`)
+      this.setState(this.state)
+    })
+
+    // this.socket.on("changePhase", () => {
+    //   // console.log("ABCDEFG")
+    //   this.state.messages.push("Game starting in 5 seconds");
+    //   this.setState(this.state);
+    //   setTimeout(() => {
+    //     this.state.messages.push("Game starting in 4 seconds")
+    //     this.setState(this.state)
+    //   }, 1000)
+    //   setTimeout(() => {
+    //     this.state.messages.push("Game starting in 3 seconds")
+    //     this.setState(this.state)
+    //   }, 2000)
+    //   setTimeout(() => {
+    //     this.state.messages.push("Game starting in 2 seconds")
+    //     this.setState(this.state)
+    //   }, 3000)
+    //   setTimeout(() => {
+    //     this.state.messages.push("Game starting in 1 seconds")
+    //     this.setState(this.state)
+    //   }, 4000)
+    // })
 
   }
 
