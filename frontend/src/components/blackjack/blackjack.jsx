@@ -93,12 +93,11 @@ class Blackjack extends React.Component {
 
     handleBetSubmit(e) {
         e.preventDefault();
-        console.log("here1")
         if(this.state.betAmount > 0){
-          this.socket.emit("bet", this.state.betAmount)
-          this.setState({ betAmount: "" });
+            this.socket.emit("bet", this.state.betAmount)
+            this.setState({ betAmount: "" });
         }else{
-          alert('Please enter a bet')
+            alert('Please enter a bet')
         }
     }
 
@@ -285,8 +284,8 @@ class Blackjack extends React.Component {
                 break;
             case 'options':
                 console.log("Currently In: Options Phase");
+                console.log('Current Turn for Options: ', this.state.currentTurn);
 
-                console.log('Current Turn for Options: ',this.state.currentTurn);
                 render = (this.props.currentUser.username === this.state.currentTurn ?
                     (
                         <section className="blackjack-options">
