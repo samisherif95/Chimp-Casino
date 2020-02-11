@@ -9,61 +9,84 @@ class BlackJackChat extends React.Component {
     }
     this.socket = this.props.socket
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.addPlayerToBJ = this.addPlayerToBJ.bind(this);
+    this.receiveBJMessage = this.receiveBJMessage.bind(this);
+    this.playerBustMessage = this.playerBustMessage.bind(this);
+    this.playerHitMessage = this.playerHitMessage.bind(this);
+    this.playerStandMessage = this.playerStandMessage.bind(this);
+    this.playerBetMessage = this.playerBetMessage.bind(this);
+    this.resetBJGameMessage = this.resetBJGameMessage.bind(this);
   }
 
-  componentDidMount() {
-    this.socket.on("addPlayerToBJ", username => {
+  addPlayerToBJ(username) {
       this.state.messages.push(`${username} has joined the game`)
       this.setState(this.state)
-    })
+  }
 
-    this.socket.on('receiveBJMessage', (data) => {
+  receiveBJMessage(data) {
       this.state.messages.push(data)
       this.setState(this.state)
-    })
+  }
 
-    this.socket.on("playerBust", username => {
+  playerBustMessage(username) {
       this.state.messages.push(`${username} has busted!!`)
       this.setState(this.state)
-    })
+  }
 
-    this.socket.on("playerHit", username => {
+  playerHitMessage(username) {
       this.state.messages.push(`${username} hits`)
       this.setState(this.state)
-    })
+  }
 
-    this.socket.on("standOption", username => {
+  playerStandMessage(username) {
       this.state.messages.push(`${username} stands`)
       this.setState(this.state)
-    })
+  }
 
-    this.socket.on("playerBet", (amount, username) => {
+  playerBetMessage(amount, username) {
       this.state.messages.push(`${username} bets ${amount}`);
       this.setState(this.state);
-    })
+  }
 
-    this.socket.on("resetBJGame", () => {
-      // console.log("ABCDEFG")
+  resetBJGameMessage() {
       this.state.messages.push("Game starting in 5 seconds");
       this.setState(this.state);
       setTimeout(() => {
-        this.state.messages.push("Game starting in 4 seconds")
-        this.setState(this.state)
+          this.state.messages.push("Game starting in 4 seconds")
+          this.setState(this.state)
       }, 1000)
       setTimeout(() => {
-        this.state.messages.push("Game starting in 3 seconds")
-        this.setState(this.state)
+          this.state.messages.push("Game starting in 3 seconds")
+          this.setState(this.state)
       }, 2000)
       setTimeout(() => {
-        this.state.messages.push("Game starting in 2 seconds")
-        this.setState(this.state)
+          this.state.messages.push("Game starting in 2 seconds")
+          this.setState(this.state)
       }, 3000)
       setTimeout(() => {
-        this.state.messages.push("Game starting in 1 seconds")
-        this.setState(this.state)
+          this.state.messages.push("Game starting in 1 seconds")
+          this.setState(this.state)
       }, 4000)
-    })
+  }
 
+  componentDidMount() {
+    this.socket.on("addPlayerToBJ", this.addPlayerToBJ);
+    this.socket.on('receiveBJMessage', this.receiveBJMessage);
+    this.socket.on("playerBust", this.playerBustMessage);
+    this.socket.on("playerHit",this.playerHitMessage);
+    this.socket.on("standOption", this.playerStandMessage);
+    this.socket.on("playerBet", this.playerBetMessage);
+    this.socket.on("resetBJGame", this.resetBJGameMessage);
+  }
+
+  componentWillUnmount() {
+    this.socket.off("addPlayerToBJ", this.addPlayerToBJ);
+    this.socket.off('receiveBJMessage', this.receiveBJMessage);
+    this.socket.off("playerBust", this.playerBustMessage);
+    this.socket.off("playerHit", this.playerHitMessage);
+    this.socket.off("standOption", this.playerStandMessage);
+    this.socket.off("playerBet", this.playerBetMessage);
+    this.socket.off("resetBJGame", this.resetBJGameMessage);
   }
 
   componentDidUpdate(prevProps, prevState) {
