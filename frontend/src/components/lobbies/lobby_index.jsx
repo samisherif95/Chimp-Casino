@@ -28,7 +28,7 @@ class LobbiesIndex extends React.Component {
     handleJoin(e) {
         e.preventDefault();
         const { lobby } = this.state
-        if (lobby.currentCapacity === lobby.maxCapacity) {
+        if (lobby.currentCapacity >=lobby.maxCapacity) {
             this.setState({ errors: "Lobby is full"})
         } else if (lobby.password) {
             if (this.state.password === lobby.password) {

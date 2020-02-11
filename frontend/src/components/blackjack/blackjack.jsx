@@ -100,10 +100,6 @@ class Blackjack extends React.Component {
         }else{
           alert('Please enter a bet')
         }
-        // if (this.state.blackjack.getBetFromCurrentTurn(parseInt(this.state.betAmount))) {
-        //     this.setState({ betAmount: 0 })
-        // }
-
     }
 
     updateBlackjack() {
@@ -130,42 +126,10 @@ class Blackjack extends React.Component {
 
     handleHit() {
         this.socket.emit("playerHit")
-        // if (this.state.blackjack.players[0].bust === false) {
-        //     this.state.blackjack.players[0].hit()
-        //     // if (this.state.blackjack.players[0].bust && this.state.blackjack.players[0].handSplit.length == 0) {
-        //     //     this.nullAllOptions();
-        //     // }
-        //     // if (this.state.blackjack.players[0].bust) {
-        //     //     document.getElementsByClassName("blackjack-hand")[0].style.color = 'red';
-        //     // }
-        //     this.updateBlackjack();
-        // } else if (this.state.blackjack.players[0].bustSplit === false) {
-        //     this.state.blackjack.players[0].hitSplit()
-        //     // if (this.state.blackjack.players[0].bustSplit) {
-        //     //     document.getElementsByClassName("blackjack-handSplit")[0].style.color = 'red';
-        //     //     this.nullAllOptions();
-        //     // }
-        //     this.state.updateBlackjack();
-        // }
-
-        // if (this.state.blackjack.checkCurrentPlayerBust()) {
-        //     if (this.state.blackjack.checkAllBust()) {
-        //         this.newRound();
-        //     }
-        // }
-        // this.updateBlackjack();
     }
 
     handleStand() {
         this.socket.emit("playerStand")
-        // this.state.blackjack.players[0].stand();
-        // // this.nullAllOptions();
-
-        // // Renders that logic into the front end 
-        // this.state.blackjack.checkCurrentPlayerStand();
-        // // This updates the state and rerenders the blackjack component with the current phase still being 
-        // // the options phase. It doesn't know it's last in the cycle 
-        // this.updateBlackjack();
     }
 
     handleSplit() {
@@ -178,22 +142,6 @@ class Blackjack extends React.Component {
     handleDouble() {
         this.state.blackjack.players[0].doubleDownHand();
         this.updateBlackjack();
-    }
-
-    nullAllOptions() {
-        document.getElementsByClassName('blackjack-hit')[0].setAttribute('disabled', true)
-        document.getElementsByClassName('blackjack-stand')[0].setAttribute('disabled', true)
-        document.getElementsByClassName('blackjack-split')[0].setAttribute('disabled', true)
-        document.getElementsByClassName('blackjack-double')[0].setAttribute('disabled', true)
-    }
-
-    newRound() {
-        document.querySelectorAll('.blackjack-hit').forEach(ele => ele.removeAttribute('disabled'))
-        document.querySelectorAll('.blackjack-stand').forEach(ele => ele.removeAttribute('disabled'))
-        document.querySelectorAll('.blackjack-split').forEach(ele => ele.removeAttribute('disabled'))
-        document.querySelectorAll('.blackjack-double').forEach(ele => ele.removeAttribute('disabled'))
-        document.querySelectorAll(".blackjack-hand").forEach(ele => ele.style.color = 'black')
-        document.querySelectorAll("blackjack-handSplit").forEach(ele => ele.style.color = 'black')
     }
 
     checkDealerStood() {
@@ -380,21 +328,12 @@ class Blackjack extends React.Component {
                 render = (
                     <div className='new-bj-game'>
                       <p>Round done: NEW ROUND PHASE</p>
-                      <p>New Round Starting in 5 seconds!</p>
                     </div>
                 )
 
                 this.socket.emit("newRound");
                 break;
         }
-        //     default:
-        //         render = (
-        //             <div>
-        //                 Waiting on players!
-        //             </div>
-        //         )
-        //         break;
-        // }
 
         let ingamePlayers = (
             this.state.players.length > 0 ?

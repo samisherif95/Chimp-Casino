@@ -63,7 +63,7 @@ class LobbyForm extends React.Component {
                 <form onSubmit={this.handleSubmit}className="lobby-form">
                     <input type="text" value={this.state.lobbyName} onChange={this.handleType("lobbyName")} placeholder="Lobby Name" id="form-lobby-name"/>
                     <input type="password" value={this.state.password} onChange={this.handleType("password")} placeholder="Password (optional)" id="form-lobby-password"/>
-                    <input type="text" value={this.state.balanceLimit} onChange={this.handleType("balanceLimit")} placeholder="Balance Limit (optional)" id="form-lobby-balance"/>
+                    {/* <input type="text" value={this.state.balanceLimit} onChange={this.handleType("balanceLimit")} placeholder="Balance Limit (optional)" id="form-lobby-balance"/> */}
                     <button id="submit-lobby" type="submit">Make Lobby</button>
                 </form>
             </div>
