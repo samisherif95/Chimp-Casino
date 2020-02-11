@@ -1,9 +1,7 @@
 import React from 'react';
 import pokerTable from '../../app/assets/images/pokerTable.png'
-import Game from '../../components/poker/game';
 import '../../app/assets/stylesheets/poker.css'
 import imageHash from './pokerImages';
-import Deck from '../../cardDeck';
 import GameChat from "../chat/game_chat_container";
 
 class Poker extends React.Component{

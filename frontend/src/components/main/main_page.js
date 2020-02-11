@@ -27,29 +27,29 @@ class MainPage extends React.Component {
                     <div>
                       <h4>Evans Shao</h4>
                       <div>
-                        <a href="http://linkedin.com/in/evans-shao-b76201139/" target="_blank"><i class="fab fa-linkedin fa-3x"></i></a>
-                        <a href="https://github.com/shaoevans" target="_blank"><i class="fab fa-github fa-3x"></i></a>
+                        <a href="http://linkedin.com/in/evans-shao-b76201139/" target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin fa-3x"></i></a>
+                        <a href="https://github.com/shaoevans" target="_blank" rel="noopener noreferrer"><i className="fab fa-github fa-3x"></i></a>
                       </div>  
                     </div>
                     <div>
                       <h4>Sebastian Mendo</h4>
                       <div>
-                        <a href="https://www.linkedin.com/in/sebastian-mendo-lopez-8730b1126/" target="_blank"><i class="fab fa-linkedin fa-3x"></i></a>
-                        <a href="https://github.com/sebastianmendo1995" target="_blank"><i class="fab fa-github fa-3x"></i></a>
+                            <a href="https://www.linkedin.com/in/sebastian-mendo-lopez-8730b1126/" target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin fa-3x"></i></a>
+                            <a href="https://github.com/sebastianmendo1995" target="_blank" rel="noopener noreferrer"><i className="fab fa-github fa-3x"></i></a>
                       </div>  
                     </div>
                     <div>
                       <h4>Duke Nguyen</h4>
                       <div>
-                        <a href="https://www.linkedin.com/in/nguyenduke/" target="_blank"><i class="fab fa-linkedin fa-3x"></i></a>
-                        <a href="https://github.com/hnguyen1179" target="_blank"><i class="fab fa-github fa-3x"></i></a>
+                        <a href="https://www.linkedin.com/in/nguyenduke/" target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin fa-3x"></i></a>
+                        <a href="https://github.com/hnguyen1179" target="_blank" rel="noopener noreferrer"><i className="fab fa-github fa-3x"></i></a>
                       </div>  
                     </div>
                     <div>
                       <h4>Sami Ellaboudy</h4>
                       <div>
-                        <a href="https://www.linkedin.com/in/sami-ellaboudy-667883161/" target="_blank"><i class="fab fa-linkedin fa-3x"></i></a>
-                        <a href="https://github.com/samisherif95" target="_blank"><i class="fab fa-github fa-3x"></i></a>
+                        <a href="https://www.linkedin.com/in/sami-ellaboudy-667883161/" target="_blank" rel="noopener noreferrer"><i className="fab fa-linkedin fa-3x"></i></a>
+                        <a href="https://github.com/samisherif95" target="_blank" rel="noopener noreferrer"><i className="fab fa-github fa-3x"></i></a>
                       </div>  
                     </div>
                   </div>
