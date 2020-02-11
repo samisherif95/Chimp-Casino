@@ -157,10 +157,10 @@
     height: 6%;
 }
 .card-11{
-    transform: translate(67px, 275px);
+    transform: translate(95px, 295px);
 }
 .card-12{
-    transform: translate(102px, 275px);
+    transform: translate(130px, 295px);
 }
 
 .card-21{
@@ -172,11 +172,11 @@
 }
 
 .card-31{
-    transform: translate(370px, 15px);
+    transform: translate(370px, -15px);
 }
 
 .card-32{
-    transform: translate(405px, 15px);
+    transform: translate(405px, -15px);
 }
 
 .card-41{
@@ -188,11 +188,11 @@
 }
 
 .card-51{
-    transform: translate(665px, 275px);
+    transform: translate(700px, 292px);
 }
 
 .card-52{
-    transform: translate(700px, 275px);
+    transform: translate(735px, 292px);
 }
 
 
@@ -201,15 +201,15 @@
 }
 
 .player-2{
-    transform: translate(196px,49px);
+    transform: translate(160px,30px);
 }
 
 .player-3{
-    transform: translate(450px,61px);
+    transform: translate(415px,32px);
 }
 
 .player-4{
-    transform: translate(695px,49px);
+    transform: translate(663px,30px);
 }
 
 .player-5{
