@@ -5,12 +5,10 @@ import LoginFormContainer from '../session/login_form_container';
 import SignupFormContainer from '../session/signup_form_container';
 import BlackjackContainer from '../../components/blackjack/blackjack_container';
 import LobbyFormContainer from "../lobbies/lobby_form_container";
-// import LobbyIndexContainer from '../lobbies/lobby_index_container';
 import LeaveLobby from "../lobbies/leave_lobby";
 import LeaderBoard from "../users/leaderboard";
 import PokerContainer from '../poker/poker_container';
 import SlotContainer from '../slots/slots_container';
-// import LeaveLobby from "../lobbies/leave_lobby";
 
 const Modal = ({ modal, closeModal, socket }) => {
     if (!modal) {
@@ -47,9 +45,6 @@ const Modal = ({ modal, closeModal, socket }) => {
         case 'leaderboard':
             component = <LeaderBoard />;
             break;
-        case 'blackjack':
-            component = <BlackjackContainer socket={socket}/>;
-            break
         case 'slots':
             component = <SlotContainer socket={socket} />
             break;

@@ -1,4 +1,5 @@
 import { openModal } from "../actions/modal_actions";
+import { updateCurrentUserBalance } from "../actions/user_actions";
 import { connect } from "react-redux";
 import Phaser from "phaser";
 import React from "react";
@@ -111,7 +112,7 @@ class GameContainer extends React.Component {
 
                     // player creation
                     this.createPlayer = playerName => {
-                        this.container = this.add.container(200, 250)
+                        this.container = this.add.container(600, 400)
                         this.physics.world.enable(this.container);
                 
                         this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
@@ -168,15 +169,17 @@ class GameContainer extends React.Component {
                     }
 
                     this.disableKeys = () => {
-                        console.log("disabled")
                         this.input.keyboard.enabled = false;
                         this.input.enabled = false;
                     }
 
                     this.enableKeys = () => {
-                        console.log("enabled")
                         this.input.keyboard.enabled = true;
                         this.input.enabled = true;
+                    }
+
+                    this.updateBalance = balance => {
+                        this.balanceText.setText(balance);
                     }
                     
 
@@ -187,25 +190,26 @@ class GameContainer extends React.Component {
                     game.destroyPlayer = this.destroyPlayer.bind(this);
                     game.disableKeys = this.disableKeys.bind(this);
                     game.enableKeys = this.enableKeys.bind(this);
+                    game.updateBalance = this.updateBalance.bind(this);
 
 
                     // audio
                     this.music = this.sound.add('island-dreams')
-                    const musicConfig = {
-                        mute: false,
-                        volume: 1,
-                        rate: 1,
-                        detune: 0,
-                        seek: 0,
-                        loop: true,
-                        delay: 0
-                    }
+                    // const musicConfig = {
+                    //     mute: false,
+                    //     volume: 1,
+                    //     rate: 1,
+                    //     detune: 0,
+                    //     seek: 0,
+                    //     loop: true,
+                    //     delay: 0
+                    // }
                     this.music.play()
 
                     //balance
-                    this.balance =this.add.sprite(50, 720, 'logo-svg')
+                    this.balance = this.add.sprite(50, 720, 'logo-svg')
                     this.balance.setScale(0.25)
-                    this.add.text(100, 700, game.props.currentUser.balance, { font: "42px 'Sans Serif'", fill: "#fcd600", align: "center" })
+                    this.balanceText = this.add.text(100, 700, game.props.currentUser.balance, { font: "42px 'Sans Serif'", fill: "#fcd600", align: "center" })
 
 
                     this.anims.create({
@@ -238,7 +242,6 @@ class GameContainer extends React.Component {
 
 
                     this.cursors = this.input.keyboard.createCursorKeys()
-                    
                     this.input.keyboard.clearCaptures();
                 },
                 update: function() {
@@ -306,31 +309,37 @@ class GameContainer extends React.Component {
 
 
 
-
+    componentWillUnmount() {
+        this.socket.emit("leaveLobby");
+    }
 
     componentDidMount() {
         this.socket.on("lobbyPlayers", (players) => {
             Object.values(players).forEach(player => {
                 if (player.playerId === this.socket.id) {
-                    setTimeout(() => this.createPlayer(player.username), 2000)
+                    setTimeout(() => this.createPlayer(player.username), 4000)
                 } else {
-                    setTimeout(() => this.createOtherPlayer(player), 2000)
+                    setTimeout(() => this.createOtherPlayer(player), 4000)
                 }
             })
         })
 
         this.socket.on("newPlayer", player => {
-            setTimeout(() => this.createOtherPlayer(player), 2000)
+            setTimeout(() => this.createOtherPlayer(player), 4000)
         })
 
         this.socket.on("playerMoved", (player) => {
             this.moveOtherPlayer(player);
         })
 
-        this.socket.on("removePlayer", player => {
+        this.socket.on("removePlayerSprite", player => {
             this.destroyPlayer(player)
         })
 
+        this.socket.on("updateBalance", balance => {
+            this.props.updateCurrentUserBalance(balance);
+            this.updateBalance(balance);
+        })
     }
 
     render() {
@@ -353,7 +362,8 @@ const mapDispatchToProps = dispatch => ({
         if (!currentModal) {
             dispatch(openModal(modal))
         }
-    }
+    },
+    updateCurrentUserBalance: balance => dispatch(updateCurrentUserBalance(balance))
 })
 
 

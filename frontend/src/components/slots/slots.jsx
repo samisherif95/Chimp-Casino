@@ -115,7 +115,7 @@ class SlotGame extends React.Component {
             this.props.currentUser.balance = this.state.balance;
         }
 
-        this.socket.emit("slotChange", this.state.balance);
+        this.socket.emit("slotChange", this.state.balance, this.props.currentUser.id);
     }
 
     handleType(type) {
