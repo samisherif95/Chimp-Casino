@@ -43,8 +43,23 @@ class GameChat extends React.Component {
         })
 
         this.socket.on("playerWon", ({ username, amount }) => {
-            this.state.messages.push(`${username} has won ${amount} bananas!`)
+            this.state.messages.push(`${username} has won ${amount} bananas!`);
+            this.state.messages.push(`Next hand starting in 10 seconds...`);
             this.setState(this.state)
+        })
+
+        this.socket.on("aboutToStart", () => {
+            console.log("hitting here");
+            this.state.messages.push("Game starting in 3 seconds...");
+            setTimeout(() => {
+                this.state.messages.push("Game starting in 2 seconds...");
+                this.setState(this.state);
+            }, 1000)
+            setTimeout(() => {
+                this.state.messages.push("Game starting in 1 seconds...");
+                this.setState(this.state);
+            }, 2000)
+            this.setState(this.state);
         })
 
         this.socket.on("removePlayer", username => {

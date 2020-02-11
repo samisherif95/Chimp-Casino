@@ -22,9 +22,9 @@ class Game {
         this.raised = false
     }
     
-    addPlayer(username, socketId){
+    addPlayer(username, socketId, balance){
         if(this.players.length < 6){
-            this.players.unshift(new Player(username, socketId))
+            this.players.unshift(new Player(username, socketId,balance))
             this.dealFirstHand();
             return true
         }else{
