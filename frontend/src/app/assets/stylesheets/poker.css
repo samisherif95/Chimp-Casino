@@ -59,6 +59,8 @@
 .buttons strong{
     color: gold;
     font-family: sans-serif;
+    display: block;
+    margin: 20px;
 }
 .test{
     display: flex;
