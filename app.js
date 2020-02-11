@@ -147,18 +147,6 @@ lobbyServer.on("connection", (socket) => {
 
 
   //lobbies
-  socket.on("getLobbies", () => {
-    const lobbies = Object.keys(lobbiesCollection).map(lobbyId => {
-        const { lobbyName, password, maxCapacity, balanceLimit } = lobbiesCollection[lobbyId];
-        return {
-            lobbyName,
-            password,
-            maxCapacity,
-            balanceLimit
-        }
-    })
-    socket.emit("receiveLobbies", lobbies);
-  })
 
   socket.on("joinLobby", (lobbyId, username) => {
     localLobbyId = lobbyId
