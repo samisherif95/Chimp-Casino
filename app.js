@@ -449,6 +449,7 @@ lobbyServer.on("connection", (socket) => {
 
     socket.on("newRound", () => {
         console.log("newRound is hit");
+        lobbyServer.in(localLobbyId + "bj").emit("aboutToStart")
         if (t === null) {
             t = setTimeout(() => {
                 localBJLobby.game.resetGame()
