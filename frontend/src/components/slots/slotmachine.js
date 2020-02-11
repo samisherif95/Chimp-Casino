@@ -1,5 +1,5 @@
-const Timer = require('./timer');
-const raf = require('./raf');
+import Timer from "./timer";
+import raf from "./raf";
 
 const defaults = {
     active: 0, // Active element [Number]

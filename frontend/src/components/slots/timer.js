@@ -1,4 +1,4 @@
-module.exports = class Timer {
+class Timer {
     constructor(cb, delay) {
         this.cb = cb;
         this.initialDelay = delay;
@@ -52,3 +52,5 @@ module.exports = class Timer {
         this.resume();
     }
 };
+
+export default Timer;
