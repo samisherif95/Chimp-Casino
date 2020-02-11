@@ -112,19 +112,17 @@ class GameContainer extends React.Component {
 
                     // player creation
                     this.createPlayer = playerName => {
-                        if (this) {
-                            this.container = this.add.container(250, 250)
-                            this.physics.world.enable(this.container);
-                    
-                            this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
-                            
-                            this.text = this.add.text(0, 0, playerName);
-                            this.text.font = "Arial"
-                            this.container.add(this.player)
-                            this.container.add(this.text)
-                    
-                            this.container.body.setCollideWorldBounds(true);
-                        }
+                        this.container = this.add.container(250, 250)
+                        this.physics.world.enable(this.container);
+                
+                        this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
+                        
+                        this.text = this.add.text(0, 0, playerName);
+                        this.text.font = "Arial"
+                        this.container.add(this.player)
+                        this.container.add(this.text)
+                
+                        this.container.body.setCollideWorldBounds(true);
                     }
 
                     // create other players 
@@ -295,21 +293,23 @@ class GameContainer extends React.Component {
 
     componentWillUnmount() {
         this.socket.emit("leaveLobby");
+        this.socket.removeAllListeners();
     }
 
     componentDidMount() {
         this.socket.on("lobbyPlayers", (players) => {
             Object.values(players).forEach(player => {
                 if (player.playerId === this.socket.id) {
-                    setTimeout(() => this.createPlayer ? this.createPlayer(player.username) : null, 2000)
+                    setTimeout(() => this.createPlayer(player.username), 3000)
+                    
                 } else {
-                    setTimeout(() => this.createOtherPlayer ? this.createOtherPlayer(player) : null, 2000)
+                    setTimeout(() => this.createOtherPlayer(player), 3000);
                 }
             })
         })
 
         this.socket.on("newPlayer", player => {
-            setTimeout(() => this.createOtherPlayer ? this.createOtherPlayer(player) : null, 2000)
+            setTimeout(() => this.createOtherPlayer(player), 3000)
         })
 
         this.socket.on("playerMoved", (player) => {
@@ -321,6 +321,7 @@ class GameContainer extends React.Component {
         })
 
         this.socket.on("updateBalance", balance => {
+            console.log(balance);
             this.props.updateCurrentUserBalance(balance);
             this.updateBalance(balance);
         })
