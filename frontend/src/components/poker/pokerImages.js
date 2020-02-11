@@ -50,6 +50,7 @@ import imgJH from './PokerImages/JH.png'
 import imgQH from './PokerImages/QH.png'
 import imgKH from './PokerImages/KH.png'
 import imgAH from './PokerImages/AH.png'
+import backCard from './PokerImages/backCard.png'
 
 export default {
     '2C': img2C,
@@ -104,4 +105,5 @@ export default {
     'QH': imgQH,
     'KH': imgKH,
     'AH': imgAH,
+    'BackCard': backCard
 };

@@ -126,42 +126,10 @@ class Blackjack extends React.Component {
 
     handleHit() {
         this.socket.emit("playerHit")
-        // if (this.state.blackjack.players[0].bust === false) {
-        //     this.state.blackjack.players[0].hit()
-        //     // if (this.state.blackjack.players[0].bust && this.state.blackjack.players[0].handSplit.length == 0) {
-        //     //     this.nullAllOptions();
-        //     // }
-        //     // if (this.state.blackjack.players[0].bust) {
-        //     //     document.getElementsByClassName("blackjack-hand")[0].style.color = 'red';
-        //     // }
-        //     this.updateBlackjack();
-        // } else if (this.state.blackjack.players[0].bustSplit === false) {
-        //     this.state.blackjack.players[0].hitSplit()
-        //     // if (this.state.blackjack.players[0].bustSplit) {
-        //     //     document.getElementsByClassName("blackjack-handSplit")[0].style.color = 'red';
-        //     //     this.nullAllOptions();
-        //     // }
-        //     this.state.updateBlackjack();
-        // }
-
-        // if (this.state.blackjack.checkCurrentPlayerBust()) {
-        //     if (this.state.blackjack.checkAllBust()) {
-        //         this.newRound();
-        //     }
-        // }
-        // this.updateBlackjack();
     }
 
     handleStand() {
         this.socket.emit("playerStand")
-        // this.state.blackjack.players[0].stand();
-        // // this.nullAllOptions();
-
-        // // Renders that logic into the front end 
-        // this.state.blackjack.checkCurrentPlayerStand();
-        // // This updates the state and rerenders the blackjack component with the current phase still being 
-        // // the options phase. It doesn't know it's last in the cycle 
-        // this.updateBlackjack();
     }
 
     handleSplit() {
@@ -174,22 +142,6 @@ class Blackjack extends React.Component {
     handleDouble() {
         this.state.blackjack.players[0].doubleDownHand();
         this.updateBlackjack();
-    }
-
-    nullAllOptions() {
-        document.getElementsByClassName('blackjack-hit')[0].setAttribute('disabled', true)
-        document.getElementsByClassName('blackjack-stand')[0].setAttribute('disabled', true)
-        document.getElementsByClassName('blackjack-split')[0].setAttribute('disabled', true)
-        document.getElementsByClassName('blackjack-double')[0].setAttribute('disabled', true)
-    }
-
-    newRound() {
-        document.querySelectorAll('.blackjack-hit').forEach(ele => ele.removeAttribute('disabled'))
-        document.querySelectorAll('.blackjack-stand').forEach(ele => ele.removeAttribute('disabled'))
-        document.querySelectorAll('.blackjack-split').forEach(ele => ele.removeAttribute('disabled'))
-        document.querySelectorAll('.blackjack-double').forEach(ele => ele.removeAttribute('disabled'))
-        document.querySelectorAll(".blackjack-hand").forEach(ele => ele.style.color = 'black')
-        document.querySelectorAll("blackjack-handSplit").forEach(ele => ele.style.color = 'black')
     }
 
     checkDealerStood() {
@@ -342,7 +294,7 @@ class Blackjack extends React.Component {
                                     Hit!
                             </button>
 
-                                <button className="blackjack-stand" onClick={this.handleStand}>
+                            <button className="blackjack-stand" onClick={this.handleStand}>
                                     Stand!
                             </button>
 
@@ -356,9 +308,9 @@ class Blackjack extends React.Component {
                             </button> */}
                         </section>
                     ) : (
-                        <div>
-                            Waiting for other players...
-                    </div>
+                      <div>
+                          Waiting for other players...
+                      </div>
                     ))
                 break
             case 'dealer':
@@ -370,23 +322,14 @@ class Blackjack extends React.Component {
                 console.log("Currently In: New Round")
                 
                 render = (
-                    <div>
-                        Round done: NEW ROUND PHASE
-                        New Round Starting in 5 seconds! 
+                    <div className='new-bj-game'>
+                      <p>Round done: NEW ROUND PHASE</p>
                     </div>
                 )
 
                 this.socket.emit("newRound");
                 break;
         }
-        //     default:
-        //         render = (
-        //             <div>
-        //                 Waiting on players!
-        //             </div>
-        //         )
-        //         break;
-        // }
 
         let ingamePlayers = (
             this.state.players.length > 0 ?
@@ -416,19 +359,17 @@ class Blackjack extends React.Component {
                             <div key={player.userId} className={className}>
                                 <section className={this.state.currentTurn === player.userId ? "blackjack-player-info current-turn": "blackjack-player-info" }>
                                     <div className="blackjack-player-id">
-                                        Player: {player.userId}
-
+                                        <p>Player: {player.userId}</p>
                                     </div>
                                     <div className="blackjack-player-poolSplit">
                                         {splitPool}
                                     </div>
                                     <div className="blackjack-player-balance">
-                                        Balance: {player.balance}
+                                      <p>Balance: {player.balance}</p>
                                     </div>
                                 </section>
 
                                 <div className="blackjack-player-hand">
-                                    Hand:
                                     <ul className="blackjack-hand">
                                         {hand}
                                     </ul>

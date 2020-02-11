@@ -28,7 +28,7 @@ class LobbiesIndex extends React.Component {
     handleJoin(e) {
         e.preventDefault();
         const { lobby } = this.state
-        if (lobby.currentCapacity === lobby.maxCapacity) {
+        if (lobby.currentCapacity >=lobby.maxCapacity) {
             this.setState({ errors: "Lobby is full"})
         } else if (lobby.password) {
             if (this.state.password === lobby.password) {
@@ -65,7 +65,7 @@ class LobbiesIndex extends React.Component {
                     {this.state.lobby && <span>{this.state.lobby.lobbyName}</span>}
                     <form onSubmit={this.handleJoin}>
                         {this.state.lobby && this.state.errors && <span className="lobby-index-errors">{this.state.errors}</span>}
-                        {this.state.lobby && this.state.lobby.password && <input className={this.state.errors ? "errors" : null} value={this.state.password} onChange={this.handleType} type="password" placeholder="password"></input>}
+                        {this.state.lobby && this.state.lobby.password && <input autoFocus className={this.state.errors ? "errors" : null} value={this.state.password} onChange={this.handleType} type="password" placeholder="password"></input>}
                         {this.state.lobby && <button type="submit" id="join-lobby">Join Lobby</button>}
                     </form>
                 </div>
