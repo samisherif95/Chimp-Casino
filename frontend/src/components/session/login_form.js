@@ -40,7 +40,6 @@ class LoginForm extends React.Component {
 
         this.props.login(user)
             .then(() => {
-                console.log("errors", this.state.errors)
                 if (!Object.keys(this.state.errors).length) {
                     this.props.history.push('/lobbies');
                     this.props.closeModal();

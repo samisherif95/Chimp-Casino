@@ -273,19 +273,7 @@ class GameContainer extends React.Component {
                         };
                     }
                 },
-                // render: function() {
-                    // console.log("here")
-                    // const chatDOM = document.getElementById("message-to-send")
-                    // const gameDOM = document.getElementById("game")
-            
-                    // gameDOM.addEventListener('click', () => {
-                    //     this.enableKeys();
-                    // })
-            
-                    // chatDOM.addEventListener('focus', () => {
-                    //     this.disableKeys();
-                    // })
-                // },
+
                 parent: "phaser-game"
             }
         }
