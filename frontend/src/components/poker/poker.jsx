@@ -107,24 +107,26 @@ class Poker extends React.Component{
             this.setState({ players, communityCards, gameStarted, showCards: alreadyHasPlayers })
         })
 
-        this.socket.on("playerCalled", (username, pot, nextUsername, communityCards, raised) => {
+        this.socket.on("playerCalled", (username, pot, nextUsername, communityCards, raised, bet) => {
             //changed amount to pot
-            this.setState({ pot, currentPlayer: nextUsername, communityCards, raised });
+            const player = this.getPlayerByName(username);
+            player.bananas -= this.state.bet;
+            this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet });
         })
 
-        this.socket.on("playerRaised", (username, amount, nextUsername, communityCards, raised) => {
+        this.socket.on("playerRaised", (username, amount, nextUsername, communityCards, raised, bet) => {
             const player = this.getPlayerByName(username);
             player.bananas -= amount; 
             const pot = this.state.pot + amount;
-            this.setState({ pot, currentPlayer: nextUsername, communityCards, raised })
+            this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet })
         })
 
-        this.socket.on("playerFolded", (username, nextUsername, communityCards, raised) => {
-            this.setState({ currentPlayer: nextUsername, communityCards, raised })
+        this.socket.on("playerFolded", (username, nextUsername, communityCards, raised, bet) => {
+            this.setState({ currentPlayer: nextUsername, communityCards, raised, bet })
         }) 
 
-        this.socket.on("playerChecked", (username, nextUsername, communityCards, raised) => {
-            this.setState({ currentPlayer: nextUsername, communityCards, raised })
+        this.socket.on("playerChecked", (username, nextUsername, communityCards, raised, bet) => {
+            this.setState({ currentPlayer: nextUsername, communityCards, raised, bet })
         }) 
 
         this.socket.on('removePlayer', username => {
@@ -183,8 +185,6 @@ class Poker extends React.Component{
     }
    
     render(){ 
-
-        console.log(this.state.players)
         let gameStarted = this.state.addedPlayer || this.state.gameStarted ? null : <button className='addPlayer' onClick={this.sendPlayerToSocket}>Add Player</button>
         let check = this.state.raised ? (<button onClick={this.sendCallToSocket}>Call</button>) : (<button onClick={this.sendCheckToSocket}>Check</button>);
         return (
@@ -196,7 +196,7 @@ class Poker extends React.Component{
                 }
 
                 {
-                    this.state.gameStarted && <div className='CommunityCards'>
+                    (this.state.gameStarted || this.state.showCards) && <div className='CommunityCards'>
                         <ul className='CCpoker'>
                             {
                                 this.state.communityCards.map(card =>(
@@ -252,7 +252,7 @@ class Poker extends React.Component{
                                 {this.state.gameStarted && this.isMyTurn() ? <button onClick ={this.sendFoldToSocket}> Fold</button> : <button disabled>Fold</button>}
                             </div>
                             {this.state.currentPlayer && <strong>{this.state.currentPlayer}'s turn</strong>}
-                            {this.state.timer && <p>{this.state.timer} until game start</p>}
+                            {this.state.bet > 0 && <strong>{this.state.bet} to call</strong>}
                         </div>
                     </div>
                     <GameChat socket={this.socket} /> 
