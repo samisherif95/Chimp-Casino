@@ -33,6 +33,17 @@ class Poker extends React.Component{
         this.sendCheckToSocket = this.sendCheckToSocket.bind(this);
         this.sendFoldToSocket = this.sendFoldToSocket.bind(this);
         this.getPlayerByName = this.getPlayerByName.bind(this);
+        this.addPokerGamePlayer = this.addPokerGamePlayer.bind(this);
+        this.getCurrentPokerPlayers = this.getCurrentPokerPlayers.bind(this);
+        this.handlePlayerCall = this.handlePlayerCall.bind(this);
+        this.handlePlayerRaise = this.handlePlayerRaise.bind(this);
+        this.handlePlayerFold = this.handlePlayerFold.bind(this);
+        this.handlePlayerCheck = this.handlePlayerCheck.bind(this);
+        this.removePlayer = this.removePlayer.bind(this);
+        this.alert = this.alert.bind(this);
+        this.gameStarted = this.gameStarted.bind(this);
+        this.handlePlayerWon = this.handlePlayerWon.bind(this);
+        this.newGame = this.newGame.bind(this);
     }
 
 
@@ -79,97 +90,97 @@ class Poker extends React.Component{
         return this.props.currentUser.username === this.state.currentPlayer;
     }
 
-    // handleNewHand(){
-    //     this.state.game.communityCards = []
-    //     this.state.game.deck = new Deck()
-    //     this.state.game.currentPlayers = this.state.game.players.slice()
-    //     this.state.game.dealHandPhase2()
-    //     this.state.game.resetNextBetRound()
-    //     this.setState({ CalledChecked: 0, won: false,raised:false, cycle: 0})
-    // }
+    addPokerGamePlayer(playerObj) {
+        this.state.players.push(playerObj);
+        if (playerObj.handle === this.props.currentUser.username) {
+            this.setState({ myCards: playerObj.hand })
+        }
+        this.setState(this.state);
+    } 
+
+    getCurrentPokerPlayers(players, communityCards, gameStarted) {
+        let alreadyHasPlayers = false;
+        if (players.length) {
+            alreadyHasPlayers = true;
+        }
+        this.setState({ players, communityCards, gameStarted, showCards: alreadyHasPlayers })
+    }
+
+    handlePlayerCall(username, pot, nextUsername, communityCards, raised, bet) {
+        const player = this.getPlayerByName(username);
+        player.bananas -= this.state.bet;
+        this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet });
+    }
+
+    handlePlayerRaise(username, amount, nextUsername, communityCards, raised, bet) {
+        const player = this.getPlayerByName(username);
+        player.bananas -= amount;
+        const pot = this.state.pot + amount;
+        this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet })
+    }
+
+    handlePlayerFold(username, nextUsername, communityCards, raised, bet) {
+        this.setState({ currentPlayer: nextUsername, communityCards, raised, bet })
+    }
+
+    handlePlayerCheck(username, nextUsername, communityCards, raised, bet) {
+        this.setState({ currentPlayer: nextUsername, communityCards, raised, bet })
+
+    }
+
+    removePlayer(username) {
+        for (let i = 0; i < this.state.players.length; i++) {
+            if (this.state.players[i].handle === username) {
+                this.state.players.splice(i, 1);
+            }
+        }
+        this.setState(this.state);
+    }
+
+    alert(message) {
+        alert(message)
+    }
+
+    gameStarted(nextUsername) {
+        this.setState({ gameStarted: true, currentPlayer: nextUsername, showCards: true })
+    }
+
+    handlePlayerWon() {
+            this.setState({ gameOver: true, gameStarted: false })
+    }
+
+    newGame(players, nextUsername) {
+        let myCards;
+        for (let i = 0; i < players.length; i++) {
+            if (players[i].handle === this.props.currentUser.username) {
+                myCards = players[i].hand;
+            }
+        }
+        this.setState({
+            players,
+            currentPlayer: nextUsername,
+            myCards,
+            communityCards: [],
+            gameStarted: true,
+            pot: 0,
+            raised: false,
+            gameOver: false
+        })
+    }
 
     componentDidMount() {
-        this.socket.emit("joinPokerGame")
-
-        this.socket.on("addPokerGamePlayer", playerObj => {
-            this.state.players.push(playerObj);
-            if (playerObj.handle === this.props.currentUser.username) {
-                this.setState({ myCards: playerObj.hand })
-            }
-            this.setState(this.state);
-        })
-
-        this.socket.on("currentPokerPlayers", (players, communityCards, gameStarted) => {
-            let alreadyHasPlayers = false;
-            if (players.length) {
-                alreadyHasPlayers = true;
-            }
-            this.setState({ players, communityCards, gameStarted, showCards: alreadyHasPlayers })
-        })
-
-        this.socket.on("playerCalled", (username, pot, nextUsername, communityCards, raised, bet) => {
-            //changed amount to pot
-            const player = this.getPlayerByName(username);
-            player.bananas -= this.state.bet;
-            this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet });
-        })
-
-        this.socket.on("playerRaised", (username, amount, nextUsername, communityCards, raised, bet) => {
-            const player = this.getPlayerByName(username);
-            player.bananas -= amount; 
-            const pot = this.state.pot + amount;
-            this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet })
-        })
-
-        this.socket.on("playerFolded", (username, nextUsername, communityCards, raised, bet) => {
-            this.setState({ currentPlayer: nextUsername, communityCards, raised, bet })
-        }) 
-
-        this.socket.on("playerChecked", (username, nextUsername, communityCards, raised, bet) => {
-            this.setState({ currentPlayer: nextUsername, communityCards, raised, bet })
-        }) 
-
-        this.socket.on('removePlayer', username => {
-            for (let i = 0; i < this.state.players.length; i++) {
-                if (this.state.players[i].handle === username) {
-                    this.state.players.splice(i, 1);
-                }
-            }
-            this.setState(this.state);
-        })
-
-        this.socket.on("alert", message => alert(message))
-
-        this.socket.on("gameStarted", nextUsername => {
-            this.setState({ gameStarted: true, currentPlayer: nextUsername, showCards: true })
-        })
-
-        this.socket.on("playerWon", () => {
-            // this.setState({ gameOver: true}, () => {
-            //     setTimeout(() => this.setState({ gameStarted: false}), 2000)
-            // })
-
-            this.setState({ gameOver: true, gameStarted: false })
-        })
-
-        this.socket.on("newGame", (players, nextUsername) => {
-            let myCards;
-            for (let i = 0; i < players.length; i++) {
-                if (players[i].handle === this.props.currentUser.username) {
-                    myCards = players[i].hand;
-                }
-            }
-            this.setState({ 
-                players,
-                currentPlayer: nextUsername,
-                myCards,
-                communityCards: [],
-                gameStarted: true,
-                pot: 0,
-                raised: false,
-                gameOver: false
-            })
-        })
+        this.socket.emit("joinPokerGame");
+        this.socket.on("addPokerGamePlayer", this.addPokerGamePlayer);
+        this.socket.on("currentPokerPlayers", this.getCurrentPokerPlayers);
+        this.socket.on("playerCalled", this.handlePlayerCall);
+        this.socket.on("playerRaised", this.handlePlayerRaise);
+        this.socket.on("playerFolded", this.handlePlayerFold);
+        this.socket.on("playerChecked", this.handlePlayerCheck);
+        this.socket.on('removePlayer', this.removePlayer);
+        this.socket.on("alert", this.alert);
+        this.socket.on("gameStarted", this.gameStarted);
+        this.socket.on("playerWon", this.handlePlayerWon);
+        this.socket.on("newGame", this.newGame);
     }
 
     currentUserIndex(){
@@ -182,6 +193,17 @@ class Poker extends React.Component{
 
     componentWillUnmount() {
         this.socket.emit("leavePokerGame");
+        this.socket.off("addPokerGamePlayer", this.addPokerGamePlayer);
+        this.socket.off("currentPokerPlayers", this.getCurrentPokerPlayers);
+        this.socket.off("playerCalled", this.handlePlayerCall);
+        this.socket.off("playerRaised", this.handlePlayerRaise);
+        this.socket.off("playerFolded", this.handlePlayerFold);
+        this.socket.off("playerChecked", this.handlePlayerChecK);
+        this.socket.off('removePlayer', this.removePlayer);
+        this.socket.off("alert", this.alert);
+        this.socket.off("gameStarted", this.gameStarted);
+        this.socket.off("playerWon", this.handlePlayerWon);
+        this.socket.off("newGame", this.newGame);
     }
    
     render(){ 
