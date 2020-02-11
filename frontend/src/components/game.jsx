@@ -273,19 +273,7 @@ class GameContainer extends React.Component {
                         };
                     }
                 },
-                // render: function() {
-                    // console.log("here")
-                    // const chatDOM = document.getElementById("message-to-send")
-                    // const gameDOM = document.getElementById("game")
-            
-                    // gameDOM.addEventListener('click', () => {
-                    //     this.enableKeys();
-                    // })
-            
-                    // chatDOM.addEventListener('focus', () => {
-                    //     this.disableKeys();
-                    // })
-                // },
+
                 parent: "phaser-game"
             }
         }
@@ -315,7 +303,9 @@ class GameContainer extends React.Component {
         })
 
         this.socket.on("playerMoved", (player) => {
-            this.moveOtherPlayer(player);
+          if (this.moveOtherPlayer) {
+            this.moveOtherPlayer(player) 
+          }
         })
 
         this.socket.on("removePlayerSprite", player => {

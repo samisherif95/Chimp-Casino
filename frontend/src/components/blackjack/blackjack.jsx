@@ -19,8 +19,6 @@ class Blackjack extends React.Component {
             phase: "",
             currentTurn: "",
         };
-        this.t = null;
-
         this.handleBetSubmit = this.handleBetSubmit.bind(this);
         this.addPlayer = this.addPlayer.bind(this);
         this.dealCards = this.dealCards.bind(this);
@@ -32,8 +30,17 @@ class Blackjack extends React.Component {
         this.handleStand = this.handleStand.bind(this);
         this.handleSplit = this.handleSplit.bind(this);
         this.handleDouble = this.handleDouble.bind(this);
-
-        window.state = this.state;
+        this.resetBJPlayers = this.resetBJPlayers.bind(this);
+        this.updatePlayerBalances = this.updatePlayerBalances.bind(this);
+        this.receiveLastBetter = this.receiveLastBetter.bind(this);
+        this.dealDealerCards = this.dealDealerCards.bind(this);
+        this.dealPlayerCards = this.dealPlayerCards.bind(this);
+        this.changeBJPhase = this.changeBJPhase.bind(this);
+        this.changeBJTurn = this.changeBJTurn.bind(this);
+        this.removeBJPlayer = this.removeBJPlayer.bind(this);
+        this.addCurrentBJPlayers = this.addCurrentBJPlayers.bind(this);
+        this.addNewBJPlayer = this.addNewBJPlayer.bind(this);
+        this.receiveDealer = this.receiveDealer.bind(this);
     }
 
     //Get current player id. Goes into game, gets zeroth index 
@@ -147,6 +154,76 @@ class Blackjack extends React.Component {
         return this.state.blackjack.checkDealerStood();
     }
 
+    receiveDealer(dealer) {
+        this.setState({ dealer: dealer });
+    }
+
+    addNewBJPlayer(player, phase, currentTurnName) {
+        this.state.players.push(player);
+        this.setState({ phase, currentTurn: currentTurnName });
+    }
+
+    addCurrentBJPlayers(playersData) {
+        this.setState({players: playersData})
+    }
+
+    removeBJPlayer(userId) {
+        for (let i = 0; i < this.state.players.length; i++) {
+            if (this.state.players[i].userId === userId) {
+                this.state.players.splice(i, 1);
+            }
+        }
+        this.setState(this.state);
+    }
+
+    changeBJTurn(currentTurnName) {
+        this.setState({ currentTurn: currentTurnName });
+    }
+
+    changeBJPhase(phase) {
+        this.setState({ phase })
+
+    }
+
+    dealPlayerCards(cards) {
+        this.state.players.forEach(player => {
+            player.hand = cards[player.userId]
+        })
+        this.setState(this.state)
+    }
+
+    dealDealerCards(cards) {
+        this.state.dealer.hand = cards;
+        this.setState({ dealer: this.state.dealer })
+    }
+
+    receiveLastBetter(lastBetterId, lastBetterBalance) {
+        this.state.players.forEach(player => {
+            if (player.userId === lastBetterId) {
+                player.balance = lastBetterBalance;
+            }
+        })
+        this.setState(this.state);
+    }
+
+    updatePlayerBalances(playersObj) {
+        this.state.players.forEach(player => {
+            player.balance = playersObj[player.userId]
+        })
+
+        this.setState(this.state);
+    }
+
+    resetBJPlayers() {
+        this.state.players.forEach(player => {
+            player.hand = [];
+            player.handSplit = [];
+            player.pool = 0;
+            player.poolSplit = 0;
+        })
+        this.setState(this.state);
+    }
+
     componentDidMount() {
         /** 
         
@@ -154,94 +231,38 @@ class Blackjack extends React.Component {
         backend over to this component's state. Everything affecting the dealer must 
         also be trasmitted over from the back end to the front end.
 
-        this.socket.emit("requestDealer");
-        this.socket.on("sendDealer", dealer => {
-            this.setState({ dealer })
-        })
-        console.log(this.state.dealer);
          */
 
         this.socket.emit("requestDealer", null);
-        this.socket.on("sendDealer", dealer => {
-            this.setState({ dealer: dealer });
-        })
+        this.socket.emit("joinBJGame", this.props.currentUser.username, this.props.currentUser.balance);
+        this.socket.on("sendDealer", this.receiveDealer);
+        this.socket.on("newBJPlayer", this.addNewBJPlayer);
+        this.socket.on("currentBJPlayers", this.addCurrentBJPlayers);
+        this.socket.on("removePlayer", this.removeBJPlayer);
+        this.socket.on("changeTurn", this.changeBJTurn);
+        this.socket.on("changePhase", this.changeBJPhase);
+        this.socket.on("dealPlayerCards", this.dealPlayerCards);
+        this.socket.on("dealDealerCards", this.dealDealerCards);
+        this.socket.on("lastBetter", this.receiveLastBetter);
+        this.socket.on("updatePlayersBalance", this.updatePlayerBalances)
+        this.socket.on("resetPlayers", this.resetBJPlayers);
+    }
 
-        // this.socket.emit('joinBlackjackGame', this.props.currentUser.username, this.props.currentUser.balance)
-        // this.addPlayer(this.props.currentUser.username, 1000)
-        this.socket.emit("joinBJGame", this.props.currentUser.username, this.props.currentUser.balance) // change to other 1 once balance is working
-
-        this.socket.on("newBJPlayer", (player, phase, currentTurnName) => {
-            this.state.players.push(player);
-            this.setState({phase, currentTurn: currentTurnName});
-        })
-
-        this.socket.on("currentBJPlayers", (playersData) => {
-            this.setState({players: playersData})
-        })
-
-        this.socket.on("removePlayer", userId => {
-            for (let i = 0; i < this.state.players.length; i++) {
-                if (this.state.players[i].userId === userId) {
-                    this.state.players.splice(i, 1);
-                }
-            }
-            this.setState(this.state);
-        })
-
-        this.socket.on("changeTurn", (currentTurnName) => {
-            console.log("A player's turn has been switched")
-            console.log('Current player\'s turn: ', currentTurnName);
-            this.setState({ currentTurn: currentTurnName });
-        })
-
-        this.socket.on("changePhase", (phase, currentTurnName) => {
-            this.setState({ phase, currentTurn: currentTurnName })
-        });
-
-        this.socket.on("dealPlayerCards", cards => {
-            this.state.players.forEach(player => {
-                player.hand = cards[player.userId]
-            })
-            this.setState(this.state)
-        })
-
-        this.socket.on("dealDealerCards", cards => {
-            this.state.dealer.hand = cards;
-            this.setState({ dealer: this.state.dealer })
-        })
-
-        this.socket.on("lastBetter", (lastBetterId, lastBetterBalance) => {
-            this.state.players.forEach(player => {
-                if (player.userId === lastBetterId) {
-                    player.balance = lastBetterBalance;
-                }
-            })
-            this.setState(this.state);
-        })
-
-        this.socket.on("updatePlayersBalance", playersObj => {
-            this.state.players.forEach(player => {
-                player.balance = playersObj[player.userId]
-            })
-
-            this.setState(this.state);
-        })
-
-        this.socket.on("resetPlayers", () => {
-            this.state.players.forEach(player => {
-                player.hand = [];
-                player.handSplit = [];
-                player.pool = 0;
-                player.poolSplit = 0;
-            })
-            this.setState(this.state);
-        })
+    componentWillUnmount() {
+        this.socket.off("sendDealer", this.receiveDealer);
+        this.socket.off("newBJPlayer", this.addNewBJPlayer);
+        this.socket.off("currentBJPlayers", this.addCurrentBJPlayers);
+        this.socket.off("removePlayer", this.removeBJPlayer);
+        this.socket.off("changeTurn", this.changeBJTurn);
+        this.socket.off("changePhase", this.changeBJPhase);
+        this.socket.off("dealPlayerCards", this.dealPlayerCards);
+        this.socket.off("dealDealerCards", this.dealDealerCards);
+        this.socket.off("lastBetter", this.receiveLastBetter);
+        this.socket.off("updatePlayersBalance", this.updatePlayerBalances)
+        this.socket.off("resetPlayers", this.resetBJPlayers);
     }
 
     render() {
-        // const { blackjack } = this.state;
-        // const { players, dealer } = blackjack;
-
         // Must keep track of current player's turn. Only ever going to be rendering logic for one player.
         // If not the current turn, don't do anything. The server will keep track of whose turn it is, but it's up to your 
         // component's job to render what is shown to the current player 
@@ -252,7 +273,6 @@ class Blackjack extends React.Component {
         let render;
         switch (this.state.phase) {
             case 'betting':
-                console.log("Currently In: Betting Phase")
 
                 // Edit 2.0: Maybe not necessary, sent getBet function down as a prop for the 
                 // Player Component. Maybe transfer this form into the player component and 
@@ -283,8 +303,6 @@ class Blackjack extends React.Component {
   
                 break;
             case 'options':
-                console.log("Currently In: Options Phase");
-                console.log('Current Turn for Options: ', this.state.currentTurn);
 
                 render = (this.props.currentUser.username === this.state.currentTurn ?
                     (
@@ -313,12 +331,9 @@ class Blackjack extends React.Component {
                     ))
                 break
             case 'dealer':
-                console.log("Currently In: Dealer Phase")
-                this.socket.emit("dealerHit")
                 this.socket.emit("payoutPlayers")
                 break;
             case 'new round':
-                console.log("Currently In: New Round")
                 
                 render = (
                     <div className='new-bj-game'>
@@ -326,7 +341,6 @@ class Blackjack extends React.Component {
                     </div>
                 )
 
-                this.socket.emit("newRound");
                 break;
         }
 
@@ -405,7 +419,7 @@ class Blackjack extends React.Component {
               <ul>{ingamePlayers ? ingamePlayers : null}</ul>
             </div>
 
-                {render}
+            {render}
             <div className="player-bet">
               {/* Bet Amount: {this.state.players.length === 0 ? "None" : this.state.players[0].pool} */}
             </div>
