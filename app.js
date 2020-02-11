@@ -412,6 +412,7 @@ lobbyServer.on("connection", (socket) => {
     socket.on("newRound", () => {
         console.log("newRound is hit");
         lobbyServer.in(localLobbyId + "bj").emit("aboutToStart")
+        socket.emit("resetBJGame")
         if (t === null) {
             t = setTimeout(() => {
                 localBJLobby.game.resetGame()
@@ -432,6 +433,7 @@ lobbyServer.on("connection", (socket) => {
     localBJLobby.game.nextTurn();
     socket.emit("changeTurn", localBJLobby.game.players[0].userId)
     socket.emit("changePhase", localBJLobby.game.currentPhase);
+    socket.emit("standOption", localBJLobby.game.players[0].userId)
   })
 
   //leave games

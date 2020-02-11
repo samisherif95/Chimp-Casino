@@ -196,7 +196,7 @@ class Blackjack extends React.Component {
         })
 
         this.socket.on("changePhase", (phase, currentTurnName) => {
-            this.setState({ phase, currentTurn: currentTurnName })
+          this.setState({ phase, currentTurn: currentTurnName })
         });
 
         this.socket.on("dealPlayerCards", cards => {
