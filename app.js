@@ -403,16 +403,22 @@ lobbyServer.on("connection", (socket) => {
   socket.on("playerHit", () => {
     localBJLobby.game.players[0].hit();
     const playerCards = {};
+
+    // Below was added in place of the commented
+    localBJLobby.game.players.forEach(player => {
+        playerCards[player.userId] = player.hand;
+    })
+
     // if (localBJLobby.game.players[0].bust) {
     if (localBJLobby.game.checkCurrentPlayerBust()) {
         // Switches to next player, since cCPB will run nextTurn if the current player 
         const player = localBJLobby.game.players[localBJLobby.game.players.length-1];
-        playerCards[player.userId] = player.hand;
+        // playerCards[player.userId] = player.hand;
         lobbyServer.in(localLobbyId + "bj").emit("playerBust", player.userId)
-        lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase);
+        lobbyServer.in(localLobbyId + "bj").emit("changeTurn", localBJLobby.game.players[0].userId)
+        lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase)
     } else {
         const player = localBJLobby.game.players[0];
-        playerCards[player.userId] = player.hand;
         lobbyServer.in(localLobbyId + "bj").emit("playerHit", player.userId)
     }
     lobbyServer.in(localLobbyId + "bj").emit("dealPlayerCards", playerCards)
@@ -421,8 +427,8 @@ lobbyServer.on("connection", (socket) => {
     socket.on("dealerHit", () => {
         localBJLobby.game.dealerHit();
         const dealerHand = localBJLobby.game.dealer.hand;
-        socket.emit("dealDealerCards", dealerHand)
-        socket.emit("sendDealer", localBJLobby.game.dealer)
+        lobbyServer.in(localLobbyId + "bj").emit("dealDealerCards", dealerHand)
+        lobbyServer.in(localLobbyId + "bj").emit("sendDealer", localBJLobby.game.dealer)
     })
 
     socket.on("payoutPlayers", () => {
@@ -434,11 +440,11 @@ lobbyServer.on("connection", (socket) => {
             playersObj[player.userId] = player.balance;
         })
 
-        socket.emit("updatePlayersBalance",
+        lobbyServer.in(localLobbyId + "bj").emit("updatePlayersBalance",
             playersObj
         )
 
-        socket.emit("changePhase", localBJLobby.game.currentPhase);
+        lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase);
     })
 
     let t = null;
@@ -448,11 +454,10 @@ lobbyServer.on("connection", (socket) => {
         if (t === null) {
             t = setTimeout(() => {
                 localBJLobby.game.resetGame()
-                socket.emit("changePhase", localBJLobby.game.currentPhase)
-                socket.emit("sendDealer", localBJLobby.game.dealer)
-                socket.emit("resetPlayers", null)
+                lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase)
+                lobbyServer.in(localLobbyId + "bj").emit("sendDealer", localBJLobby.game.dealer)
+                lobbyServer.in(localLobbyId + "bj").emit("resetPlayers", null)
                 lobbyServer.in(localLobbyId + "bj").emit("changeTurn", localBJLobby.game.players[0].userId)
-                console.log(localBJLobby.game.players);
                 t = null;
             }, 5000)
         }
@@ -461,8 +466,8 @@ lobbyServer.on("connection", (socket) => {
   socket.on("playerStand", () => {
     localBJLobby.game.players[0].stand();
     localBJLobby.game.nextTurn();
-    socket.emit("changeTurn", localBJLobby.game.players[0].userId)
-    socket.emit("changePhase", localBJLobby.game.currentPhase);
+    lobbyServer.in(localLobbyId + "bj").emit("changeTurn", localBJLobby.game.players[0].userId)
+    lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase);
   })
 
   //leave games
