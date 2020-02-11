@@ -12,24 +12,34 @@ class BlackJackChat extends React.Component {
   }
 
   componentDidMount() {
+    this.socket.on("addPlayerToBJ", username => {
+      this.state.messages.push(`${username} has joined the game`)
+      this.setState(this.state)
+    })
+
     this.socket.on('receiveBJMessage', (data) => {
       this.state.messages.push(data)
       this.setState(this.state)
     })
 
     this.socket.on("playerBust", username => {
-      this.state.messages.push(`${username} busted!!`)
+      this.state.messages.push(`${username} has busted!!`)
       this.setState(this.state)
     })
 
     this.socket.on("playerHit", username => {
-      this.state.messages.push(`${username} has hit a card`)
+      this.state.messages.push(`${username} hits`)
       this.setState(this.state)
     })
 
     this.socket.on("standOption", username => {
-      this.state.messages.push(`${username} stand`)
+      this.state.messages.push(`${username} stands`)
       this.setState(this.state)
+    })
+
+    this.socket.on("playerBet", (amount, username) => {
+      this.state.messages.push(`${username} bets ${amount}`);
+      this.setState(this.state);
     })
 
     this.socket.on("resetBJGame", () => {
