@@ -143,11 +143,13 @@ class GameContainer extends React.Component {
 
                     // move other players
                     this.moveOtherPlayer = playerInfo => {
-                        this.otherPlayers.getChildren().forEach(player => {
-                            if (playerInfo.playerId === player.playerId) {
-                                player.setPosition(playerInfo.x, playerInfo.y);
-                            }
-                        })
+                        if (this) {
+                            this.otherPlayers.getChildren().forEach(player => {
+                                if (playerInfo.playerId === player.playerId) {
+                                    player.setPosition(playerInfo.x, playerInfo.y);
+                                }
+                            })
+                        }
                     }
 
                     // destroy player on disconnect
@@ -309,7 +311,7 @@ class GameContainer extends React.Component {
         })
 
         this.socket.on("newPlayer", player => {
-            setTimeout(() => this.createOtherPlayer(player), 3000)
+            setTimeout(() => this.createOtherPlayer(player), 3000);
         })
 
         this.socket.on("playerMoved", (player) => {
@@ -317,11 +319,10 @@ class GameContainer extends React.Component {
         })
 
         this.socket.on("removePlayerSprite", player => {
-            this.destroyPlayer(player)
+            setTimeout(() => this.destroyPlayer(player), 3000);
         })
 
         this.socket.on("updateBalance", balance => {
-            console.log(balance);
             this.props.updateCurrentUserBalance(balance);
             this.updateBalance(balance);
         })
