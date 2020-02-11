@@ -334,7 +334,33 @@ lobbyServer.on("connection", (socket) => {
         localPokerLobby.game.communityCards,
         localPokerLobby.game.raised,
         localPokerLobby.game.bet );
-        pokerGameOver();
+      if (localPokerLobby.game.cycle === 4) {
+          const winner = localPokerLobby.game.getWinner();
+          socket.emit("updateBalance", winner.bananas);
+          lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
+          setTimeout(() => {
+              if (localPokerLobby.game.players.length > 1) {
+                  localPokerLobby.game.handleNewHand();
+                  lobbyServer.in(localLobbyId + "poker").emit("newGame",
+                      localPokerLobby.game.players.map(player => {
+                          return {
+                              handle: player.handle,
+                              bananas: player.bananas,
+                              hand: player.hand,
+                              bigBlind: player.bigBlind,
+                              smallBlind: player.smallBlind,
+                          }
+                      }), localPokerLobby.game.currentPlayers[0].handle);
+              }
+          }, 10000)
+          setTimeout(() => {
+              if (localPokerLobby.game.players.length > 1) {
+                  lobbyServer.in(localLobbyId + "poker").emit("aboutToStart")
+              } else {
+                  lobbyServer.in(localLobbyId + "poker").emit("needMorePlayers")
+              }
+          }, 7000)
+      } 
 
   })
 
