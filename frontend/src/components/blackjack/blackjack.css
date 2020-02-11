@@ -33,8 +33,8 @@
 .blackjack-options {
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
-    align-items: center;
+    align-items: flex-end;
+    margin-right: 50px;
 }
 
 .blackjack-options > button{
@@ -64,14 +64,32 @@
 }
 
 .blackjack-player-info {
-    color: red;
+    color: #fff;
     font-weight: 700;
     display: flex;
     flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 0 5px;
+}
+
+.blackjack-player-info p {
+  margin: 0;
 }
 
 .current-turn {
-    background-image: radial-gradient(gold, transparent);
+    /* background-image: radial-gradient(gold, transparent); */
+    color: gold;
+    background-color: rgba(0,0,0,0.5);
+    padding-right: 5px;
+    padding-left: 5px;
+    border-radius: 5px;
+    border: 1px solid gold;
+}
+
+.current-turn p{
+  margin:0
 }
 
 .dealer-info {
@@ -83,11 +101,6 @@
     height: 400px;
     width: 1000px;
     transform: translate(23px, -120px);
-}
-
-.blackjack-options {
-    display: flex;
-    flex-direction: column;
 }
 
 .blackjack-player-0 {
@@ -159,5 +172,10 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 15px;
+}
 
+.new-bj-game p{
+  color: #fff;
+  font-size: 15px;
+  padding: 10px 0;
 }

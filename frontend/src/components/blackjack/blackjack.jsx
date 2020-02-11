@@ -360,9 +360,9 @@ class Blackjack extends React.Component {
                             </button> */}
                         </section>
                     ) : (
-                        <div>
-                            Waiting for other players...
-                    </div>
+                      <div>
+                          Waiting for other players...
+                      </div>
                     ))
                 break
             case 'dealer':
@@ -378,9 +378,9 @@ class Blackjack extends React.Component {
                 console.log("Currently In: New Round")
                 
                 render = (
-                    <div>
-                        Round done: NEW ROUND PHASE
-                        New Round Starting in 5 seconds! 
+                    <div className='new-bj-game'>
+                      <p>Round done: NEW ROUND PHASE</p>
+                      <p>New Round Starting in 5 seconds!</p>
                     </div>
                 )
 
@@ -424,19 +424,17 @@ class Blackjack extends React.Component {
                             <div key={player.userId} className={className}>
                                 <section className={this.state.currentTurn === player.userId ? "blackjack-player-info current-turn": "blackjack-player-info" }>
                                     <div className="blackjack-player-id">
-                                        Player: {player.userId}
-
+                                        <p>Player: {player.userId}</p>
                                     </div>
                                     <div className="blackjack-player-poolSplit">
                                         {splitPool}
                                     </div>
                                     <div className="blackjack-player-balance">
-                                        Balance: {player.balance}
+                                      <p>Balance: {player.balance}</p>
                                     </div>
                                 </section>
 
                                 <div className="blackjack-player-hand">
-                                    Hand:
                                     <ul className="blackjack-hand">
                                         {hand}
                                     </ul>
