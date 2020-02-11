@@ -1,8 +1,8 @@
 class Player {
-    constructor(handle, socketId){
+    constructor(handle, socketId, balance){
         this.socketId = socketId;
         this.handle = handle;
-        this.bananas = 2500;
+        this.bananas = balance;
         this.hand = [];
         this.fullcardHand = [];
         this.bigBlind = false;

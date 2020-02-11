@@ -21,6 +21,8 @@ class Poker extends React.Component{
             addedPlayer: false,
             pot: 0,
             timer: null,
+            gameOver: false,
+            showCards: false
         }
         
         window.state = this.state
@@ -36,7 +38,7 @@ class Poker extends React.Component{
 
     sendPlayerToSocket() {
         this.setState({addedPlayer: true})
-        this.socket.emit("addPokerGamePlayer", this.props.currentUser.username)
+        this.socket.emit("addPokerGamePlayer", this.props.currentUser.username, this.props.currentUser.balance)
         this.forceUpdate();
     }
 
@@ -98,8 +100,11 @@ class Poker extends React.Component{
         })
 
         this.socket.on("currentPokerPlayers", (players, communityCards, gameStarted) => {
-            console.log(gameStarted)
-            this.setState({ players, communityCards, gameStarted })
+            let alreadyHasPlayers = false;
+            if (players.length) {
+                alreadyHasPlayers = true;
+            }
+            this.setState({ players, communityCards, gameStarted, showCards: alreadyHasPlayers })
         })
 
         this.socket.on("playerCalled", (username, pot, nextUsername, communityCards, raised) => {
@@ -134,11 +139,15 @@ class Poker extends React.Component{
         this.socket.on("alert", message => alert(message))
 
         this.socket.on("gameStarted", nextUsername => {
-            this.setState({ gameStarted: true, currentPlayer: nextUsername })
+            this.setState({ gameStarted: true, currentPlayer: nextUsername, showCards: true })
         })
 
         this.socket.on("playerWon", () => {
-            this.setState({ gameStarted: false })
+            // this.setState({ gameOver: true}, () => {
+            //     setTimeout(() => this.setState({ gameStarted: false}), 2000)
+            // })
+
+            this.setState({ gameOver: true, gameStarted: false })
         })
 
         this.socket.on("newGame", (players, nextUsername) => {
@@ -155,7 +164,8 @@ class Poker extends React.Component{
                 communityCards: [],
                 gameStarted: true,
                 pot: 0,
-                raised: false
+                raised: false,
+                gameOver: false
             })
         })
     }
@@ -201,25 +211,40 @@ class Poker extends React.Component{
                     {
                         this.state.players.map((player,idx) =>{
                             if(idx < this.currentUserIndex()){
-                                return <div className={`player player-${idx+1}`}>{this.state.players[idx].handle}</div>
+                                return <div className={`player player-${idx+1} ${player.handle === this.state.currentPlayer ? "current-player" : null}`}>{this.state.players[idx].handle}</div>
                             }else if(idx > this.currentUserIndex()){
-                                return <div className={`player player-${idx+1}`}>{this.state.players[idx].handle}</div>
+                                return <div className={`player player-${idx+1} ${player.handle === this.state.currentPlayer ? "current-player" : null}`}>{this.state.players[idx].handle}</div>
                             }
                         })
                     }
-                    {/* {this.state.gameStarted && this.state.players[0] && <div className='player player-1'>{this.state.players[0].handle}</div>}
-                    {this.state.gameStarted && this.state.players[1] && <div className='player player-2'>{this.state.players[1].handle}</div>}
-                    {this.state.gameStarted && this.state.players[2] && <div className='player player-3'>Sami</div>}
-                    {this.state.gameStarted && this.state.players[3] && <div className='player player-4'>Sami</div>}
-                    {this.state.gameStarted && this.state.players[4] && <div className='player player-5'>Sami</div>} */}
+                    {
+                        this.state.players.map((player, idx) => {
+                            if (idx < this.currentUserIndex()) {
+                                return <div className={`balance balance-${idx + 1} ${player.handle === this.state.currentPlayer ? "current-balance" : null}`}>{this.state.players[idx].bananas}</div>
+                            } else if (idx > this.currentUserIndex()) {
+                                return <div className={`balance balance-${idx + 1} ${player.handle === this.state.currentPlayer ? "current-balance" : null}`}>{this.state.players[idx].bananas}</div>
+                            }
+                        })
+                    }
 
-                    <img src={pokerTable} alt="poker table" />
+                    {this.state.showCards && this.state.players[0] !== undefined && 0 !== this.currentUserIndex() &&<img className='otherPlayerCard card-11' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[0].hand[0][2]] : this.imageHash['BackCard']}></img>}
+                    {this.state.showCards && this.state.players[0] !== undefined && 0 !== this.currentUserIndex() &&<img className='otherPlayerCard card-12' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[0].hand[1][2]] : this.imageHash['BackCard']}></img>}
+                    {this.state.showCards && this.state.players[1] !== undefined && 1 !== this.currentUserIndex() &&<img className='otherPlayerCard card-21' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[1].hand[0][2]] : this.imageHash['BackCard']}></img>}
+                    {this.state.showCards && this.state.players[1] !== undefined && 1 !== this.currentUserIndex() &&<img className='otherPlayerCard card-22' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[1].hand[1][2]] : this.imageHash['BackCard']}></img>}
+                    {this.state.showCards && this.state.players[2] !== undefined && 2 !== this.currentUserIndex() &&<img className='otherPlayerCard card-31' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[2].hand[0][2]] : this.imageHash['BackCard']}></img>}
+                    {this.state.showCards && this.state.players[2] !== undefined && 2 !== this.currentUserIndex() &&<img className='otherPlayerCard card-32' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[2].hand[1][2]] : this.imageHash['BackCard']}></img>}
+                    {this.state.showCards && this.state.players[3] !== undefined && 3 !== this.currentUserIndex() &&<img className='otherPlayerCard card-41' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[3].hand[0][2]] : this.imageHash['BackCard']}></img>}
+                    {this.state.showCards && this.state.players[3] !== undefined && 3 !== this.currentUserIndex() &&<img className='otherPlayerCard card-42' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[3].hand[1][2]] : this.imageHash['BackCard']}></img>}
+                    {this.state.showCards && this.state.players[4] !== undefined && 4 !== this.currentUserIndex() &&<img className='otherPlayerCard card-51' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[4].hand[0][2]] : this.imageHash['BackCard']}></img>}
+                    {this.state.showCards && this.state.players[4] !== undefined && 4 !== this.currentUserIndex() &&<img className='otherPlayerCard card-52' src={this.state.gameOver ? this.imageHash[this.state.players[4].hand[1][2]] : this.imageHash['BackCard']}></img>}
+
+                    <img className='pokerTableImage' src={pokerTable} alt="poker table" />
                     <div className='CardsButtons'>
                         {gameStarted}
-                        {this.state.gameStarted && this.state.myCards.length && <img src={this.imageHash[this.state.myCards[0][2]]}/>}
-                        {this.state.gameStarted && this.state.myCards.length && <img src={this.imageHash[this.state.myCards[1][2]]}/>}
+                        {this.state.gameStarted && this.state.myCards.length && <img className='playerCard' src={this.imageHash[this.state.myCards[0][2]]}/>}
+                        {this.state.gameStarted && this.state.myCards.length && <img className='playerCard' src={this.imageHash[this.state.myCards[1][2]]}/>}
                         <div className='buttons'>
-                        {this.state.gameStarted && this.state.myCards.length && <strong>{this.props.currentUser.username} Your Balance: {this.getPlayerByName(this.props.currentUser.username).bananas}</strong>}
+                        {this.state.gameStarted && this.state.myCards.length && <strong>Your Balance: {this.getPlayerByName(this.props.currentUser.username).bananas}</strong>}
                             <div className='test'>
                                 {this.state.gameStarted && this.isMyTurn() ? check : <button disabled>Check</button>}
                                 {/* {this.state.gameStarted ? <button onClick ={this.sendCallToSocket}>Call</button> : <button disabled>Call</button>} */}
