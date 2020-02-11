@@ -315,7 +315,9 @@ class GameContainer extends React.Component {
         })
 
         this.socket.on("playerMoved", (player) => {
-            this.moveOtherPlayer(player);
+          if (this.moveOtherPlayer) {
+            this.moveOtherPlayer(player) 
+          }
         })
 
         this.socket.on("removePlayerSprite", player => {

@@ -12,47 +12,57 @@ class BlackJackChat extends React.Component {
   }
 
   componentDidMount() {
+    this.socket.on("addPlayerToBJ", username => {
+      this.state.messages.push(`${username} has joined the game`)
+      this.setState(this.state)
+    })
+
     this.socket.on('receiveBJMessage', (data) => {
       this.state.messages.push(data)
       this.setState(this.state)
     })
 
     this.socket.on("playerBust", username => {
-      this.state.messages.push(`${username} busted!!`)
+      this.state.messages.push(`${username} has busted!!`)
       this.setState(this.state)
     })
 
     this.socket.on("playerHit", username => {
-      this.state.messages.push(`${username} has hit a card`)
+      this.state.messages.push(`${username} hits`)
       this.setState(this.state)
     })
 
-    this.socket.on("changeTurn", () => {
-      this.state.messages.push(`stand`)
+    this.socket.on("standOption", username => {
+      this.state.messages.push(`${username} stands`)
       this.setState(this.state)
     })
 
-    // this.socket.on("changePhase", () => {
-    //   // console.log("ABCDEFG")
-    //   this.state.messages.push("Game starting in 5 seconds");
-    //   this.setState(this.state);
-    //   setTimeout(() => {
-    //     this.state.messages.push("Game starting in 4 seconds")
-    //     this.setState(this.state)
-    //   }, 1000)
-    //   setTimeout(() => {
-    //     this.state.messages.push("Game starting in 3 seconds")
-    //     this.setState(this.state)
-    //   }, 2000)
-    //   setTimeout(() => {
-    //     this.state.messages.push("Game starting in 2 seconds")
-    //     this.setState(this.state)
-    //   }, 3000)
-    //   setTimeout(() => {
-    //     this.state.messages.push("Game starting in 1 seconds")
-    //     this.setState(this.state)
-    //   }, 4000)
-    // })
+    this.socket.on("playerBet", (amount, username) => {
+      this.state.messages.push(`${username} bets ${amount}`);
+      this.setState(this.state);
+    })
+
+    this.socket.on("resetBJGame", () => {
+      // console.log("ABCDEFG")
+      this.state.messages.push("Game starting in 5 seconds");
+      this.setState(this.state);
+      setTimeout(() => {
+        this.state.messages.push("Game starting in 4 seconds")
+        this.setState(this.state)
+      }, 1000)
+      setTimeout(() => {
+        this.state.messages.push("Game starting in 3 seconds")
+        this.setState(this.state)
+      }, 2000)
+      setTimeout(() => {
+        this.state.messages.push("Game starting in 2 seconds")
+        this.setState(this.state)
+      }, 3000)
+      setTimeout(() => {
+        this.state.messages.push("Game starting in 1 seconds")
+        this.setState(this.state)
+      }, 4000)
+    })
 
   }
 

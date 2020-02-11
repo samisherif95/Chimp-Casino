@@ -194,8 +194,8 @@ class Blackjack extends React.Component {
             this.setState({ currentTurn: currentTurnName });
         })
 
-        this.socket.on("changePhase", (phase, currentTurnName) => {
-            this.setState({ phase, currentTurn: currentTurnName })
+        this.socket.on("changePhase", phase => {
+          this.setState({ phase })
         });
 
         this.socket.on("dealPlayerCards", cards => {
@@ -314,7 +314,7 @@ class Blackjack extends React.Component {
                 break
             case 'dealer':
                 console.log("Currently In: Dealer Phase")
-                this.socket.emit("dealerHit")
+                // this.socket.emit("dealerHit")
                 this.socket.emit("payoutPlayers")
                 break;
             case 'new round':
@@ -326,7 +326,7 @@ class Blackjack extends React.Component {
                     </div>
                 )
 
-                this.socket.emit("newRound");
+                // this.socket.emit("newRound");
                 break;
         }
 
@@ -405,7 +405,7 @@ class Blackjack extends React.Component {
               <ul>{ingamePlayers ? ingamePlayers : null}</ul>
             </div>
 
-                {render}
+            {render}
             <div className="player-bet">
               {/* Bet Amount: {this.state.players.length === 0 ? "None" : this.state.players[0].pool} */}
             </div>
