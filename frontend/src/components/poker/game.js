@@ -112,7 +112,7 @@ class Game {
         max.bananas+= this.pot;
         const temp = this.pot;
         this.pot = 0
-        return {username: max.handle, amount: temp}
+        return {username: max.handle, amount: temp, bananas: max.bananas}
     }
 
     resetNextBetRound(){
