@@ -28,8 +28,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-function whatEver (something){
-    this.something =  something
-}
-

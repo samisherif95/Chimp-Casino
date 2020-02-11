@@ -150,10 +150,6 @@ class Blackjack extends React.Component {
         this.updateBlackjack();
     }
 
-    checkDealerStood() {
-        return this.state.blackjack.checkDealerStood();
-    }
-
     receiveDealer(dealer) {
         this.setState({ dealer: dealer });
     }

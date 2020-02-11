@@ -1,5 +1,4 @@
 import  { connect } from 'react-redux';
-import { openModal } from '../../actions/modal_actions';
 
 import GameChat from './game_chat';
 
