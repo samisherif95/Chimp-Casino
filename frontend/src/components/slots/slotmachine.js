@@ -403,4 +403,4 @@ class SlotMachine {
     }
 }
 
-module.exports = SlotMachine;
+export default SlotMachine;
