@@ -25,7 +25,6 @@ class Poker extends React.Component{
             showCards: false
         }
         
-        window.state = this.state
         this.imageHash = imageHash;
         this.sendPlayerToSocket = this.sendPlayerToSocket.bind(this);
         this.sendCallToSocket = this.sendCallToSocket.bind(this);
@@ -233,13 +232,23 @@ class Poker extends React.Component{
                     {
                         this.state.players.map((player,idx) =>{
                             if(idx < this.currentUserIndex()){
-                                return <div className={`player player-${idx+1} ${player.handle === this.state.currentPlayer ? "current-player" : null}`}>{this.state.players[idx].handle}</div>
+                                return(
+                                    <div className={`player player-${idx+1} ${player.handle === this.state.currentPlayer ? "current-player" : null}`}>
+                                        <div>{this.state.players[idx].handle}</div>
+                                        <div>Balance: {this.state.players[idx].bananas}</div>
+                                    </div>
+                                )
                             }else if(idx > this.currentUserIndex()){
-                                return <div className={`player player-${idx+1} ${player.handle === this.state.currentPlayer ? "current-player" : null}`}>{this.state.players[idx].handle}</div>
+                                return (
+                                    <div className={`player player-${idx+1} ${player.handle === this.state.currentPlayer ? "current-player" : null}`}>
+                                        <div>{this.state.players[idx].handle}</div>
+                                        <div>Balance: {this.state.players[idx].bananas}</div>
+                                    </div>
+                                )
                             }
                         })
                     }
-                    {
+                    {/* {
                         this.state.players.map((player, idx) => {
                             if (idx < this.currentUserIndex()) {
                                 return <div className={`balance balance-${idx + 1} ${player.handle === this.state.currentPlayer ? "current-balance" : null}`}>{this.state.players[idx].bananas}</div>
@@ -247,7 +256,7 @@ class Poker extends React.Component{
                                 return <div className={`balance balance-${idx + 1} ${player.handle === this.state.currentPlayer ? "current-balance" : null}`}>{this.state.players[idx].bananas}</div>
                             }
                         })
-                    }
+                    } */}
 
                     {this.state.showCards && this.state.players[0] !== undefined && 0 !== this.currentUserIndex() &&<img className='otherPlayerCard card-11' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[0].hand[0][2]] : this.imageHash['BackCard']}></img>}
                     {this.state.showCards && this.state.players[0] !== undefined && 0 !== this.currentUserIndex() &&<img className='otherPlayerCard card-12' src={this.state.showCards &&this.state.gameOver ? this.imageHash[this.state.players[0].hand[1][2]] : this.imageHash['BackCard']}></img>}

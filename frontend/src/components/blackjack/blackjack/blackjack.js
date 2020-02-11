@@ -146,7 +146,6 @@ class Blackjack {
         this.players.push(this.players.shift());
         this.cycle += 1 
         if (this.cycle === this.players.length) {
-            console.log("Full cycle has completed");
             this.cycle = 0;
             this.finishedCycle = true;
             
@@ -167,15 +166,12 @@ class Blackjack {
             this.nextTurn();
             return true;
         }
-        console.log("Cannot wage this!")
         return false;
     }
 
     addPlayer(socketId, playerId, balance) {
         if (this.players.length > 7) {
-            console.log("Table full, too many players!")
         } else if (!['waiting', 'betting'].includes(this.currentPhase)) {
-            console.log("Please wait until the next round")
             this.playersQueue.push(new Player(socketId, playerId, balance, this.deck)); 
         } else {
             this.players.push(new Player(socketId, playerId, balance, this.deck));
@@ -228,7 +224,6 @@ class Blackjack {
                     player.pool = 0;
                 }
             });
-            console.log("Round over!")
             this.roundDone = true;
             this.currentPhase = 'waiting'
         }
@@ -237,7 +232,6 @@ class Blackjack {
     // dealerHit and dealerBust are called on AFTER each player has gomne
     // through their options phase 
     dealerBust() {
-        console.log("Dealer has bust! Every player standing wins!");
         this.players.forEach(player => {
             if (player.stood === true) {
                 if (player.pool !== 0) {
@@ -251,7 +245,6 @@ class Blackjack {
                 } 
             }
         });
-        console.log("Round over!")
         this.roundDone = true;
     }
 
@@ -281,7 +274,6 @@ class Blackjack {
     // Iterate though each player, checking to see if each player has a .split and .double boolean 
     // before paying out the player. 
     compareHands() {
-        console.log("Comparing hands!")
         const dealerValue = this.dealer.getHandValue(this.dealer.hand);
 
         this.players.forEach(player => {
@@ -292,14 +284,11 @@ class Blackjack {
                     if (playerValue === dealerValue) {
                         player.balance += parseInt(player.pool);
                         player.pool = 0;
-                        console.log("player has tied with dealer")
                     } else if (playerValue > dealerValue) {
                         player.balance += (player.pool * 2);
                         player.pool = 0;
-                        console.log("player wins!")
                     } else if (playerValue < dealerValue) {
                         player.pool = 0;
-                        console.log("player loses")
                     }
                 }
 
@@ -426,10 +415,8 @@ class Player {
 
     bet(wager) {
         if (this.balance - wager < 0) {
-            console.log("Wager too high!");
             return false;
         } else if (wager === 0) {
-            console.log("Must have a wager")
             return false;
         } else {
             this.balance -= wager;
@@ -466,7 +453,6 @@ class Player {
         this.hand.push(this.deck.deal());
         if (this.getHandValue(this.hand) > 21) {
             this.bust = true;
-            console.log("Player has busted!");
         }
     }
 
@@ -474,7 +460,6 @@ class Player {
         this.handSplit.push(this.deck.deal());
         if (this.getHandValue(this.handSplit) > 21) {
             this.bustSplit = true;
-            console.log("Player has busted!");
         }
     }
 
@@ -492,10 +477,8 @@ class Player {
     // Otherwise, each split hand now have their own separate pool and will be treated individually
     splitHand() {
         if (!this.isDubs(this.hand)) {
-            console.log("You cannot split this hand");
             return;
         } else if (this.balance - this.pool < 0) {
-            console.log("You can't afford this!");
             return;
         }
 
@@ -509,13 +492,10 @@ class Player {
     // AFTER the player has placed a bet and during
     doubleDownHand() {
         if (![9, 10, 11].includes(this.getHandValue(this.hand))) {
-            console.log("You cannot double down on this hand");
             return;
         } else if (this.doubleDown === true) {
-            console.log("You've already double down on this hand")
             return;
         } else if (this.balance - this.pool < 0) {
-            console.log("You can't afford this!");
             return;
         }
 

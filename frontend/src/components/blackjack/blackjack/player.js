@@ -35,7 +35,6 @@ export default class Player {
 
     bet(wager) {
         if (this.balance - this.wager < 0) {
-            console.log("Wager too high!");
             return;
         }
 
@@ -71,7 +70,6 @@ export default class Player {
         this.hand.push(card);
         if (this.getHandValue(this.hand) > 21) {
             this.bust = true;
-            console.log("player has busted!")
         }
     }
 
@@ -89,10 +87,8 @@ export default class Player {
   // Otherwise, each split hand now have their own separate pool and will be treated individually
     splitHand() {
         if (!this.isDubs(this.hand)) {
-            console.log("You cannot split this hand");
             return;
         } else if (this.balance - this.pool < 0) {
-            console.log("You can't afford this!");
             return;
         }
 
@@ -106,10 +102,8 @@ export default class Player {
   // AFTER the player has placed a bet and during
     doubleDownHand() {
         if (![9, 10, 11].includes(this.getHandValue(this.hand))) {
-            console.log("You cannot double down on this hand");
             return;
         } else if (this.balance - this.pool < 0) {
-            console.log("You can't afford this!");
             return;
         }
 

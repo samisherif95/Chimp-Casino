@@ -47,7 +47,6 @@ class LobbyForm extends React.Component {
         }
         this.props.createLobby(lobbyData)
             .then(payload => {
-                // console.log(payload.lobby.data)
                 this.props.closeModal();
                 this.props.history.push(`/lobbies/${payload.lobby.data._id}/game`);
             })
