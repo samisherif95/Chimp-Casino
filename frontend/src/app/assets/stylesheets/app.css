@@ -258,6 +258,18 @@ button{
     cursor: pointer;
 }
 
+#join-lobby {
+    background-color: #e82953;
+    color: #fff;
+    font-size: 16px;
+    padding: 6px 18px;
+    border-radius: 5px;
+}
+
+#join-lobby:hover {
+    background-color: #c40d35;
+    cursor: pointer;
+}
 
 
 .text-center p a {
@@ -301,9 +313,33 @@ button{
     padding-bottom: 5px;
     padding-top: 5px;
     background-color: #fcd600;
-    /* font-size: 1.5em; */
 }
 
+.lobby-index-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fcd600;
+    height: 30px;
+    padding: 10px;
+    font-size: 1.3em;
+}
+
+.lobby-index-footer input {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+.lobby-index-errors {
+    color: red;
+    font-size: 0.7em;
+    margin-right: 10px;
+}
+
+input.errors {
+    border: 1px solid red;
+}
 
 canvas {
     box-shadow: 0 8px 16px rgba(0,0,0,0.8);
@@ -512,7 +548,7 @@ h2 {
 
 .game-message {
     text-align: center;
-    color: gray;
+    color: white;
     display: flex;
     justify-content: center;
 }
