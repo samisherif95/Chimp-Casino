@@ -112,26 +112,19 @@ class GameContainer extends React.Component {
 
                     // player creation
                     this.createPlayer = playerName => {
-                        this.container = this.add.container(600, 400)
-                        this.physics.world.enable(this.container);
-                
-                        this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
-                            // .setInteractive({ useHandCursor: true })
-                            // .on('pointerdown', () => {
-                            //     if (this.music.isPlaying) {
-                            //         this.music.pause();
-                            //     } else {
-                            //         this.music.resume();
-                            //     }
-                                    
-                            // })
-                        
-                        this.text = this.add.text(0, 0, playerName);
-                        this.text.font = "Arial"
-                        this.container.add(this.player)
-                        this.container.add(this.text)
-                
-                        this.container.body.setCollideWorldBounds(true);
+                        if (this) {
+                            this.container = this.add.container(250, 250)
+                            this.physics.world.enable(this.container);
+                    
+                            this.player = this.physics.add.sprite(20, 35, 'monkey2', 56)
+                            
+                            this.text = this.add.text(0, 0, playerName);
+                            this.text.font = "Arial"
+                            this.container.add(this.player)
+                            this.container.add(this.text)
+                    
+                            this.container.body.setCollideWorldBounds(true);
+                        }
                     }
 
                     // create other players 
@@ -195,15 +188,6 @@ class GameContainer extends React.Component {
 
                     // audio
                     this.music = this.sound.add('island-dreams')
-                    // const musicConfig = {
-                    //     mute: false,
-                    //     volume: 1,
-                    //     rate: 1,
-                    //     detune: 0,
-                    //     seek: 0,
-                    //     loop: true,
-                    //     delay: 0
-                    // }
                     this.music.play()
 
                     //balance
@@ -317,15 +301,15 @@ class GameContainer extends React.Component {
         this.socket.on("lobbyPlayers", (players) => {
             Object.values(players).forEach(player => {
                 if (player.playerId === this.socket.id) {
-                    setTimeout(() => this.createPlayer(player.username), 4000)
+                    setTimeout(() => this.createPlayer ? this.createPlayer(player.username) : null, 2000)
                 } else {
-                    setTimeout(() => this.createOtherPlayer(player), 4000)
+                    setTimeout(() => this.createOtherPlayer ? this.createOtherPlayer(player) : null, 2000)
                 }
             })
         })
 
         this.socket.on("newPlayer", player => {
-            setTimeout(() => this.createOtherPlayer(player), 4000)
+            setTimeout(() => this.createOtherPlayer ? this.createOtherPlayer(player) : null, 2000)
         })
 
         this.socket.on("playerMoved", (player) => {

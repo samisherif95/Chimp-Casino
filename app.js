@@ -92,33 +92,43 @@ lobbyServer.on("connection", (socket) => {
     const findLobbyByIdAndChangeCapacity = num => {
         Lobby.findById(localLobbyId).then(lobby => {
             lobby.set({ currentCapacity: lobby.currentCapacity + num});
-            lobby.save();
+            lobby.save().then(lobby => {
+                if (lobby.currentCapacity === 0) {
+                    lobby.remove();
+                }
+            });
         })
     }
 
 
 
 
-  const pokerGameOver = () => {
-      if (localPokerLobby.game.cycle === 4) {
-          const winner = localPokerLobby.game.getWinner();
-          lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
-          setTimeout(() => {
-              localPokerLobby.game.handleNewHand();
-              lobbyServer.in(localLobbyId + "poker").emit("newGame",
-                  localPokerLobby.game.players.map(player => {
-                      return {
-                          handle: player.handle,
-                          bananas: player.bananas,
-                          hand: player.hand,
-                          bigBlind: player.bigBlind,
-                          smallBlind: player.smallBlind,
-                      }
-                  }), localPokerLobby.game.currentPlayers[0].handle);
-          }, 10000)
-          setTimeout(() => lobbyServer.in(localLobbyId + "poker").emit("aboutToStart"), 7000)
-      } 
-  }
+    const pokerGameOver = () => {
+        if (localPokerLobby.game.cycle === 4 || localPokerLobby.game.players.length === 1) {
+            const winner = localPokerLobby.game.getWinner();
+            lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
+                setTimeout(() => {
+                    if (localPokerLobby.game.players.length > 1) {
+                        localPokerLobby.game.handleNewHand();
+                        lobbyServer.in(localLobbyId + "poker").emit("newGame",
+                            localPokerLobby.game.players.map(player => {
+                                return {
+                                    handle: player.handle,
+                                    bananas: player.bananas,
+                                    hand: player.hand,
+                                    bigBlind: player.bigBlind,
+                                    smallBlind: player.smallBlind,
+                                }
+                            }), localPokerLobby.game.currentPlayers[0].handle);
+                    }
+                }, 10000)
+                setTimeout(() => {
+                    if (localPokerLobby.game.players.length > 1) {
+                        lobbyServer.in(localLobbyId + "poker").emit("aboutToStart")
+                    }
+                }, 7000)
+        } 
+    }
   //chat 
   socket.on("chat", (data) => {
     lobbyServer.in(localLobbyId).emit("receiveMessage", data);
@@ -193,14 +203,8 @@ lobbyServer.on("connection", (socket) => {
   socket.on("leaveLobby", () => {
     socket.leave(localLobbyId);
     delete lobbiesCollection[localLobbyId].players[socket.id];
-    console.log(lobbiesCollection[localLobbyId])
-    if (!Object.keys(lobbiesCollection[localLobbyId].players).length) {
-        console.log("inside");
-        // Lobby.findByIdAndRemove(localLobbyId, () => {})
-        Lobby.deleteOne({ _id: localLobbyId })
-    } else {
-        findLobbyByIdAndChangeCapacity(-1);
-    }
+    findLobbyByIdAndChangeCapacity(-1);
+    
   })
 
   //games
@@ -257,7 +261,8 @@ lobbyServer.on("connection", (socket) => {
     localPokerLobby.game.pot, 
     localPokerLobby.game.currentPlayers[0].handle,
     localPokerLobby.game.communityCards,
-    localPokerLobby.game.raised)
+    localPokerLobby.game.raised,
+    localPokerLobby.game.bet )
     pokerGameOver();
   })
 
@@ -268,25 +273,9 @@ lobbyServer.on("connection", (socket) => {
         amount,
         localPokerLobby.game.currentPlayers[0].handle,
         localPokerLobby.game.communityCards,
-        localPokerLobby.game.raised)
+        localPokerLobby.game.raised, 
+        localPokerLobby.game.bet )
         pokerGameOver();
-        // if (localPokerLobby.game.cycle === 4) {
-        //     const winner = localPokerLobby.game.getWinner();
-        //     lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
-        //     setTimeout(() => {
-        //         localPokerLobby.game.handleNewHand();
-        //         lobbyServer.in(localLobbyId + "poker").emit("newGame",
-        //             localPokerLobby.game.players.map(player => {
-        //                 return {
-        //                     handle: player.handle,
-        //                     bananas: player.bananas,
-        //                     hand: player.hand,
-        //                     bigBlind: player.bigBlind,
-        //                     smallBlind: player.smallBlind,
-        //                 }
-        //             }), localPokerLobby.game.currentPlayers[0].handle);
-        //     }, 10000)
-        // } 
     } else {
         socket.emit("alert", "You must enter a valid amount")
     }
@@ -298,26 +287,9 @@ lobbyServer.on("connection", (socket) => {
         username,
         localPokerLobby.game.currentPlayers[0].handle,
         localPokerLobby.game.communityCards,
-        localPokerLobby.game.raised)
-        console.log(localPokerLobby.game.cycle)
+        localPokerLobby.game.raised,
+        localPokerLobby.game.bet )
         pokerGameOver();
-    // if (localPokerLobby.game.cycle === 4) {
-    //     const winner = localPokerLobby.game.getWinner();
-    //     lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
-    //     setTimeout(() => {
-    //         localPokerLobby.game.handleNewHand();
-    //         lobbyServer.in(localLobbyId + "poker").emit("newGame", 
-    //         localPokerLobby.game.players.map(player => {
-    //             return {
-    //                 handle: player.handle,
-    //                 bananas: player.bananas,
-    //                 hand: player.hand,
-    //                 bigBlind: player.bigBlind,
-    //                 smallBlind: player.smallBlind,
-    //             }
-    //         }), localPokerLobby.game.currentPlayers[0].handle);
-    //     }, 10000)
-    // } 
 
   })
 
@@ -327,25 +299,9 @@ lobbyServer.on("connection", (socket) => {
         username,
         localPokerLobby.game.currentPlayers[0].handle,
         localPokerLobby.game.communityCards,
-        localPokerLobby.game.raised);
+        localPokerLobby.game.raised,
+        localPokerLobby.game.bet );
         pokerGameOver();
-    //   if (localPokerLobby.game.cycle === 4) {
-    //       const winner = localPokerLobby.game.getWinner();
-    //       lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
-    //       setTimeout(() => {
-    //           localPokerLobby.game.handleNewHand();
-    //           lobbyServer.in(localLobbyId + "poker").emit("newGame",
-    //               localPokerLobby.game.players.map(player => {
-    //                   return {
-    //                       handle: player.handle,
-    //                       bananas: player.bananas,
-    //                       hand: player.hand,
-    //                       bigBlind: player.bigBlind,
-    //                       smallBlind: player.smallBlind,
-    //                   }
-    //               }), localPokerLobby.game.currentPlayers[0].handle);
-    //       }, 10000)
-    //   } 
 
   })
 
@@ -389,11 +345,7 @@ lobbyServer.on("connection", (socket) => {
     if (localBJLobby.game.getBetFromCurrentTurn(amount)) {
         if (localBJLobby.game.currentPhase === "options") {
             const playerCards = {};
-
-            // console.log(localBJLobby.game.players)
-            // const naturals = localBJLobby.game.naturalBlackJack()
             localBJLobby.game.players.forEach(player => playerCards[player.userId] = player.hand)
-            console.log(localBJLobby.game.dealer.hand);
             const dealerCards = localBJLobby.game.dealer.hand
 
             lobbyServer.in(localLobbyId + "bj").emit("dealPlayerCards", playerCards)
@@ -463,11 +415,13 @@ lobbyServer.on("connection", (socket) => {
         if (t === null) {
             t = setTimeout(() => {
                 localBJLobby.game.resetGame()
-                socket.emit("changePhase", localBJLobby.game.currentPhase)
-                socket.emit("sendDealer", localBJLobby.game.dealer)
-                socket.emit("resetPlayers", null)
-                lobbyServer.in(localLobbyId + "bj").emit("changeTurn", localBJLobby.game.players[0].userId)
-                console.log(localBJLobby.game.players);
+                if (localBJLobby.game.players.length) {
+                    socket.emit("changePhase", localBJLobby.game.currentPhase)
+                    socket.emit("sendDealer", localBJLobby.game.dealer)
+                    socket.emit("resetPlayers", null)
+                    lobbyServer.in(localLobbyId + "bj").emit("changeTurn", localBJLobby.game.players[0].userId)
+                    console.log(localBJLobby.game.players);
+                }
                 t = null;
             }, 5000)
         }
@@ -490,25 +444,8 @@ lobbyServer.on("connection", (socket) => {
         lobbyServer.in(localLobbyId + "poker").emit("removePlayer", pokerPlayer.handle)
         if (localPokerLobby.game.players.length === 0) {
             localPokerLobby.game = new PokerGame();
-        } else if (localPokerLobby.game.players.length === 1) {
-            lobbyServer.in(localLobbyId + "poker").emit("playerWon", {
-                username: localPokerLobby.game.players[0].handle,
-                amount: localPokerLobby.game.pot
-            })
-            setTimeout(() => {
-                localPokerLobby.game.handleNewHand();
-                lobbyServer.in(localLobbyId + "poker").emit("newGame",
-                    localPokerLobby.game.players.map(player => {
-                        return {
-                            handle: player.handle,
-                            bananas: player.bananas,
-                            hand: player.hand,
-                            bigBlind: player.bigBlind,
-                            smallBlind: player.smallBlind,
-                        }
-                    }), localPokerLobby.game.currentPlayers[0].handle);
-            }, 10000)
-        }
+        } 
+        pokerGameOver();
     }
   })
 
@@ -543,25 +480,8 @@ lobbyServer.on("connection", (socket) => {
             lobbyServer.in(localLobbyId + "poker").emit("removePlayer", pokerPlayer.handle);
             if (localPokerLobby.game.players.length === 0) {
                 localPokerLobby.game = new PokerGame();
-            } else if (localPokerLobby.game.players.length === 1) {
-                lobbyServer.in(localLobbyId + "poker").emit("playerWon", {
-                    username: localPokerLobby.game.players[0],
-                    amount: localPokerLobby.game.pot
-                })
-                setTimeout(() => {
-                    localPokerLobby.game.handleNewHand();
-                    lobbyServer.in(localLobbyId + "poker").emit("newGame",
-                        localPokerLobby.game.players.map(player => {
-                            return {
-                                handle: player.handle,
-                                bananas: player.bananas,
-                                hand: player.hand,
-                                bigBlind: player.bigBlind,
-                                smallBlind: player.smallBlind,
-                            }
-                        }), localPokerLobby.game.currentPlayers[0].handle);
-                }, 10000)
             }
+            pokerGameOver();
         }
       socket.to(localLobbyId).emit('removePlayerSprite', socket.id)
     }

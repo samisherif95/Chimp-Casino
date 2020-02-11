@@ -38,7 +38,7 @@ class GameChat extends React.Component {
         })
 
         this.socket.on("addPokerGamePlayer", playerObj => {
-            this.state.messages.push(`${playerObj.handle} has joined`)
+            this.state.messages.push(`${playerObj.handle} has joined the game`)
             this.setState(this.state)
         })
 
