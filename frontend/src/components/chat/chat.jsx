@@ -6,12 +6,14 @@ class Chat extends React.Component {
         this.state = {
             message: '',
             messages: [
-                { user: "King Kong", message: "Welcome! Press the jukebox to mute the game"}, 
-                { user: "King Kong", message: "We are still working on some features, please bear with us"}
+                { user: "Helpful Chimp", message: "Welcome! Press the jukebox to mute the game"}, 
+                { user: "Helpful Chimp", message: "If you are alone, please approach the slots machine or the blackjack table to play games!" },
+                { user: "Helpful Chimp", message: "Use the arrow keys to move around" }
             ]
         }
         this.socket = this.props.socket
         this.handleSubmit  = this.handleSubmit.bind(this)
+        this.onEnterPress = this.onEnterPress.bind(this);
     }
 
     componentDidMount(){ 
@@ -36,10 +38,17 @@ class Chat extends React.Component {
         element.scrollTop = element.scrollHeight;
     }
 
-    handleChange(field){
+    handleChange(field) {
         return e => this.setState({
-            [field]: e.currentTarget.value
-        });
+              [field]: e.currentTarget.value
+            }); 
+    }
+
+    
+    onEnterPress(e) {
+      if (e.keyCode === 13 && e.shiftKey === false) {
+        this.handleSubmit(e);
+      }
     }
 
     handleSubmit(e){
@@ -100,6 +109,7 @@ class Chat extends React.Component {
                     <form onSubmit={this.handleSubmit}>
                         <textarea
                             value={this.state.message}
+                            onKeyDown={this.onEnterPress}
                             onChange={this.handleChange('message')}
                             id="message-to-send"
                             placeholder="Type your message"
