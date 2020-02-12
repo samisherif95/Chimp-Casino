@@ -20,7 +20,6 @@ class Blackjack extends React.Component {
             currentTurn: "",
         };
         this.handleBetSubmit = this.handleBetSubmit.bind(this);
-        this.addPlayer = this.addPlayer.bind(this);
         this.dealCards = this.dealCards.bind(this);
         this.updateBlackjack = this.updateBlackjack.bind(this);
         this.checkCurrentPlayerBust = this.checkCurrentPlayerBust.bind(this);
