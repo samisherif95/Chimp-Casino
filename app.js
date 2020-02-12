@@ -70,7 +70,9 @@ lobbyServer.on("connection", (socket) => {
     }
 
     const findUserByUsernameAndUpdateBalance = (username, balance) => {
-        User.updateOne({ username }, { balance })
+        console.log(username)
+        console.log(balance);
+        User.updateOne({ username }, { balance }).then(user => console.log(user));
     }
 
     const findLobbyByIdAndChangeCapacity = num => {
@@ -246,7 +248,7 @@ lobbyServer.on("connection", (socket) => {
   })
 
   socket.on("playerCalled", username => {
-    const currentPlayer = localPokerLobby.game.players[0];
+    const currentPlayer = localPokerLobby.game.currentPlayers[0];
     localPokerLobby.game.handleCall();
     socket.emit("updateBalance", currentPlayer.bananas);
     findUserByUsernameAndUpdateBalance(currentPlayer.handle, currentPlayer.bananas);
@@ -261,7 +263,7 @@ lobbyServer.on("connection", (socket) => {
   })
 
   socket.on("playerRaised", (username, amount) => {
-      const currentPlayer = localPokerLobby.game.players[0];
+      const currentPlayer = localPokerLobby.game.currentPlayers[0];
 
     if (localPokerLobby.game.handleRaise(amount)) {
         socket.emit("updateBalance", currentPlayer.bananas);
