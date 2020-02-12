@@ -103,7 +103,7 @@ class Game {
 
         let max = this.players[0]
         let maxScore = this.players[0].score
-        this.players.forEach(player =>{
+        this.currentPlayers.forEach(player =>{
             if(player.score > maxScore){
                 maxScore = player.score;
                 max = player;
@@ -242,6 +242,7 @@ class Game {
         this.currentPlayers = this.players.slice()
         this.dealHandPhase2()
         this.resetNextBetRound();
+        this.bet = 0;
         this.CalledChecked =0;
         this.raised = false;
         this.cycle =0;
