@@ -4,9 +4,6 @@ import { fetchTopTenUsers } from "../../actions/user_actions";
 import LeaderBoardIndexItem from "./leaderboard_index_item";
 
 class LeaderBoard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     this.props.fetchTopTenUsers();
