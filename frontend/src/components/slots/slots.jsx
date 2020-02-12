@@ -139,27 +139,27 @@ class SlotGame extends React.Component {
                         <div className="col-sm-4">
                             <div>
                                 <div id="machine1" className="randomizeMachine">
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot4} /></div>
-                                    <div><img src={slot4} /></div>
-                                    <div><img src={slot4} /></div>
-                                    <div><img src={slot5} /></div>
-                                    <div><img src={slot5} /></div>
-                                    <div><img src={slot6} /></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot4} alt="slot"/></div>
+                                    <div><img src={slot4} alt="slot"/></div>
+                                    <div><img src={slot4} alt="slot"/></div>
+                                    <div><img src={slot5} alt="slot"/></div>
+                                    <div><img src={slot5} alt="slot"/></div>
+                                    <div><img src={slot6} alt="slot"/></div>
                                 </div>
                             </div>
                             <div id="machine1Result" className="col-xs-4 machineResult"></div>
@@ -168,27 +168,27 @@ class SlotGame extends React.Component {
                         <div className="col-sm-4">
                             <div>
                                 <div id="machine2" className="randomizeMachine">
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot4} /></div>
-                                    <div><img src={slot4} /></div>
-                                    <div><img src={slot4} /></div>
-                                    <div><img src={slot5} /></div>
-                                    <div><img src={slot5} /></div>
-                                    <div><img src={slot6} /></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot4} alt="slot"/></div>
+                                    <div><img src={slot4} alt="slot"/></div>
+                                    <div><img src={slot4} alt="slot"/></div>
+                                    <div><img src={slot5} alt="slot"/></div>
+                                    <div><img src={slot5} alt="slot"/></div>
+                                    <div><img src={slot6} alt="slot"/></div>
                                 </div>
                             </div>
                             <div id="machine2Result" className="col-xs-4 machineResult"></div>
@@ -197,27 +197,27 @@ class SlotGame extends React.Component {
                         <div className="col-sm-4">
                             <div>
                                 <div id="machine3" className="randomizeMachine">
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot1} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot2} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot3} /></div>
-                                    <div><img src={slot4} /></div>
-                                    <div><img src={slot4} /></div>
-                                    <div><img src={slot4} /></div>
-                                    <div><img src={slot5} /></div>
-                                    <div><img src={slot5} /></div>
-                                    <div><img src={slot6} /></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot1} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot2} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot3} alt="slot"/></div>
+                                    <div><img src={slot4} alt="slot"/></div>
+                                    <div><img src={slot4} alt="slot"/></div>
+                                    <div><img src={slot4} alt="slot"/></div>
+                                    <div><img src={slot5} alt="slot"/></div>
+                                    <div><img src={slot5} alt="slot"/></div>
+                                    <div><img src={slot6} alt="slot"/></div>
                                 </div>
                             </div>
                             <div id="machine3Result" className="col-xs-4 machineResult"></div>
