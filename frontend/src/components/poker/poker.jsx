@@ -270,8 +270,8 @@ class Poker extends React.Component{
                     <img className='pokerTableImage' src={pokerTable} alt="poker table" />
                     <div className='CardsButtons'>
                         {gameStarted}
-                        {this.state.gameStarted && this.state.myCards.length && <img className='playerCard' src={this.imageHash[this.state.myCards[0][2]]}/>}
-                        {this.state.gameStarted && this.state.myCards.length && <img className='playerCard' src={this.imageHash[this.state.myCards[1][2]]}/>}
+                        {this.state.showCards && this.state.myCards.length && <img className='playerCard' src={this.imageHash[this.state.myCards[0][2]]}/>}
+                        {this.state.showCards && this.state.myCards.length && <img className='playerCard' src={this.imageHash[this.state.myCards[1][2]]}/>}
                         <div className='buttons'>
                         {this.state.gameStarted && this.state.myCards.length && <strong>Your Balance: {this.getPlayerByName(this.props.currentUser.username).bananas}</strong>}
                             <div className='test'>
