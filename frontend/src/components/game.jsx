@@ -290,16 +290,16 @@ class GameContainer extends React.Component {
         this.socket.on("lobbyPlayers", (players) => {
             Object.values(players).forEach(player => {
                 if (player.playerId === this.socket.id) {
-                    setTimeout(() => this.createPlayer(player.username), 8000)
+                    setTimeout(() => this.createPlayer(player.username), 7000)
                     
                 } else {
-                    setTimeout(() => this.createOtherPlayer(player), 8000);
+                    setTimeout(() => this.createOtherPlayer(player), 7000);
                 }
             })
         })
 
         this.socket.on("newPlayer", player => {
-            setTimeout(() => this.createOtherPlayer(player), 8000);
+            setTimeout(() => this.createOtherPlayer(player), 7000);
         })
 
         this.socket.on("playerMoved", (player) => {
@@ -309,7 +309,7 @@ class GameContainer extends React.Component {
         })
 
         this.socket.on("removePlayerSprite", player => {
-            setTimeout(() => this.destroyPlayer(player), 8000);
+            setTimeout(() => this.destroyPlayer(player), 7000);
         })
 
         this.socket.on("updateBalance", balance => {

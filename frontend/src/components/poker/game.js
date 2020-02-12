@@ -97,7 +97,7 @@ class Game {
     }
 
     getWinner(){
-        this.players.forEach(player =>{
+        this.currentPlayers.forEach(player =>{
             player.score = this.pokerlogic.evaluateHand(player.fullcardHand)
         })
 
