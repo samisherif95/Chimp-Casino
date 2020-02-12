@@ -7,7 +7,7 @@ class Game {
         this.pot = 0;
         this.turnStarted = false
         this.deck = new Deck();
-         this.pokerlogic = new PokerLogic();
+        this.pokerlogic = new PokerLogic();
         this.players = []
         this.currentPlayers =[]
         this.tempPlayers = []
@@ -216,7 +216,7 @@ class Game {
             this.raised = true
             this.bet = amount;
             this.pot += amount;
-            this.currentPlayers[0].bananas -= amount;
+            this.currentPlayers[0].bananas = this.currentPlayers[0].bananas - (amount - this.bet);
             this.nextTurn()
             return true;
         } else {
@@ -234,9 +234,14 @@ class Game {
         if (this.currentPlayers.length === 1) {
             this.cycle = 4;
         }
+        // console.log(this.players)
     }
 
     handleNewHand() {
+        this.players.forEach(player =>{
+            player.score = 0
+        })
+        console.log(this.players)
         this.communityCards = []
         this.deck = new Deck()
         this.currentPlayers = this.players.slice()
