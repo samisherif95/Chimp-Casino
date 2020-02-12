@@ -70,9 +70,7 @@ lobbyServer.on("connection", (socket) => {
     }
 
     const findUserByUsernameAndUpdateBalance = (username, balance) => {
-        console.log(username)
-        console.log(balance);
-        User.updateOne({ username }, { balance }).then(user => console.log(user));
+        User.updateOne({ username }, { balance });
     }
 
     const findLobbyByIdAndChangeCapacity = num => {
@@ -92,8 +90,9 @@ lobbyServer.on("connection", (socket) => {
     const pokerGameOver = () => {
         if (localPokerLobby.game.cycle === 4 || localPokerLobby.game.players.length === 1) {
             const winner = localPokerLobby.game.getWinner();
-            socket.emit("updateBalance", winner.bananas);
-            findUserByUsernameAndUpdateBalance(winner.userId, winner.bananas);
+            // lobbyServer.in(localLobbyId + "poker").emit("updateBalance", winner.bananas);
+            lobbyServer.to(winner.socketId).emit("updateBalance", winner.bananas);
+            findUserByUsernameAndUpdateBalance(winner.username, winner.bananas);
             lobbyServer.in(localLobbyId + "poker").emit("playerWon", winner)
                 setTimeout(() => {
                     if (localPokerLobby.game.players.length > 1) {
