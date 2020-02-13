@@ -20,7 +20,8 @@ class Poker extends React.Component{
             pot: 0,
             timer: null,
             gameOver: false,
-            showCards: false
+            showCards: false,
+            madeMove: false,
         }
         
         this.imageHash = imageHash;
@@ -53,7 +54,11 @@ class Poker extends React.Component{
 
 
     sendCallToSocket() {
-        this.socket.emit("playerCalled", this.props.currentUser.username)
+        if (!this.state.madeMove) {
+
+            this.socket.emit("playerCalled", this.props.currentUser.username)
+            this.setState({ madeMove: true});
+        }
     }
 
 
@@ -61,17 +66,26 @@ class Poker extends React.Component{
         let currentBet;
         currentBet = parseInt(prompt('please enter an amount to raise'))
         this.socket.emit("playerRaised", this.props.currentUser.username, currentBet)
+        this.setState({ madeMove: true});
     }
 
 
     sendCheckToSocket() {
-        this.socket.emit("playerChecked", this.props.currentUser.username)
+        if (!this.state.madeMove) {
+
+            this.socket.emit("playerChecked", this.props.currentUser.username)
+            this.setState({ madeMove: true});
+        }
+
     }
 
  
 
     sendFoldToSocket() {
-        this.socket.emit("playerFolded", this.props.currentUser.username)
+        if (!this.state.madeMove) {
+            this.socket.emit("playerFolded", this.props.currentUser.username)
+            this.setState({ madeMove: true});
+        }
     }
     
     getPlayerByName(handle) {
@@ -106,22 +120,22 @@ class Poker extends React.Component{
     handlePlayerCall(username, pot, nextUsername, communityCards, raised, bet) {
         const player = this.getPlayerByName(username);
         player.bananas -= this.state.bet;
-        this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet });
+        this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet, madeMove: false });
     }
 
     handlePlayerRaise(username, amount, nextUsername, communityCards, raised, bet) {
         const player = this.getPlayerByName(username);
         player.bananas -= amount;
         const pot = this.state.pot + amount;
-        this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet })
+        this.setState({ pot, currentPlayer: nextUsername, communityCards, raised, bet, madeMove: false })
     }
 
     handlePlayerFold(username, nextUsername, communityCards, raised, bet) {
-        this.setState({ currentPlayer: nextUsername, communityCards, raised, bet })
+        this.setState({ currentPlayer: nextUsername, communityCards, raised, bet, madeMove: false })
     }
 
     handlePlayerCheck(username, nextUsername, communityCards, raised, bet) {
-        this.setState({ currentPlayer: nextUsername, communityCards, raised, bet })
+        this.setState({ currentPlayer: nextUsername, communityCards, raised, bet, madeMove: false })
 
     }
 
