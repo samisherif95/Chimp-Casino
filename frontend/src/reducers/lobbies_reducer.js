@@ -6,7 +6,7 @@ const lobbiesReducer = (state = {}, action) => {
     let nextState;
     switch (action.type) {
         case RECEIVE_LOBBIES:
-            nextState = Object.assign({}, state);
+            nextState = {};
             action.lobbies.data.forEach(lobby => {
                 nextState[lobby._id] = lobby
             })

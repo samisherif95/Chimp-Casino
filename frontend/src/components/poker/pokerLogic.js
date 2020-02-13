@@ -168,7 +168,7 @@ class PokerLogic {
             if (value === 2){count+=1}
         })
 
-        if(count > 1){
+        if(count === 2){
             return true
         }else{
             return false
@@ -186,7 +186,7 @@ class PokerLogic {
             if (value === 2) { count += 1 }
         })
 
-        if (count > 0) {
+        if (count === 1) {
             return true
         } else {
             return false

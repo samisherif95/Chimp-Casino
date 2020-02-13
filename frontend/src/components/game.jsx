@@ -72,7 +72,7 @@ class GameContainer extends React.Component {
                     this.add.sprite(615, 60, 'slots').setOrigin(0, 0)
                     this.add.sprite(315, 20, 'wood-plank').setOrigin(0, 0)
                     this.add.sprite(750, 0, 'millionaire').setOrigin(0, 0)
-                    this.add.sprite(490, 60, 'jukebox').setOrigin(0, 0)
+                    this.add.sprite(509, 60, 'jukebox').setOrigin(0, 0)
                         .setInteractive({ useHandCursor: true })
                         .on('pointerdown', () => {
                             if (this.music.isPlaying) {
@@ -85,10 +85,10 @@ class GameContainer extends React.Component {
         
                     this.furnitures = this.physics.add.staticGroup()
                     this.furnitures.create(0, 0, 'casino-wall').setOrigin(0, 0)
-                    this.furnitures.create(315, 30, 'wood-plank').setOrigin(0, 0)
+                    this.furnitures.create(330, 30, 'wood-plank').setOrigin(0, 0)
                     this.furnitures.create(750, 0, 'millionaire').setOrigin(0, 0)
                     this.furnitures.create(60, 140, 'statue')
-                    this.furnitures.create(490, 60, 'jukebox').setOrigin(0, 0)
+                    this.furnitures.create(509, 60, 'jukebox').setOrigin(0, 0)
                     
                     this.pokerTable = this.physics.add.staticGroup()
                     this.pokerCollision = this.pokerTable.create(270, 550, 'poker-col')
@@ -107,7 +107,7 @@ class GameContainer extends React.Component {
                     this.add.sprite(615, 60, 'slots').setOrigin(0, 0)
 
                     this.bulletinBoard = this.physics.add.staticGroup();
-                    this.bulletinBoard.create(315, 90, 'bulletin-board').setOrigin(0, 0)
+                    this.bulletinBoard.create(330, 90, 'bulletin-board').setOrigin(0, 0)
 
 
                     // player creation
@@ -146,6 +146,15 @@ class GameContainer extends React.Component {
                         if (this) {
                             this.otherPlayers.getChildren().forEach(player => {
                                 if (playerInfo.playerId === player.playerId) {
+                                    if (playerInfo.x < player.x) {
+                                        player.first.anims.play('leftAlt', false)
+                                    } else if (playerInfo.x > player.x) {
+                                        player.first.anims.play('rightAlt', false)
+                                    } else if (playerInfo.y < player.y) {
+                                        player.first.anims.play('upAlt', false)
+                                    } else {
+                                        player.first.anims.play('downAlt', false)
+                                    }
                                     player.setPosition(playerInfo.x, playerInfo.y);
                                 }
                             })
@@ -203,11 +212,27 @@ class GameContainer extends React.Component {
                         repeat: -1
                     });
 
+
+                    this.anims.create({
+                        key: 'leftAlt',
+                        frames: this.anims.generateFrameNumbers('monkey2', { start: 63, end: 65 }),
+                        frameRate: 10,
+                        repeat: 0
+                    });
+
+
                     this.anims.create({
                         key: 'right',
                         frames: this.anims.generateFrameNumbers('monkey2', { start: 75, end: 77 }),
                         frameRate: 10,
                         repeat: -1
+                    });
+
+                    this.anims.create({
+                        key: 'rightAlt',
+                        frames: this.anims.generateFrameNumbers('monkey2', { start: 75, end: 77 }),
+                        frameRate: 10,
+                        repeat: 0
                     });
 
                     this.anims.create({
@@ -218,10 +243,24 @@ class GameContainer extends React.Component {
                     });
 
                     this.anims.create({
+                        key: 'upAlt',
+                        frames: this.anims.generateFrameNumbers('monkey2', { start: 87, end: 89 }),
+                        frameRate: 10,
+                        repeat: 0
+                    });
+
+                    this.anims.create({
                         key: 'down',
                         frames: this.anims.generateFrameNumbers('monkey2', { start: 51, end: 53 }),
                         frameRate: 10,
                         repeat: -1
+                    });
+
+                    this.anims.create({
+                        key: 'downAlt',
+                        frames: this.anims.generateFrameNumbers('monkey2', { start: 51, end: 53 }),
+                        frameRate: 10,
+                        repeat: 0
                     });
 
 
@@ -284,7 +323,6 @@ class GameContainer extends React.Component {
 
 
     componentWillUnmount() {
-        this.socket.emit("leaveLobby");
         this.socket.removeAllListeners();
     }
 

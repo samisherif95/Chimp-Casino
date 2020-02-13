@@ -8,7 +8,8 @@ class Chat extends React.Component {
             messages: [
                 { user: "Helpful Chimp", message: "Welcome! Press the jukebox to mute the game"}, 
                 { user: "Helpful Chimp", message: "If you are alone, please approach the slots machine or the blackjack table to play games!" },
-                { user: "Helpful Chimp", message: "Use the arrow keys to move around" }
+                { user: "Helpful Chimp", message: "Use the arrow keys to move around" },
+                { user: "Helpful Chimp", message: "To leave this room, just go to the door!" }
             ]
         }
         this.socket = this.props.socket

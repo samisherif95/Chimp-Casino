@@ -8,6 +8,7 @@
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.1",
+    "fast-deep-equal": "^3.1.1",
     "has-cors": "^1.1.0",
     "jquery": "^3.4.1",
     "jquery-slotmachine": "^4.0.1",
