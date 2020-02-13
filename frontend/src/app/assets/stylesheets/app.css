@@ -1,25 +1,24 @@
 .main-page{
     width: 100%;
-    height: 90vh;
-    display: flex;
-    align-items: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
 }
 
-.main-grid{
-  display: grid;
-  grid-gap: 10vmin;
-  grid-template-columns: repeat(2, 1fr);
-  border-radius: 5px;
-  margin: 0 auto;
+.main{
+  height: 100vh;
+  display: flex;
+  align-items: center;
 }
 
-.main-grid > div{
+.main > div{
   background-color: rgb(0, 0, 0, 0.6);
   border-radius: 10px;
-  padding: 10px;  
+  padding: 15px;  
+  max-width: 400px;
+  margin-left: 20px;
 }
 
-.contact-title,
 .game-info-title {
   width: 400px;
 }
@@ -29,27 +28,41 @@
   font-family: 'Raleway', sans-serif;
   font-size: 18px;
   color: #fff;
+  line-height: 1.5em;
   max-width: 400px;
 }
 
-.contact-title > h2,
 .game-info-title > h2{
   display: flex;
   justify-content: center;
   color: #f44336;
 }
 
-.contact-info > div {
+
+.footer {
+  display: block;
+  position: absolute;
+  width: 100%;
+  background-color: rgba(0,0,0,.8);
+  bottom: 0;
+}
+
+.contact-info {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.contact-info > div{
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 
 .contact-info > div > h4{
-  font-size: 25px;
-  max-width: 250px;
   font-family: 'Raleway', sans-serif;
+  font-size: 20px;
   color: #fff;
+  padding-right: 10px;
 }
 
 .fa-linkedin{
@@ -116,6 +129,7 @@ body{
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover;
     height: 100vh;
+    position: relative;
 }
 
 .navbar{
@@ -123,7 +137,6 @@ body{
     justify-content: space-between;
     background-color: rgba(46, 45, 42, 0.788);
     color: white;
-    margin-bottom: 30px;
 }
 
 ul {
