@@ -146,6 +146,15 @@ class GameContainer extends React.Component {
                         if (this) {
                             this.otherPlayers.getChildren().forEach(player => {
                                 if (playerInfo.playerId === player.playerId) {
+                                    if (playerInfo.x < player.x) {
+                                        player.first.anims.play('leftAlt', false)
+                                    } else if (playerInfo.x > player.x) {
+                                        player.first.anims.play('rightAlt', false)
+                                    } else if (playerInfo.y < player.y) {
+                                        player.first.anims.play('upAlt', false)
+                                    } else {
+                                        player.first.anims.play('downAlt', false)
+                                    }
                                     player.setPosition(playerInfo.x, playerInfo.y);
                                 }
                             })
@@ -203,11 +212,27 @@ class GameContainer extends React.Component {
                         repeat: -1
                     });
 
+
+                    this.anims.create({
+                        key: 'leftAlt',
+                        frames: this.anims.generateFrameNumbers('monkey2', { start: 63, end: 65 }),
+                        frameRate: 10,
+                        repeat: 0
+                    });
+
+
                     this.anims.create({
                         key: 'right',
                         frames: this.anims.generateFrameNumbers('monkey2', { start: 75, end: 77 }),
                         frameRate: 10,
                         repeat: -1
+                    });
+
+                    this.anims.create({
+                        key: 'rightAlt',
+                        frames: this.anims.generateFrameNumbers('monkey2', { start: 75, end: 77 }),
+                        frameRate: 10,
+                        repeat: 0
                     });
 
                     this.anims.create({
@@ -218,10 +243,24 @@ class GameContainer extends React.Component {
                     });
 
                     this.anims.create({
+                        key: 'upAlt',
+                        frames: this.anims.generateFrameNumbers('monkey2', { start: 87, end: 89 }),
+                        frameRate: 10,
+                        repeat: 0
+                    });
+
+                    this.anims.create({
                         key: 'down',
                         frames: this.anims.generateFrameNumbers('monkey2', { start: 51, end: 53 }),
                         frameRate: 10,
                         repeat: -1
+                    });
+
+                    this.anims.create({
+                        key: 'downAlt',
+                        frames: this.anims.generateFrameNumbers('monkey2', { start: 51, end: 53 }),
+                        frameRate: 10,
+                        repeat: 0
                     });
 
 
