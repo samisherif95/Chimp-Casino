@@ -33,7 +33,7 @@ class GameContainer extends React.Component {
         this.lobbyId = this.props.match.params.lobbyId;
         this.socket = this.props.socket
 
-        this.socket.emit("joinLobby", this.lobbyId, this.props.currentUser.username);
+        // this.socket.emit("joinLobby", this.lobbyId, this.props.currentUser.username);
 
         const game = this;
 
@@ -227,6 +227,8 @@ class GameContainer extends React.Component {
 
                     this.cursors = this.input.keyboard.createCursorKeys()
                     this.input.keyboard.clearCaptures();
+                    game.socket.emit("joinLobby", game.lobbyId, game.props.currentUser.username);
+
                 },
                 update: function() {
                     if (this.container) {
@@ -290,26 +292,26 @@ class GameContainer extends React.Component {
         this.socket.on("lobbyPlayers", (players) => {
             Object.values(players).forEach(player => {
                 if (player.playerId === this.socket.id) {
-                    setTimeout(() => this.createPlayer(player.username), 7000)
+                    this.createPlayer(player.username);
                     
                 } else {
-                    setTimeout(() => this.createOtherPlayer(player), 7000);
+                    this.createOtherPlayer(player);
                 }
             })
         })
 
         this.socket.on("newPlayer", player => {
-            setTimeout(() => this.createOtherPlayer(player), 7000);
+            this.createOtherPlayer(player);
         })
 
         this.socket.on("playerMoved", (player) => {
           if (this.moveOtherPlayer) {
-            this.moveOtherPlayer(player) 
+            this.moveOtherPlayer(player) ;
           }
         })
 
         this.socket.on("removePlayerSprite", player => {
-            setTimeout(() => this.destroyPlayer(player), 7000);
+            this.destroyPlayer(player);
         })
 
         this.socket.on("updateBalance", balance => {
