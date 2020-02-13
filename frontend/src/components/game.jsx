@@ -72,7 +72,7 @@ class GameContainer extends React.Component {
                     this.add.sprite(615, 60, 'slots').setOrigin(0, 0)
                     this.add.sprite(315, 20, 'wood-plank').setOrigin(0, 0)
                     this.add.sprite(750, 0, 'millionaire').setOrigin(0, 0)
-                    this.add.sprite(490, 60, 'jukebox').setOrigin(0, 0)
+                    this.add.sprite(509, 60, 'jukebox').setOrigin(0, 0)
                         .setInteractive({ useHandCursor: true })
                         .on('pointerdown', () => {
                             if (this.music.isPlaying) {
@@ -85,10 +85,10 @@ class GameContainer extends React.Component {
         
                     this.furnitures = this.physics.add.staticGroup()
                     this.furnitures.create(0, 0, 'casino-wall').setOrigin(0, 0)
-                    this.furnitures.create(315, 30, 'wood-plank').setOrigin(0, 0)
+                    this.furnitures.create(330, 30, 'wood-plank').setOrigin(0, 0)
                     this.furnitures.create(750, 0, 'millionaire').setOrigin(0, 0)
                     this.furnitures.create(60, 140, 'statue')
-                    this.furnitures.create(490, 60, 'jukebox').setOrigin(0, 0)
+                    this.furnitures.create(509, 60, 'jukebox').setOrigin(0, 0)
                     
                     this.pokerTable = this.physics.add.staticGroup()
                     this.pokerCollision = this.pokerTable.create(270, 550, 'poker-col')
@@ -107,7 +107,7 @@ class GameContainer extends React.Component {
                     this.add.sprite(615, 60, 'slots').setOrigin(0, 0)
 
                     this.bulletinBoard = this.physics.add.staticGroup();
-                    this.bulletinBoard.create(315, 90, 'bulletin-board').setOrigin(0, 0)
+                    this.bulletinBoard.create(330, 90, 'bulletin-board').setOrigin(0, 0)
 
 
                     // player creation
@@ -284,7 +284,6 @@ class GameContainer extends React.Component {
 
 
     componentWillUnmount() {
-        this.socket.emit("leaveLobby");
         this.socket.removeAllListeners();
     }
 

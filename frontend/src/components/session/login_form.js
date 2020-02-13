@@ -66,6 +66,8 @@ class LoginForm extends React.Component {
                 errorUsername = error;
             } else if (error.includes('Password')) {
                 errorPassword = error
+            } else if (error.includes('Incorrect')) {
+                errorPassword = error;
             }
         });
 

@@ -70,7 +70,6 @@ lobbyServer.on("connection", (socket) => {
     }
 
     const findUserByUsernameAndUpdateBalance = (username, balance) => {
-        console.log(username, balance)
         User.updateOne({ username }, { balance })
             .then(user => console.log("success"))
             .catch(err => console.log(err))
@@ -80,11 +79,11 @@ lobbyServer.on("connection", (socket) => {
         Lobby.findById(localLobbyId).then(lobby => {
             lobby.set({ currentCapacity: lobby.currentCapacity + num});
             lobby.save().then(lobby => {
-                if (lobby.currentCapacity === 0) {
+                if (lobby.currentCapacity === 0 && lobby.lobbyName !== "General") {
                     lobby.remove();
                 }
             });
-        })
+        }).catch(err => console.log(err));
     }
 
 

@@ -1,5 +1,6 @@
 import React from "react";
 import LobbyIndexItem from "./lobby_index_item";
+import equal from 'fast-deep-equal'
 
 class LobbiesIndex extends React.Component {
     constructor(props) {
@@ -12,8 +13,6 @@ class LobbiesIndex extends React.Component {
     }
 
     componentDidMount() {
-        this.socket.emit("getLobbies");
-        this.socket.on("receiveLobbies", lobbyData => this.setState({ lobbies: lobbyData}));
         this.props.fetchLobbies()
     }
 
@@ -45,6 +44,8 @@ class LobbiesIndex extends React.Component {
         return (
             <div className="lobby-index-container">
                 <h2>Lobbies</h2>
+                <i onClick={this.props.fetchLobbies} className="fas fa-sync-alt"></i>
+
                 <div className="lobby-index-header">
                     <div className="lobby-name-div">
                         <span>Lobby Name</span>
