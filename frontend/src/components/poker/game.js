@@ -216,7 +216,7 @@ class Game {
             this.raised = true
             this.bet = amount;
             this.pot += amount;
-            this.currentPlayers[0].bananas = this.currentPlayers[0].bananas - (amount - this.bet);
+            this.currentPlayers[0].bananas -= amount;
             this.nextTurn()
             return true;
         } else {
