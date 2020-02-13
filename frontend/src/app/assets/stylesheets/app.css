@@ -11,9 +11,9 @@
   border-radius: 10px;
   padding: 15px;  
   max-width: 400px;
-  margin-left: 20px;
+  margin-left: 40px;
   position: absolute;
-  transform: translateY(-50%);
+  transform: translateY(-60%);
   top: 50%;
 }
 
@@ -369,6 +369,11 @@ button{
     padding-bottom: 5px;
 }
 
+li.selected {
+    background-color: #fcd600;
+    padding-right: 5px;
+}
+
 .lobby-index li:hover {
     background-color: #fcd600;
     cursor: pointer;
@@ -458,12 +463,7 @@ canvas {
     padding-bottom: 20px;
 }
 
-/* .lobby-index-item {
-    display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: space-between;
-} */
+
 
 .game-container {
     display: flex;

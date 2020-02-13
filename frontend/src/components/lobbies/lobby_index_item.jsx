@@ -1,9 +1,9 @@
 import React from "react";
 
-const LobbyIndexItem = ({lobby, selectLobby}) => {
+const LobbyIndexItem = ({lobby, selectLobby, selectedLobby}) => {
 
     return (
-        <li onClick={()=>selectLobby(lobby)} className="lobby-index-item">
+        <li onClick={()=>selectLobby(lobby)} className={`lobby-index-item ${selectedLobby && selectedLobby._id === lobby._id ? "selected" : ""}`}>
             <div className="lobby-name-div">
                 <span className="lobby-name-span">{lobby.lobbyName}</span>
             </div>
