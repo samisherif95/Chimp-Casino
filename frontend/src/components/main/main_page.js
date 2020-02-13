@@ -26,12 +26,12 @@ class MainPage extends React.Component {
                   </div>
                   <div className='game-info-body'>
                     <p>
-                      This is a classic RPG style monkey-themed casino game that is intended for you to enjoy with your friends!
-                      To play this game you must create an account and then you will be prompted to choose a lobby or you can create one for you and your friends.
-                      That lobby can be password protected or not depending on your prefrence. Once in a side a lobby you have your monkey avatar,
-                      which you can move via the arrow key buttons. To play a game just move your monkey towards that specific game and once you are close enough
-                      it will start up.<br/>
-                      Enjoy and don't lose your bananas all at once.
+                        This is a classic RPG style monkey-themed casino game that is intended for you to enjoy with your friends!<br/>
+                        To play this game you must create an account and then you will be prompted to choose a lobby or you can create one for you and your friends.
+                        That lobby can be password protected or not depending on your prefrence. <br/>Once in a side a lobby you have your monkey avatar,
+                        which you can move via the arrow key buttons.<br/> To play a game just move your monkey towards that specific game and once you are close enough
+                        it will start up.<br/>
+                        Enjoy and don't lose your bananas all at once.
                     </p>
                   </div>
                   <div className='game-info-play'>
