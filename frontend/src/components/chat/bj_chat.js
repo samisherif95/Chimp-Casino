@@ -16,6 +16,7 @@ class BlackJackChat extends React.Component {
     this.playerStandMessage = this.playerStandMessage.bind(this);
     this.playerBetMessage = this.playerBetMessage.bind(this);
     this.resetBJGameMessage = this.resetBJGameMessage.bind(this);
+    this.winOrLoseMessage = this.winOrLoseMessage.bind(this);
   }
 
   addPlayerToBJ(username) {
@@ -49,12 +50,6 @@ class BlackJackChat extends React.Component {
   }
 
   resetBJGameMessage() {
-      this.state.messages.push("Game starting in 5 seconds");
-      this.setState(this.state);
-      setTimeout(() => {
-          this.state.messages.push("Game starting in 4 seconds")
-          this.setState(this.state)
-      }, 1000)
       setTimeout(() => {
           this.state.messages.push("Game starting in 3 seconds")
           this.setState(this.state)
@@ -67,6 +62,19 @@ class BlackJackChat extends React.Component {
           this.state.messages.push("Game starting in 1 seconds")
           this.setState(this.state)
       }, 4000)
+      setTimeout(() => {
+          this.state.messages.push("Please bet")
+          this.setState(this.state)
+      }, 5000)
+  }
+
+  winOrLoseMessage(balance) {
+    if (balance > this.props.currentUser.balance) {
+        this.state.messages.push(`You won ${balance - this.props.currentUser.balance} bananas!`);
+    } else {
+        this.state.messages.push(`You lost. Try again!`);
+    }
+    this.setState(this.state);
   }
 
   componentDidMount() {
@@ -77,6 +85,7 @@ class BlackJackChat extends React.Component {
     this.socket.on("standOption", this.playerStandMessage);
     this.socket.on("playerBet", this.playerBetMessage);
     this.socket.on("resetBJGame", this.resetBJGameMessage);
+    this.socket.on("winOrLose", this.winOrLoseMessage);
   }
 
   componentWillUnmount() {
@@ -86,6 +95,7 @@ class BlackJackChat extends React.Component {
     this.socket.off("playerHit", this.playerHitMessage);
     this.socket.off("standOption", this.playerStandMessage);
     this.socket.off("playerBet", this.playerBetMessage);
+    this.socket.off("winOrLose", this.winOrLoseMessage);
     this.socket.off("resetBJGame", this.resetBJGameMessage);
   }
 

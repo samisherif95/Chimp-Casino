@@ -70,7 +70,10 @@ lobbyServer.on("connection", (socket) => {
     }
 
     const findUserByUsernameAndUpdateBalance = (username, balance) => {
-        User.updateOne({ username }, { balance });
+        console.log(username, balance)
+        User.updateOne({ username }, { balance })
+            .then(user => console.log("success"))
+            .catch(err => console.log(err))
     }
 
     const findLobbyByIdAndChangeCapacity = num => {
@@ -120,6 +123,19 @@ lobbyServer.on("connection", (socket) => {
     }
 
     const bJGameOver = () => {
+        localBJLobby.game.compareHands();
+        // Update player's balances on the front end 
+        let playersObj = {};
+        localBJLobby.game.players.forEach(player => {
+          playersObj[player.userId] = player.balance;
+          findUserByUsernameAndUpdateBalance(player.userId, player.balance);
+            lobbyServer.to(player.socketId).emit("winOrLose", player.balance);
+            lobbyServer.to(player.socketId).emit("updateBalance", player.balance);
+        })
+        // socket.emit("updateBalance", localBJLobby.game.getPlayerBySocketId(socket.id).balance);
+        lobbyServer.in(localLobbyId + "bj").emit("updatePlayersBalance", playersObj)
+
+      lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase, localBJLobby.game.players[0].userId);
       socket.emit("resetBJGame")
       lobbyServer.in(localLobbyId + "bj").emit("aboutToStart")
       setTimeout(() => {
@@ -428,17 +444,17 @@ lobbyServer.on("connection", (socket) => {
   })
 
     socket.on("payoutPlayers", () => {
-        localBJLobby.game.compareHands();
-        // Update player's balances on the front end 
-        let playersObj = {};
-        localBJLobby.game.players.forEach(player => {
-          playersObj[player.userId] = player.balance;
-          findUserByUsernameAndUpdateBalance(player.userId, player.balance);
-        })
-        socket.emit("updateBalance", localBJLobby.game.getPlayerBySocketId(socket.id).balance);
-        lobbyServer.in(localLobbyId + "bj").emit("updatePlayersBalance", playersObj)
+    //     localBJLobby.game.compareHands();
+    //     // Update player's balances on the front end 
+    //     let playersObj = {};
+    //     localBJLobby.game.players.forEach(player => {
+    //       playersObj[player.userId] = player.balance;
+    //       findUserByUsernameAndUpdateBalance(player.userId, player.balance);
+    //     })
+    //     socket.emit("updateBalance", localBJLobby.game.getPlayerBySocketId(socket.id).balance);
+    //     lobbyServer.in(localLobbyId + "bj").emit("updatePlayersBalance", playersObj)
 
-      lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase, localBJLobby.game.players[0].userId);
+    //   lobbyServer.in(localLobbyId + "bj").emit("changePhase", localBJLobby.game.currentPhase, localBJLobby.game.players[0].userId);
     })
 
 
