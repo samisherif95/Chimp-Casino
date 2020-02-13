@@ -1,14 +1,9 @@
 .main-page{
+    margin-top: 70px;
     width: 100%;
     position: absolute;
     top: 0;
     bottom: 0;
-}
-
-.main{
-  height: 100vh;
-  display: flex;
-  align-items: center;
 }
 
 .main > div{
@@ -17,6 +12,9 @@
   padding: 15px;  
   max-width: 400px;
   margin-left: 20px;
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
 }
 
 .game-info-title {
@@ -101,6 +99,7 @@
 
 .btn-play:hover{
     background-color: #FF4500;
+    cursor: pointer;
 }
 
 .logo-container{
@@ -152,6 +151,7 @@ ul {
 li {
   float: left;
   vertical-align: center;
+  cursor: pointer;
 }
 
 li a {
