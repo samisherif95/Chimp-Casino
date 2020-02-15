@@ -23,7 +23,8 @@ class Poker extends React.Component{
             showCards: false,
             madeMove: false,
         }
-        
+
+        window.state = this.state
         this.imageHash = imageHash;
         this.sendPlayerToSocket = this.sendPlayerToSocket.bind(this);
         this.sendCallToSocket = this.sendCallToSocket.bind(this);

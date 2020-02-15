@@ -84,8 +84,9 @@ class Game {
     }
 
     dealCommunityPhase3(){
+        console.log('hitting here')
         this.communityCards.push(this.deck.deal());
-        this.players.forEach(player =>{
+        this.currentPlayers.forEach(player =>{
             this.communityCards.forEach(card =>{
                 player.fullcardHand.push(card);
             })
@@ -94,6 +95,13 @@ class Game {
               player.fullcardHand.push(card);
             });
         }) 
+
+        console.log(this.currentPlayers)
+        console.log('-------------------------------------------')
+        console.log('player1',this.currentPlayers[0].fullcardHand)
+        console.log('-------------------------------------------')
+        console.log('player2',this.currentPlayers[1].fullcardHand)
+
     }
 
     getWinner(){
@@ -107,6 +115,35 @@ class Game {
             if(player.score > maxScore){
                 maxScore = player.score;
                 max = player;
+            }else if(player.score === maxScore){
+                let cardValuesPlayer = []
+                let cardValuesMax = []
+                player.fullcardHand.forEach(card => {
+                    if (card[0] === 'A') { cardValuesPlayer.push(14) }
+                    else if (card[0] === 'J') { cardValuesPlayer.push(11) }
+                    else if (card[0] === 'Q') { cardValuesPlayer.push(12) }
+                    else if (card[0] === 'K') { cardValuesPlayer.push(13) }
+                    else { cardValuesPlayer.push(card[0]) }
+                })
+
+                max.fullcardHand.forEach(card => {
+                    if (card[0] === 'A') { cardValuesMax.push(14) }
+                    else if (card[0] === 'J') { cardValuesMax.push(11) }
+                    else if (card[0] === 'Q') { cardValuesMax.push(12) }
+                    else if (card[0] === 'K') { cardValuesMax.push(13) }
+                    else { cardValuesMax.push(card[0]) }
+                })
+
+                cardValuesPlayer = cardValuesPlayer.sort(function (a, b) { return a - b });
+                cardValuesMax = cardValuesMax.sort(function (a, b) { return a - b });
+                cardValuesMax = cardValuesMax.slice(2)
+                cardValuesPlayer = cardValuesPlayer.slice(2)
+                let sumMax = cardValuesMax.reduce((a, b) => a + b, 0)
+                let sumPlayer = cardValuesPlayer.reduce((a, b) => a + b, 0) 
+                if(sumPlayer > sumMax){
+                    maxScore = player.score;
+                    max = player;
+                }
             }
         })
         max.bananas+= this.pot;
@@ -240,8 +277,9 @@ class Game {
     handleNewHand() {
         this.players.forEach(player =>{
             player.score = 0
+            player.fullcardHand = []
         })
-        console.log(this.players)
+        // console.log(this.players)
         this.communityCards = []
         this.deck = new Deck()
         this.currentPlayers = this.players.slice()
