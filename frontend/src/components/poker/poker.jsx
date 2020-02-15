@@ -67,20 +67,16 @@ class Poker extends React.Component{
         let currentBet;
         currentBet = parseInt(prompt('please enter an amount to raise'))
         this.socket.emit("playerRaised", this.props.currentUser.username, currentBet)
-        this.setState({ madeMove: true});
     }
 
 
     sendCheckToSocket() {
         if (!this.state.madeMove) {
-
             this.socket.emit("playerChecked", this.props.currentUser.username)
             this.setState({ madeMove: true});
         }
 
     }
-
- 
 
     sendFoldToSocket() {
         if (!this.state.madeMove) {
