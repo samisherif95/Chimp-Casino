@@ -323,6 +323,7 @@ class GameContainer extends React.Component {
 
 
     componentWillUnmount() {
+        this.socket.emit("leaveLobby")
         this.socket.removeAllListeners();
     }
 

@@ -6,7 +6,6 @@ import { closeModal } from "../../actions/modal_actions";
 const LeaveLobby = ({history, closeModal, socket}) => {
     const handleYes = () => {
         closeModal();
-        socket.emit("leaveLobby")
         history.push("/lobbies");
     }
 
