@@ -296,6 +296,16 @@ button{
 
 }
 
+#demo-user{
+    background-color: #0084ff;
+    color: #fff;
+    font-size: 16px;
+    width: 80%;
+    height: 40px;
+    padding: 6px 12px;
+    border-radius: 5px;
+}
+
 .leave-lobby {
     font-size: 1.5em;
 }
