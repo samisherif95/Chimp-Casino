@@ -293,10 +293,9 @@ button{
 #submit-lobby:hover {
     background-color: #c40d35;
     cursor: pointer;
-
 }
 
-#demo-user{
+#demo-user {
     background-color: #0084ff;
     color: #fff;
     font-size: 16px;
@@ -304,6 +303,12 @@ button{
     height: 40px;
     padding: 6px 12px;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+#demo-user:hover {
+    background-color: #02396b;
+    cursor: pointer;
 }
 
 .leave-lobby {
