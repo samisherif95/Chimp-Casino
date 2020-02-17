@@ -132,8 +132,9 @@ class LoginForm extends React.Component {
                     <h3>Welcome back</h3>
                     <p>Please Log In</p>
                 </div>
+                <button id='demo-user' onClick={this.handleDemoUser}>Demo User</button>
+
                 <form className='form-login' onSubmit={this.handleSubmit}>
-                    <button id='demo-user' type='submit' onClick={this.handleDemoUser}>Demo User</button>
                     <input type="text"
                         id='username'
                         value={this.state.username}
