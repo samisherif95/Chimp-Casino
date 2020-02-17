@@ -78,7 +78,7 @@ class GameContainer extends React.Component {
                             if (this.music.isPlaying) {
                                 this.music.pause();
                             } else {
-                                this.music.resume();
+                                this.music.play();
                             }
 
                         })
@@ -197,7 +197,7 @@ class GameContainer extends React.Component {
 
                     // audio
                     this.music = this.sound.add('island-dreams')
-                    this.music.play()
+                    // this.music.play()
 
                     //balance
                     this.balance = this.add.sprite(50, 720, 'logo-svg')
