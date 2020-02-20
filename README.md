@@ -17,3 +17,9 @@ The casino room model itself was done by bringing together many unrelated images
 
 Once these two conditions were fulfilled, getting the players' locations to update live as they moved them was simple, any time a player moves, send over their new positional information to the server, and have the server broadcast the new position to all the other players.
 
+## Slots
+
+## Poker
+
+## Blackjack
+
