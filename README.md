@@ -52,14 +52,6 @@ The casino room model itself was done by bringing together many unrelated images
     socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id]);
     socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players);
   });
-
-  socket.on('playerMovement', position => {
-    const movedPlayer = lobbiesCollection[localLobbyId].players[socket.id];
-    movedPlayer.x = position.x;
-    movedPlayer.y = position.y;
-    socket.to(localLobbyId).emit("playerMoved", movedPlayer)
-  })
-  
 ``
 `
 
