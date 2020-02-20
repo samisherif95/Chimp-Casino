@@ -1,7 +1,7 @@
 # Chimp-Casino
 A casino game where chimps can deal with monkey business
 
-![Chimp Casino Demo](chimps-casino.gif)
+![Chimp Casino Demo](demos/chimps-casino.gif)
 
 
 ## Lobbies
