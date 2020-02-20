@@ -15,45 +15,5 @@ The casino room model itself was done by bringing together many unrelated images
 * 2. Existing players within the lobby had to be notified of the new players existance
 * 3. The new player had to be sent an object containing all existing players' information to render them
 
-`
-``
-  socket.on("joinLobby", (lobbyId, username) => {
-    localLobbyId = lobbyId
-
-    socket.join(lobbyId)
-    if (lobbiesCollection[lobbyId]) {
-      lobbiesCollection[lobbyId].players[socket.id] = {
-        x: 200,
-        y: 250,
-        playerId: socket.id,
-        username
-      }
-    } else {
-      lobbiesCollection[lobbyId] = {
-        players: {},
-        id: lobbyId,
-        bJ: {
-            game: new GameLogic.Blackjack(),
-        },
-        poker: {
-            game: new PokerGame(),
-        }
-      }
-      lobbiesCollection[lobbyId].players[socket.id] = {
-        x: 200,
-        y: 250,
-        playerId: socket.id,
-        username
-      }
-    }
-    findLobbyByIdAndChangeCapacity(1);
-    localPokerLobby = lobbiesCollection[lobbyId].poker
-    localBJLobby = lobbiesCollection[lobbyId].bJ;
-    socket.to(lobbyId).emit('newPlayer', lobbiesCollection[lobbyId].players[socket.id]);
-    socket.emit('lobbyPlayers', lobbiesCollection[lobbyId].players);
-  });
-``
-`
-
 Once these two conditions were fulfilled, getting the players' locations to update live as they moved them was simple, any time a player moves, send over their new positional information to the server, and have the server broadcast the new position to all the other players.
 
