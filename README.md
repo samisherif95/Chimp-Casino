@@ -59,6 +59,7 @@ The casino room model itself was done by bringing together many unrelated images
     movedPlayer.y = position.y;
     socket.to(localLobbyId).emit("playerMoved", movedPlayer)
   })
+  
 ``
 `
 
