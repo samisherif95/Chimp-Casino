@@ -20,6 +20,7 @@ Once these two conditions were fulfilled, getting the players' locations to upda
 ## Slots
 
 ## Poker
+![PokerDemo]()
 
 ## Blackjack
 
