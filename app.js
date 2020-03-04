@@ -80,7 +80,7 @@ lobbyServer.on("connection", (socket) => {
             lobby.set({ currentCapacity: lobby.currentCapacity + num});
             lobby.save().then(lobby => {
                 setTimeout(() => {
-                    if (lobby.currentCapacity === 0 && lobby.lobbyName !== "General") {
+                    if (lobby.currentCapacity <= 0) {
                         lobby.remove();
                     }
                 }, 30000)
@@ -546,7 +546,6 @@ lobbyServer.on("connection", (socket) => {
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
-        
         
 app.get("/", (req, res) => {
   res.send("Hello App!")
