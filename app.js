@@ -42,7 +42,6 @@ app.use("/api/users", users);
 app.use("/api/chatrooms", chatrooms);
 app.use("/api/lobbies", lobbies);
 
-
 //Websockets Setup
 
 const lobbyServer = socket(server)
