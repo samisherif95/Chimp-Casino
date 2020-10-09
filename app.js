@@ -88,9 +88,6 @@ lobbyServer.on("connection", (socket) => {
         }).catch(err => console.log(err));
     }
 
-
-
-
     const pokerGameOver = () => {
         if (localPokerLobby.game.cycle === 4 || localPokerLobby.game.players.length === 1) {
             const winner = localPokerLobby.game.getWinner();

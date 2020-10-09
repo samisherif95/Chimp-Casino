@@ -47,7 +47,7 @@ class NavBar extends React.Component {
                     </div>
                 </Link>
                 {this.getLinks()}
-            </div>
+            f</div>
         );
     }
 }
